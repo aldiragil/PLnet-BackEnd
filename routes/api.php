@@ -18,6 +18,7 @@ Route::post('logout',[App\Http\Controllers\AuthController::class,'logout']);
 Route::post('register',[App\Http\Controllers\AuthController::class,'register']);
 Route::post('check-token',[App\Http\Controllers\AuthController::class,'checkToken']);
 Route::post('refresh-token',[App\Http\Controllers\AuthController::class,'refreshToken']);
+Route::get('menu/show/{id}',[App\Http\Controllers\MenuController::class,'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
 

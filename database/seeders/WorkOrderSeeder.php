@@ -91,6 +91,5 @@ class WorkOrderSeeder extends Seeder
             'updated_by' => 1,
         ]);
 
-
     }
 }

@@ -2,58 +2,78 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
+use App\Repositories\MenuRepository;
 use App\Repositories\WaRepository;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\EmailRequest;
 use App\Http\Requests\UserRequest;
 use App\Helpers\ApiHelper;
 use App\Models\User;
-use Hash;
 
 class AuthController extends Controller
 {
     
-    private $UserRepository,$WaRepository;
+    private $UserRepository,
+            $WaRepository,
+            $MenuRepository,
+            $ApiHelper,
+            $user;
     
-    public function __construct(UserRepository $UserRepository,WaRepository $WaRepository)
+    public function __construct(
+        UserRepository $UserRepository,
+        WaRepository $WaRepository,
+        MenuRepository $MenuRepository,
+        ApiHelper $ApiHelper,
+        User $user
+        )
     {
-        $this->UserRepository = $UserRepository;
-        $this->WaRepository = $WaRepository;
+        $this->UserRepository   = $UserRepository;
+        $this->WaRepository     = $WaRepository;
+        $this->MenuRepository   = $MenuRepository;
+        $this->ApiHelper        = $ApiHelper;
+        $this->user             = $user;
     }
     
     public function register(UserRequest $request){
+        $request->merge(['tipe_id'=>2]);
         $user = $this->UserRepository->createUser($request->validated());
         if(is_object($user)){
-            // $user;
             // $this->WaRepository->sendWa($request);
             
-            return ApiHelper::response(200,true,REGISTER_SUCCESS,array(
-                'access_token' => $user->createToken($request->device)->plainTextToken,
-                'name' => $user->name
+            return $this->ApiHelper->response(200,true,REGISTER_SUCCESS,array(
+                'tipe' => ($user->tipe_id === 1?'EMPLOYEE':'CUSTOMER'),
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email
             ));
         }else{
-            return ApiHelper::response(400,false,REGISTER_FAILED,$user);
+            return $this->ApiHelper->response(400,false,REGISTER_FAILED,$user);
         }
     }
     
     public function login(LoginRequest $request)
     {
-        $user = User::where('email', $request->email)->first();
+        $user = $this->user->where('email', $request->email)->first();
         if ($user) {
             if (Hash::check($request->password, $user->password)) {
-                return ApiHelper::response(200,true,LOGIN_SUCCESS, [
+                return $this->ApiHelper->response(200,true,LOGIN_SUCCESS, [
+                    'access_token' => $user->createToken($request->device)->plainTextToken,
+                    'tipe' => ($user->tipe_id === 1?'EMPLOYEE':'CUSTOMER'),
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'token' => $user->createToken($request->device)->plainTextToken
+                    'notification' => null,
+                    'menu' => $this->MenuRepository->show($user->id)
+                    
                 ]);
             } else {
-                return ApiHelper::response(200,false,PASSWORD_MISMATCH);
+                return $this->ApiHelper->response(200,false,PASSWORD_MISMATCH);
             }
         } else {
-            return ApiHelper::response(200,false,USER_DOES_NOT_EXIST);
+            return $this->ApiHelper->response(200,false,USER_DOES_NOT_EXIST);
         }
     }
     
@@ -61,7 +81,7 @@ class AuthController extends Controller
     public function logout(EmailRequest $request)
     {
         
-        $user = User::where('email', $request->email)->first();
+        $user = $this->user->where('email', $request->email)->first();
         
         $delete_success = true;
         foreach ($user->tokens as $token) {
@@ -71,16 +91,16 @@ class AuthController extends Controller
         }
         
         if ($delete_success) {
-            return ApiHelper::response(200,true,LOGOUT_SUCCESS);
+            return $this->ApiHelper->response(200,true,LOGOUT_SUCCESS);
         } else {
-            return ApiHelper::response(200,false,LOGOUT_FAILED);
+            return $this->ApiHelper->response(200,false,LOGOUT_FAILED);
         }
     }
     
     public function refreshToken(EmailRequest $request)
     {
         
-        $user = User::where('email', $request->email)->first();
+        $user = $this->user->where('email', $request->email)->first();
         
         $delete_success = true;
         foreach ($user->tokens as $token) {
@@ -90,27 +110,27 @@ class AuthController extends Controller
         }
         
         if ($delete_success) {
-            return ApiHelper::response(200, true, REFRESH_TOKEN_SUCCESS, [
+            return $this->ApiHelper->response(200, true, REFRESH_TOKEN_SUCCESS, [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
                 'access_token' => $user->createToken($request->device)->plainTextToken
             ]);
         } else {
-            return ApiHelper::response(200, false, REFRESH_TOKEN_FAILED);
+            return $this->ApiHelper->response(200, false, REFRESH_TOKEN_FAILED);
         }
     }
     
     public function checkToken(EmailRequest $request)
     {
-        if($user = User::where('email', $request->email)->first()){
-            return ApiHelper::response(200, true, CHECK_TOKEN_SUCCESS, [
+        if($user = $this->user->where('email', $request->email)->first()){
+            return $this->ApiHelper->response(200, true, CHECK_TOKEN_SUCCESS, [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email
             ]);
         }else{
-            return ApiHelper::response(200, false, CHECK_TOKEN_FAILED);
+            return $this->ApiHelper->response(200, false, CHECK_TOKEN_FAILED);
         }
     }
     

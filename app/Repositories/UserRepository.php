@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Interfaces\UserInterface;
 use App\Models\User;
 use Exception;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class UserRepository implements UserInterface{
     

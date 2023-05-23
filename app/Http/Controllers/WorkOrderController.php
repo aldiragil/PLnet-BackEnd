@@ -7,7 +7,6 @@ use App\Models\WorkOrder;
 use App\Repositories\WorkOrderRepository;
 use App\Http\Requests\StoreWorkOrderRequest;
 use App\Http\Requests\UpdateWorkOrderRequest;
-use Illuminate\Support\Facades\Request;
 
 class WorkOrderController extends Controller
 {
