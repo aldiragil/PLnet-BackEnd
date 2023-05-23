@@ -7,7 +7,7 @@ use App\Models\User;
 use Exception;
 use DB;
 
-class UserRepository implements UserInterface {
+class UserRepository implements UserInterface{
     
     private $user;
     public function __construct(User $user)

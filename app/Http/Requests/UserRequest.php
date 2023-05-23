@@ -29,6 +29,7 @@ class UserRequest extends FormRequest
         return [
             'name' => 'required|string|min:2',
             'email' => 'required|email|unique:users,email',
+            // 'phone' => 'required|numeric|unique:users,phone|min:8',
             'password' => 'required',
             'confirm_password' => 'required|same:password'
         ];
@@ -42,6 +43,11 @@ class UserRequest extends FormRequest
             'email.required' => 'Email tidak boleh kosong',
             'email.email' => 'Email tidak valid',
             'email.unique' => 'Email telah terdaftar',
+            'phone.required' => 'Nomor Telepon tidak boleh kosong',
+            'phone.numeric' => 'Nomor Telepon tidak valid',
+            'phone.unique' => 'Nomor Telepon telah terdaftar',
+            'phone.min' => 'Nomor Telepon terlalu sedikit',
+            'phone.max' => 'Nomor Telepon terlalu banyak',
             'password.required' => 'Password tidak boleh kosong',
             'confirm_password.required' => 'Konfirmasi Password tidak boleh kosong',
             'confirm_password.same' => 'Password tidak sama'

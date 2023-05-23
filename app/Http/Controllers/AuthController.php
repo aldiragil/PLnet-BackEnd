@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\UserRepository;
 use App\Http\Controllers\Controller;
+use App\Repositories\UserRepository;
+use App\Repositories\WaRepository;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\EmailRequest;
 use App\Http\Requests\UserRequest;
@@ -14,22 +15,26 @@ use Hash;
 class AuthController extends Controller
 {
     
-    private $UserRepository;
+    private $UserRepository,$WaRepository;
     
-    public function __construct(UserRepository $UserRepository)
+    public function __construct(UserRepository $UserRepository,WaRepository $WaRepository)
     {
         $this->UserRepository = $UserRepository;
+        $this->WaRepository = $WaRepository;
     }
     
     public function register(UserRequest $request){
-        
-        if($user = $this->UserRepository->createUser($request->validated())){
+        $user = $this->UserRepository->createUser($request->validated());
+        if(is_object($user)){
+            // $user;
+            // $this->WaRepository->sendWa($request);
+            
             return ApiHelper::response(200,true,REGISTER_SUCCESS,array(
-                'access_token' => $user->createToken('auth_token')->plainTextToken,
+                'access_token' => $user->createToken($request->device)->plainTextToken,
                 'name' => $user->name
             ));
         }else{
-            return ApiHelper::response(400,true,REGISTER_FAILED,$user);
+            return ApiHelper::response(400,false,REGISTER_FAILED,$user);
         }
     }
     

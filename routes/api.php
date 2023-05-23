@@ -19,10 +19,13 @@ Route::post('register',[App\Http\Controllers\AuthController::class,'register']);
 Route::post('check-token',[App\Http\Controllers\AuthController::class,'checkToken']);
 Route::post('refresh-token',[App\Http\Controllers\AuthController::class,'refreshToken']);
 
-// Route::middleware('auth:sanctum')->group(function () {
-//     Route::post('/user', [App\Http\Controllers\AuthController::class,'user']);
-// });
+Route::middleware('auth:sanctum')->group(function () {
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    Route::get('setting/{group}',[App\Http\Controllers\SettingController::class,'show_group'])->where([ 'group' => '[A-Za-z]+']);
+    Route::post('work-order/create',[App\Http\Controllers\WorkOrderController::class,'create']);
+
 });
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });

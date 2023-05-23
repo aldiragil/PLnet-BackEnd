@@ -2,18 +2,19 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-
 use App\Models\Setting;
+use App\Models\WorkOrder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class WorkOrderSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      */
     public function run(): void
     {
+
         // Work Order Category
         Setting::create([
             'id' => 1,
@@ -89,5 +90,7 @@ class DatabaseSeeder extends Seeder
             'created_by' => 1,
             'updated_by' => 1,
         ]);
+
+
     }
 }
