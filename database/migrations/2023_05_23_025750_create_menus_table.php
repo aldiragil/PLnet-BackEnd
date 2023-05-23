@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('tipe');
             $table->string('icon')->nullable();
             $table->integer('order')->default(0);
+            $table->integer('active')->default(1);
             $table->timestamps();
         });
     }

@@ -48,9 +48,14 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
 
-    public function menu()
+    public function menuall()
     {
-        return $this->belongsToMany(Menu::class, 'menu_accesses', 'user_id', 'menu_id')->orderBy('menus.id');
+        return $this->belongsToMany(Menu::class, 'menu_accesses', 'user_id', 'menu_id');
+    }
+
+    public function accessmenu()
+    {
+        return $this->belongsToMany(Menu::class, 'menu_accesses', 'user_id', 'menu_id')->where('active',1);
     }
 
 

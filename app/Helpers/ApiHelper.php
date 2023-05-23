@@ -63,4 +63,5 @@ class ApiHelper{
 
         return response()->json(self::$response,$code);
     }
+
 }

@@ -20,7 +20,7 @@ class MenuRepository implements MenuInterface {
 
     public function show($id)
     {
-        $query = $this->user->with('menu')->where('id',$id)->first()->toArray();
-        return MenuHelper::ShowMenu($query['menu'],0);
+        $query = $this->user->with('accessmenu')->where('id',$id)->first()->toArray();
+        return MenuHelper::ShowMenu($query['accessmenu'],0);
     }
 }
