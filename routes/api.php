@@ -28,10 +28,14 @@ Route::controller(App\Http\Controllers\AuthController::class)->group(function() 
 // Route::post('refresh-token',[App\Http\Controllers\AuthController::class,'refreshToken']);
 
 Route::middleware('auth:sanctum')->group(function () {
-
+    Route::controller(App\Http\Controllers\WorkOrderController::class)->group(function() {
+        Route::get('work-order/list','list');
+        Route::post('work-order/create','create');
+        Route::put('work-order/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
+    });
+    
     Route::get('setting/{group}',[App\Http\Controllers\SettingController::class,'show_group'])->where([ 'group' => '[A-Za-z]+']);
-    Route::post('work-order/create',[App\Http\Controllers\WorkOrderController::class,'create']);
-    Route::get('menu/show/{id}',[App\Http\Controllers\MenuController::class,'show'])->where([ 'id' => '[0-9]+']);
+    Route::get('menu/show/{tipe}/{id}',[App\Http\Controllers\MenuController::class,'show'])->where([ 'tipe' => '[0-9]+', 'id' => '[0-9]+' ]);
 
 });
 

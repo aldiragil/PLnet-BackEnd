@@ -47,9 +47,9 @@ class MenuController extends Controller
     /**
     * Display the specified resource.
     */
-    public function show($id)
+    public function show($tipe,$id)
     {
-        $data = $this->MenuRepository->show($id);
+        $data = $this->MenuRepository->show($tipe,$id);
         
         if(is_array($data)){
             return $this->ApiHelper->response(200,true,CREATE_SUCCESS,$data);

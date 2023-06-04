@@ -7,8 +7,8 @@ interface WorkOrderInterface
 
     public function all();
     public function getById($id);
-    public function createData($data, $user_id);
-    public function updateData(array $data, $user_id, $id);
-    public function deleteData($id);
+    public function create($data, $user_id);
+    public function update($data, $user_id, $id);
+    public function delete($id);
 
 }

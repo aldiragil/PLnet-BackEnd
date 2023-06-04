@@ -4,16 +4,16 @@ namespace App\Helpers;
 
 class MenuHelper{
     
-    static function ShowMenu(array $menu = null, $parent_id = null){
+    static function ShowMenu(array $menu = null, $tipe = null, $parent_id = null){
         
         $response = NULL;
         foreach($menu as $key){
             
-            if($key['parent_id']==$parent_id){
+            if($key['parent_id']==$parent_id && $key['tipe_id']==$tipe){
                 $return         = array();
                 $return['id']   = $key['id'];
                 $return['name'] = $key['menu'];
-                $return['child'] = MenuHelper::ShowMenu($menu,$key['id']);
+                $return['child'] = MenuHelper::ShowMenu($menu,$tipe,$key['id']);
                 $response[] = $return;
             }
         }

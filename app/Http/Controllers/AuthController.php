@@ -66,7 +66,7 @@ class AuthController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                     'notification' => null,
-                    'menu' => $this->MenuRepository->show($user->id)
+                    'menu' => $this->MenuRepository->show($user->id,$user->tipe_id)
                     
                 ]);
             } else {

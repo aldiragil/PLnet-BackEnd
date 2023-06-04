@@ -12,21 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('master_odps', function (Blueprint $table) {
+        Schema::create('packages', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
             $table->string('name');
-            $table->string('serial');
-            $table->string('location');
-            $table->string('latitude');
-            $table->string('longitude');
-            $table->string('device');
-            $table->string('slot');
-            $table->string('port');
-            $table->string('capacity');
-            $table->string('image');
-            $table->string('note');
-            $table->integer('active');
+            $table->integer('price');
             $table->integer('created_by');
             $table->integer('updated_by');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP(0)'));
@@ -39,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('master_odps');
+        Schema::dropIfExists('packages');
     }
 };

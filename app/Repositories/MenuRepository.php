@@ -18,9 +18,10 @@ class MenuRepository implements MenuInterface {
         $this->access = $access;
     }
 
-    public function show($id)
+    public function show($tipe,$id)
     {
         $query = $this->user->with('accessmenu')->where('id',$id)->first()->toArray();
-        return MenuHelper::ShowMenu($query['accessmenu'],0);
+        // dd($query);
+        return MenuHelper::ShowMenu($query['accessmenu'],$query['tipe_id'],0);
     }
 }

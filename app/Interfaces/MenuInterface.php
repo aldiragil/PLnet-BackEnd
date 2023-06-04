@@ -4,5 +4,5 @@ namespace App\Interfaces;
 
 interface MenuInterface
 {
-    public function show($id);
+    public function show($tipe,$id);
 }

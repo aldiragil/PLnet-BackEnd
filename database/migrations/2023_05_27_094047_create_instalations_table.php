@@ -12,25 +12,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('work_orders', function (Blueprint $table) {
+        Schema::create('instalations', function (Blueprint $table) {
             $table->id();
-            $table->integer('customer_id')->nullable();
             $table->string('code')->unique();
             $table->date('date');
-            $table->string('category');
-            $table->string('name');
-            $table->string('location');
-            $table->string('latitude');
-            $table->string('longitude');
-            $table->string('phone');
-            $table->string('order');
-            $table->string('description');
-            $table->string('level');
+            $table->integer('customer_id');
+            $table->integer('package_id');
+            $table->integer('odp_id');
+            $table->string('serial');
+            $table->string('due_date');
             $table->string('note')->nullable();
             $table->integer('status')->default(0);
             $table->integer('active')->default(1);
-            $table->dateTime('start_order')->default(DB::raw('CURRENT_TIMESTAMP(0)'));
-            $table->dateTime('end_order')->nullable();
             $table->integer('created_by');
             $table->integer('updated_by');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP(0)'));
@@ -43,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('work_orders');
+        Schema::dropIfExists('instalations');
     }
 };

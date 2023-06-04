@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 
-class StoreWorkOrderRequest extends FormRequest
+class WorkOrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +22,11 @@ class StoreWorkOrderRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
-    public function rules(): array
+    public function rules()
     {
-        return [
+        $rules =  [
             'user_id'   => 'nullable|exists:users,id',
             'date'      => 'required|date',
-            'code'      => 'required|string',
             'category'  => 'required|string',
             'name'      => 'required|string',
             'phone'     => 'required',
@@ -39,6 +38,13 @@ class StoreWorkOrderRequest extends FormRequest
             'level'     => 'required|string',
             'note'      => 'nullable|string'
         ];
+
+        if (in_array($this->method(), ['PUT', 'PATCH'])) {
+            $rules['code'] = ['required','unique:work_orders,code,'. $this->route('id')];
+        }else{
+            $rules['code'] = ['required','unique:work_orders,code'];
+        }
+        return $rules;
     }
 
     public function messages()
@@ -48,7 +54,7 @@ class StoreWorkOrderRequest extends FormRequest
             'date.required' => 'Tanggal tidak boleh kosong',
             'date.date' => 'Tanggal tidak valid',
             'code.required' => 'Kode Work Order tidak boleh kosong',
-            'code.string' => 'Kode Work Order tidak valid',
+            'code.unique' => 'Kode Work Order tidak boleh sama',
             'category.required' => 'Kategori tidak boleh kosong',
             'category.string' => 'Kategori tidak valid',
             'name.required' => 'Nama Pelanggan tidak boleh kosong',

@@ -22,10 +22,12 @@ define('REGISTER_FAILED', 'Registrasi Gagal!');
 define('CREATE_SUCCESS', 'Berhasil dibuat!');
 define('CREATE_FAILED', 'Gagal dibuat!');
 
-define('EDIT_SUCCESS', 'Edit success!');
-define('EDIT_FAILED', 'Edit failed!');
-define('DELETE_SUCCESS', 'Delete success!');
-define('DELETE_FAILED', 'Delete failed!');
+define('EDIT_SUCCESS', 'Berhasil diedit!');
+define('EDIT_FAILED', 'Gagal diedit!');
+
+define('DELETE_SUCCESS', 'Berhasil dihapus!');
+define('DELETE_FAILED', 'Gagal dihapus!');
+
 define('DATA_SUBMITTED_FOR_APPROVAL', 'Data submitted for approval!');
 define('APPROVE_SUCCESS', 'Approved!');
 define('ALREADY_APPROVED', 'Already approved!');
