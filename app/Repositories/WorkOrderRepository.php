@@ -3,10 +3,10 @@
 namespace App\Repositories;
 
 use App\Interfaces\WorkOrderInterface;
-use App\Models\User;
 use App\Models\WorkOrder;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class WorkOrderRepository implements WorkOrderInterface{
     
@@ -58,7 +58,7 @@ class WorkOrderRepository implements WorkOrderInterface{
     
     public function update($data, $user_id, $id)
     {
-        $data['updated_by'] = $user_id;
+        $data['updated_by'] = Auth::id();
         try {
             DB::beginTransaction();
             $this->work_order = WorkOrder::find($id);

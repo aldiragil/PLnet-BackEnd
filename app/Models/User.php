@@ -18,6 +18,7 @@ class User extends Authenticatable
     * @var array<int, string>
     */
     protected $fillable = [
+        'tipe_id',
         'name',
         'email',
         'phone',
@@ -47,16 +48,19 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($value);
     }
-
-    public function menuall()
-    {
-        return $this->belongsToMany(Menu::class, 'menu_accesses', 'user_id', 'menu_id');
+    
+    function role(){
+        return $this->belongsTo(MenuRole::class,'tipe_id');
     }
-
-    public function accessmenu()
+    
+    public function menuEmp()
     {
-        return $this->belongsToMany(Menu::class, 'menu_accesses', 'user_id', 'menu_id')->where('active',1);
-    }
-
-
+        return $this->belongsToMany(
+            Menu::class,
+            'menu_accesses',
+            'tipe_id',
+            'menu_id'
+        )->where('menus.active',1)->where('menus.tipe_id',1);
+    }    
+    
 }

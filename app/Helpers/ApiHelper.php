@@ -2,6 +2,9 @@
 
 namespace App\Helpers;
 
+define('SUCCESS', ' Berhasil!');
+define('FAILED', ' Gagal!');
+
 define('LOGIN_SUCCESS', 'Berhasil Masuk!');
 define('LOGIN_FAILED', 'Gagal Masuk!');
 define('LOGOUT_SUCCESS', 'Berhasil Keluar!');
@@ -52,7 +55,7 @@ class ApiHelper{
         'data' => null
     ];
     
-    public static function response($code = null, $success = null, $message = null, $data = null){
+    static function response($code = null, $success = null, $message = null, $data = null){
         
         self::$response = [
             "success" => $success,
@@ -65,5 +68,16 @@ class ApiHelper{
 
         return response()->json(self::$response,$code);
     }
+    
+    static function return($data = null, $message = null){
+        if (is_object($data) || is_array($data)) {
+            $success = true;
+            $message = $message.SUCCESS;
+        }else{
+            $success = false;
+            $message = $message.FAILED;
+        }
 
+        return ApiHelper::response(200,$success,$message,$data);
+    }
 }

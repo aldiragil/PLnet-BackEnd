@@ -33,7 +33,21 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('work-order/create','create');
         Route::put('work-order/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
     });
-    
+
+    Route::controller(App\Http\Controllers\UserController::class)->group(function() {
+        Route::get('user/list','list');
+        Route::post('user/create','create');
+        Route::put('user/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
+    });
+
+    Route::controller(App\Http\Controllers\MenuController::class)->group(function() {
+        Route::get('menu/all','getMenu');
+        Route::get('menu/role','getRole');
+        Route::get('menu/show-user/{id}','showByUser')->where([ 'id' => '[0-9]+' ]);
+        Route::get('menu/show-role/{id}','showByRole')->where([ 'id' => '[0-9]+' ]);
+        Route::post('menu/update-role','updateAccess');
+    });
+
     Route::get('setting/{group}',[App\Http\Controllers\SettingController::class,'show_group'])->where([ 'group' => '[A-Za-z]+']);
     Route::get('menu/show/{tipe}/{id}',[App\Http\Controllers\MenuController::class,'show'])->where([ 'tipe' => '[0-9]+', 'id' => '[0-9]+' ]);
 

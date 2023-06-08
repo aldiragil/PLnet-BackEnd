@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Menu;
 use App\Models\MenuAccess;
+use App\Models\MenuRole;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,6 +16,30 @@ class MenuSeeder extends Seeder
     public function run(): void
     {
 
+        MenuRole::create([
+            'id'        => 0,
+            'name'      => "Administrator",
+        ]);
+
+        MenuRole::create([
+            'id'        => 0,
+            'name'      => "Customer",
+        ]);
+
+        MenuRole::create([
+            'id'        => 0,
+            'name'      => "Collector",
+        ]);
+
+        MenuRole::create([
+            'id'        => 0,
+            'name'      => "Teknisi",
+        ]);
+
+        MenuRole::create([
+            'id'        => 0,
+            'name'      => "NOC",
+        ]);
 
         // 1 Menu Master Order Pemasangan Internet
         Menu::create([
@@ -379,11 +404,35 @@ class MenuSeeder extends Seeder
         
         for ($i=0; $i < $menu->id; $i++) { 
             MenuAccess::create([
-                'user_id'   => 1,
+                'tipe_id'   => 1,
                 'menu_id' => $i,
             ]);  
         }
 
+        MenuAccess::create([
+            'tipe_id'   => 3,
+            'menu_id' => 1,
+        ]);  
+        MenuAccess::create([
+            'tipe_id'   => 3,
+            'menu_id' => 2,
+        ]);  
+        MenuAccess::create([
+            'tipe_id'   => 3,
+            'menu_id' => 3,
+        ]);  
+        MenuAccess::create([
+            'tipe_id'   => 3,
+            'menu_id' => 4,
+        ]);  
+        MenuAccess::create([
+            'tipe_id'   => 3,
+            'menu_id' => 5,
+        ]);  
+        MenuAccess::create([
+            'tipe_id'   => 3,
+            'menu_id' => 6,
+        ]);  
 
 
     }

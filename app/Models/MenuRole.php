@@ -5,18 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Menu extends Model
+class MenuRole extends Model
 {
     use HasFactory;
-    
+
     public function user()
     {
-        return $this->belongsToMany(
-            User::class,
-            'menu_accesses',
-            'menu_id',
-            'tipe_id'
-        );
+        return $this->hasMany(User::class,'tipe_id');
     }
-    
+
 }

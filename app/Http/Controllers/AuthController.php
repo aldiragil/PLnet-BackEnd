@@ -19,22 +19,19 @@ class AuthController extends Controller
     private $UserRepository,
             $WaRepository,
             $MenuRepository,
-            $ApiHelper,
-            $user;
+            $ApiHelper;
     
     public function __construct(
         UserRepository $UserRepository,
         WaRepository $WaRepository,
         MenuRepository $MenuRepository,
-        ApiHelper $ApiHelper,
-        User $user
+        ApiHelper $ApiHelper
         )
     {
         $this->UserRepository   = $UserRepository;
         $this->WaRepository     = $WaRepository;
         $this->MenuRepository   = $MenuRepository;
         $this->ApiHelper        = $ApiHelper;
-        $this->user             = $user;
     }
     
     public function register(UserRequest $request){
@@ -50,24 +47,24 @@ class AuthController extends Controller
                 'email' => $user->email
             ));
         }else{
-            return $this->ApiHelper->response(400,false,REGISTER_FAILED,$user);
+            return $this->ApiHelper->response(200,false,REGISTER_FAILED,$user);
         }
     }
     
     public function login(LoginRequest $request)
     {
-        $user = $this->user->where('email', $request->email)->first();
-        if ($user) {
+        $user = $this->UserRepository->firstUserBy(['email' => $request->email]);
+        if (is_object($user)) {
             if (Hash::check($request->password, $user->password)) {
                 return $this->ApiHelper->response(200,true,LOGIN_SUCCESS, [
                     'access_token' => $user->createToken($request->device)->plainTextToken,
-                    'tipe' => ($user->tipe_id === 1?'EMPLOYEE':'CUSTOMER'),
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
+                    'tipe_id' => $user->tipe_id,
+                    'tipe_name' => $user->role->name,
                     'notification' => null,
-                    'menu' => $this->MenuRepository->show($user->id,$user->tipe_id)
-                    
+                    'menu' => $this->MenuRepository->getUserMenu($user->tipe_id,$user->id)
                 ]);
             } else {
                 return $this->ApiHelper->response(200,false,PASSWORD_MISMATCH);
@@ -81,16 +78,16 @@ class AuthController extends Controller
     public function logout(EmailRequest $request)
     {
         
-        $user = $this->user->where('email', $request->email)->first();
+        $user = $this->UserRepository->firstUserBy(['email'=> $request->email]);
         
-        $delete_success = true;
+        $delete = true;
         foreach ($user->tokens as $token) {
             if (!$token->delete()) {
-                $delete_success = false;
+                $delete = false;
             }
         }
-        
-        if ($delete_success) {
+
+        if ($delete) {
             return $this->ApiHelper->response(200,true,LOGOUT_SUCCESS);
         } else {
             return $this->ApiHelper->response(200,false,LOGOUT_FAILED);
@@ -100,7 +97,7 @@ class AuthController extends Controller
     public function refreshToken(EmailRequest $request)
     {
         
-        $user = $this->user->where('email', $request->email)->first();
+        $user = $this->UserRepository->firstUserBy(['email' => $request->email]);
         
         $delete_success = true;
         foreach ($user->tokens as $token) {
@@ -123,7 +120,7 @@ class AuthController extends Controller
     
     public function checkToken(EmailRequest $request)
     {
-        if($user = $this->user->where('email', $request->email)->first()){
+        if($user = $this->UserRepository->firstUserBy(['email', $request->email])){
             return $this->ApiHelper->response(200, true, CHECK_TOKEN_SUCCESS, [
                 'id' => $user->id,
                 'name' => $user->name,

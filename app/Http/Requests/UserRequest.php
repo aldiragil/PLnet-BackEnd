@@ -26,18 +26,30 @@ class UserRequest extends FormRequest
     */
     public function rules()
     {
-        return [
+
+        $rules = [
+            'tipe_id' => 'required|numeric',
             'name' => 'required|string|min:2',
-            'email' => 'required|email|unique:users,email',
-            // 'phone' => 'required|numeric|unique:users,phone|min:8',
-            'password' => 'required',
+            'phone' => 'numeric',
+            'password' => 'required|min:6',
             'confirm_password' => 'required|same:password'
         ];
+
+        if (in_array($this->method(), ['PUT', 'PATCH'])) {
+            $rules['email'] = ['required','unique:users,email,'. $this->route('id')];
+        }else{
+            $rules['email'] = ['required','unique:users,email','email'];
+        }
+        
+        return $rules;
+
     }
     
     public function messages()
     {
         return [
+            'tipe_id.required' => 'Tipe User tidak boleh kosong.',
+            'tipe_id.number' => 'Tipe User tidak valid',
             'name.required' => 'Nama tidak boleh kosong.',
             'name.min' => 'Nama harus lebih dari 1 karakter',
             'email.required' => 'Email tidak boleh kosong',
@@ -49,6 +61,8 @@ class UserRequest extends FormRequest
             'phone.min' => 'Nomor Telepon terlalu sedikit',
             'phone.max' => 'Nomor Telepon terlalu banyak',
             'password.required' => 'Password tidak boleh kosong',
+            'password.min' => 'Password minimal 6 karakter',
+            'password.regex' => 'Password tidak valid',
             'confirm_password.required' => 'Konfirmasi Password tidak boleh kosong',
             'confirm_password.same' => 'Password tidak sama'
         ];

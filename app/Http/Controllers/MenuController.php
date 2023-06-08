@@ -4,81 +4,65 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ApiHelper;
 use App\Helpers\MenuHelper;
+use App\Http\Requests\DataRequest;
 use App\Models\Menu;
 use App\Http\Requests\StoreMenuRequest;
-use App\Http\Requests\UpdateMenuRequest;
 use App\Repositories\MenuRepository;
+use App\Repositories\UserRepository;
+use GuzzleHttp\Psr7\Request;
 
 class MenuController extends Controller
 {
-
-    private $MenuRepository,$ApiHelper;
     
-    public function __construct(MenuRepository $MenuRepository,ApiHelper $ApiHelper)
-    {
-        $this->MenuRepository = $MenuRepository;
-        $this->ApiHelper = $ApiHelper;
-    }
-
-    /**
-    * Display a listing of the resource.
-    */
-    public function index()
-    {
-        //
-    }
+    private $MenuRepository,$UserRepository,$ApiHelper,$menu = 'Menu';
     
-    /**
-    * Show the form for creating a new resource.
-    */
-    public function create()
+    public function __construct(MenuRepository $MenuRepository,UserRepository $UserRepository,ApiHelper $ApiHelper)
     {
-        //
+        $this->MenuRepository   = $MenuRepository;
+        $this->UserRepository   = $UserRepository;
+        $this->ApiHelper        = $ApiHelper;
     }
-    
-    /**
-    * Store a newly created resource in storage.
-    */
-    public function store(StoreMenuRequest $request)
-    {
-        //
-    }
-    
-    /**
-    * Display the specified resource.
-    */
-    public function show($tipe,$id)
-    {
-        $data = $this->MenuRepository->show($tipe,$id);
         
-        if(is_array($data)){
-            return $this->ApiHelper->response(200,true,CREATE_SUCCESS,$data);
-        }else{
-            return $this->ApiHelper->response(400,false,CREATE_FAILED,$data);
-        }
-    }
-    
-    /**
-    * Show the form for editing the specified resource.
-    */
-    public function edit()
+    public function getRole()
     {
-        //
+        return $this->ApiHelper->return(
+            $this->MenuRepository->role(),
+            'List Role '.$this->menu
+        );
     }
-    
-    /**
-    * Update the specified resource in storage.
-    */
-    public function update(UpdateMenuRequest $request, Menu $menu)
+
+    public function getMenu()
     {
-        //
+        return $this->ApiHelper->return(
+            $this->MenuRepository->all(),
+            'Ambil Semua '.$this->menu
+        );
     }
-    
-    /**
-    * Remove the specified resource from storage.
-    */
-    public function destroy(Menu $menu)
+
+    public function showByRole($id)
     {
-        //
+        return $this->ApiHelper->return(
+            $this->MenuRepository->getRoleMenu($id),
+            'List '.$this->menu
+        );
     }
+
+    public function showByUser($id)
+    {
+        $data = $this->UserRepository->getUserById($id);
+        return $this->ApiHelper->return(
+            $this->MenuRepository->getUserMenu($data->tipe_id,$data->id),
+            'List '.$this->menu
+        );
+        
+    }
+
+    public function updateAccess(DataRequest $request)
+    {
+        return $this->ApiHelper->response(200,false,USER_DOES_NOT_EXIST,
+            $this->MenuRepository->updateAccess($request->validated())
+        );
+    }
+
+
 }
