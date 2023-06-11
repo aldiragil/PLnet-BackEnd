@@ -25,10 +25,10 @@ class WorkOrderRepository implements WorkOrderInterface{
         return $this->work_order->where('id',$id)->first();
     }
     
-    public function create($data,$user_id)
+    public function create($data)
     {
-        $data['created_by'] = $user_id;
-        $data['updated_by'] = $user_id;
+        $data['created_by'] = Auth::id();
+        $data['updated_by'] = Auth::id();
         try {
             DB::beginTransaction();
             // $work_order             = new WorkOrder();
@@ -56,7 +56,7 @@ class WorkOrderRepository implements WorkOrderInterface{
         }
     }
     
-    public function update($data, $user_id, $id)
+    public function update($data, $id)
     {
         $data['updated_by'] = Auth::id();
         try {

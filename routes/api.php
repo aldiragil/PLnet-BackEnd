@@ -29,9 +29,11 @@ Route::controller(App\Http\Controllers\AuthController::class)->group(function() 
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::controller(App\Http\Controllers\WorkOrderController::class)->group(function() {
+        Route::get('work-order/component','component');
         Route::get('work-order/list','list');
         Route::post('work-order/create','create');
         Route::put('work-order/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
+        Route::patch('work-order/status/{id}','status')->where([ 'id' => '[0-9]+' ]);
     });
 
     Route::controller(App\Http\Controllers\UserController::class)->group(function() {

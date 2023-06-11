@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('level');
             $table->string('note')->nullable();
-            $table->integer('status')->default(0);
+            $table->integer('status')->default(1);
             $table->integer('active')->default(1);
             $table->dateTime('start_order')->default(DB::raw('CURRENT_TIMESTAMP(0)'));
             $table->dateTime('end_order')->nullable();

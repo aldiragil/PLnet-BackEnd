@@ -70,7 +70,7 @@ class ApiHelper{
     }
     
     static function return($data = null, $message = null){
-        if (is_object($data) || is_array($data)) {
+        if (is_object($data) || is_array($data) || $data === true) {
             $success = true;
             $message = $message.SUCCESS;
         }else{

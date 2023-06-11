@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class MenuAccess extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'tipe_id',
+        'menu_id',
+    ];
+
 }

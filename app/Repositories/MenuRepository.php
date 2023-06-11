@@ -8,29 +8,29 @@ use App\Models\Menu;
 use App\Models\MenuAccess;
 use App\Models\MenuRole;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class MenuRepository implements MenuInterface {
     
-    private $menu,$role,$access,$user;
-    public function __construct(Menu $menu, MenuRole $role, MenuAccess $access, User $user)
+    private $menu,$role,$user;
+    public function __construct(Menu $menu, MenuRole $role, User $user)
     {
         $this->user = $user;
         $this->menu = $menu;
-        $this->access = $access;
         $this->role = $role;
     }
-
+    
     public function all()
     {
         return $this->menu->get()->toArray();
     }
-
+    
     public function role()
     {
         return $this->role->whereNotIN('id','!=',2)->get()->toArray();
     }
-
+    
     public function getRoleMenu($id)
     {
         $menu = $this->menu
@@ -40,9 +40,9 @@ class MenuRepository implements MenuInterface {
         ->get()
         ->toArray();
         return MenuHelper::ShowMenu(true,$menu,0);
-
+        
     }
-
+    
     public function getUserMenu($tipe_id, $id)
     {
         if ($tipe_id == 2) {
@@ -53,10 +53,26 @@ class MenuRepository implements MenuInterface {
         }
         return MenuHelper::ShowMenu(false,$menu,0);
     }
-
+    
     public function updateAccess($request)
     {
         $data = $this->menu->selectRaw("GROUP_CONCAT(parent_id,',',id) ID")->where('active',1)->whereIn('id',$request['data'])->first(); 
-        return $this->menu->whereIn('id',explode(',', $data->ID))->get()->toArray();
+        $menu = $this->menu->whereIn('id',explode(',', $data->ID))->get();
+        try {
+            DB::beginTransaction();
+            MenuAccess::where('tipe_id',$request['id'])->delete();
+            foreach ($menu as $m) {
+                $hak_akses[] = [
+                    'tipe_id' => $request['id'],
+                    'menu_id' => $m->id
+                ];
+            }
+            $return = MenuAccess::insert($hak_akses);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $return = $e->getMessage();
+        }
+        return $return;
     }
 }

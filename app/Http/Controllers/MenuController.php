@@ -59,10 +59,9 @@ class MenuController extends Controller
 
     public function updateAccess(DataRequest $request)
     {
-        return $this->ApiHelper->response(200,false,USER_DOES_NOT_EXIST,
-            $this->MenuRepository->updateAccess($request->validated())
+        return $this->ApiHelper->return(
+            $this->MenuRepository->updateAccess($request->validated()),
+            'Update Akses '.$this->menu
         );
     }
-
-
 }
