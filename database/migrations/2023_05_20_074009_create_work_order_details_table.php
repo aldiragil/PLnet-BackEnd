@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('work_order_details', function (Blueprint $table) {
             $table->id();
             $table->integer('work_order_id');
+            $table->integer('emp_id');
             $table->string('code')->unique();
             $table->dateTime('start_order');
             $table->dateTime('end_order');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\ApiHelper;
 use App\Http\Requests\CustomerRequest;
 use App\Repositories\CustomerRepository;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
@@ -24,7 +25,9 @@ class CustomerController extends Controller
     }
     
     public function create(CustomerRequest $request){
-        return $this->ApiHelper->return(
+        $request['created_by'] = Auth::id();
+        $request['updated_by'] = Auth::id();
+         return $this->ApiHelper->return(
             $this->CustomerRepository->create($request->validated()),
             'Simpan '.$this->menu
         );
@@ -32,6 +35,7 @@ class CustomerController extends Controller
     }
     
     public function update($id, CustomerRequest $request){
+        $request['updated_by'] = Auth::id();
         return $this->ApiHelper->return(
             $this->CustomerRepository->update($request->validated(),$id),
             'Ubah '.$this->menu

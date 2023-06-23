@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('payment_id');
             $table->string('code')->unique();
             $table->string('nik');
-            $table->string('nama');
+            $table->string('name');
             $table->string('location');
             $table->string('latitude');
             $table->string('longitude');

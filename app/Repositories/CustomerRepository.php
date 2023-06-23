@@ -38,8 +38,6 @@ class CustomerRepository implements CustomerInterface {
     
     public function create(array $data)
     {
-        $data['created_by'] = Auth::id();
-        $data['updated_by'] = Auth::id();
         try {
             DB::beginTransaction();
             $data = $this->customer->create($data);

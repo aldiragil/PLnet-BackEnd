@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('work_orders', function (Blueprint $table) {
             $table->id();
             $table->integer('customer_id')->nullable();
+            $table->integer('id_status')->default(0);
             $table->string('code')->unique();
             $table->date('date');
             $table->string('category');
@@ -27,7 +28,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('level');
             $table->string('note')->nullable();
-            $table->integer('status')->default(1);
+            $table->string('status');
             $table->integer('active')->default(1);
             $table->dateTime('start_order')->default(DB::raw('CURRENT_TIMESTAMP(0)'));
             $table->dateTime('end_order')->nullable();

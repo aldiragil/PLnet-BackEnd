@@ -36,7 +36,8 @@ class WorkOrderRequest extends FormRequest
             'order'     => 'required|string',
             'description'=> 'required|string',
             'level'     => 'required|string',
-            'note'      => 'nullable|string'
+            'note'      => 'nullable|string',
+            'emp'      => 'array'
         ];
 
         if (in_array($this->method(), ['PUT', 'PATCH'])) {

@@ -6,62 +6,66 @@ use App\Helpers\ApiHelper;
 use App\Http\Requests\StatusRequest;
 use App\Repositories\WorkOrderRepository;
 use App\Http\Requests\WorkOrderRequest;
+use App\Repositories\CustomerRepository;
 use App\Repositories\SettingRepository;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 
 class WorkOrderController extends Controller
 {
     
-    private $WorkOrderRepository, $SettingRepository, $UserRepository, $ApiHelper, $menu = "Work Order";
+    private $WorkOrderRepository, $SettingRepository, $UserRepository, $CustomerRepository, $ApiHelper, $menu = "Work Order";
     
     public function __construct(
         WorkOrderRepository $workOrderRepository,
         SettingRepository $settingRepository,
         UserRepository $userRepository,
-        ApiHelper $ApiHelper){
-        $this->WorkOrderRepository  = $workOrderRepository;
-        $this->SettingRepository    = $settingRepository;
-        $this->UserRepository       = $userRepository;
-        $this->ApiHelper            = $ApiHelper;
+        CustomerRepository $customerRepository,
+        ApiHelper $ApiHelper) {
+            $this->WorkOrderRepository  = $workOrderRepository;
+            $this->SettingRepository    = $settingRepository;
+            $this->UserRepository       = $userRepository;
+            $this->CustomerRepository   = $customerRepository;
+            $this->ApiHelper            = $ApiHelper;
     }
     
     public function component(){
         $setting    = $this->SettingRepository->showGroup(['group'=>'WorkOrder']);
         $user       = $this->UserRepository->allUser()->map->only(['id', 'name']);
-
+        $customer   = $this->CustomerRepository->all()->map->only(['id', 'name']);
+        
         return $this->ApiHelper->return(
-            array_merge($setting,['User'=>$user]),
+            array_merge($setting, ['User'=>$user], ['Customer'=>$customer]),
             'Ambil Semua '.$this->menu
         );
     }
-
+    
     public function list(){
-        $return = $this->WorkOrderRepository->all()->toArray();
-        if (is_array($return)) {
-            $temp = array();
-            foreach ($return as $ret) {
-                $replace['status'] = (
-                    $ret['status'] == 1? 'Draf':(
-                        $ret['status'] == 2? 'Pending':(
-                            $ret['status'] == 3? 'Proses': 'Done'
-                        )
-                    )
-                );
-                $temp[] = array_replace($ret,$replace);
-            }
-            $return = $temp;
-        }
+        $where = [
+            // "status"=>2
+        ];
+        $return = $this->WorkOrderRepository->getBy($where)->paginate();
         return $this->ApiHelper->return(
             $return,
             'Ambil Semua '.$this->menu
         );
     }
-
+    
     public function create(WorkOrderRequest $request){
-        return $this->ApiHelper->return(
-            $this->WorkOrderRepository->create($request->validated()),
-            'Simpan '.$this->menu
-        );
+        $work_order = $this->WorkOrderRepository->create(array_merge($request->validated(),[
+            "created_by" => Auth::id(),
+            "updated_by" => Auth::id(),
+            "status" => 'Draft'
+        ]))->toArray();
+        foreach ($request['user'] as $emp) {
+            $data_work_order_emp[] = [
+                'work_order_id' => $work_order['id'],
+                'user_id' => $emp['id']
+            ];
+        }
+        $this->WorkOrderRepository->createEmp($data_work_order_emp);
+        return $this->ApiHelper->return($work_order,'Simpan '.$this->menu);
     }
     
     public function update($id, WorkOrderRequest $request){
@@ -70,12 +74,22 @@ class WorkOrderController extends Controller
             'Ubah '.$this->menu
         );
     }
-
+    
     public function status($id, StatusRequest $request){
+        $request->validated();
+        $id_status = 0;
+        $status = 'Draft';
+        if ($request['status']) {
+            $id_status  = $request['status'];
+            $status     = ($request['status'] == 0?'Draft': ($request['status'] == 1?'Create':($request['status'] == 2?'Pending':($request['status'] == 3?'Process':'End'))));
+        }
         return $this->ApiHelper->return(
-            $this->WorkOrderRepository->update($request->validated(), $id),
+            $this->WorkOrderRepository->update([
+                "updated_by" => Auth::id(),
+                "id_status" => $id_status,
+                "status" => $status
+            ], $id),
             'Ubah Status '.$this->menu
         );
     }
-
 }
