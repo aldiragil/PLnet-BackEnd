@@ -23,10 +23,12 @@ return new class extends Migration
             $table->string('location');
             $table->string('latitude');
             $table->string('longitude');
-            $table->string('telp');
+            $table->string('phone');
             $table->string('area');
             $table->string('barcode');
-            $table->integer('active');
+            $table->string('image_ktp')->nullable();
+            $table->string('image_ttd')->nullable();
+            $table->integer('active')->default(1);
             $table->integer('status')->default(0);
             $table->integer('created_by');
             $table->integer('updated_by');

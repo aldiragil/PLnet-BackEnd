@@ -21,9 +21,12 @@ class CustomerRepository implements CustomerInterface {
         return $this->customer->all();
     }
     
-    public function getBy($where)
-    {
-        return $this->customer->where($where)->get();
+    public function getBy($search){
+        if ($search) {
+            return $this->customer->where('name', 'like', '%'.$search.'%');
+        }else{
+            return $this->customer->orderBy('name');
+        }
     }
     
     public function getById($id)

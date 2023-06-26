@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\ApiHelper;
 use App\Http\Requests\CustomerRequest;
 use App\Repositories\CustomerRepository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
@@ -24,20 +25,32 @@ class CustomerController extends Controller
         );
     }
     
+    public function list(Request $request){
+        $search = $request->search;
+        return $this->ApiHelper->return(
+            $this->CustomerRepository->getBy($search)->paginate(10),
+            'Ambil Semua '.$this->menu
+        );
+    }
+    
+    
     public function create(CustomerRequest $request){
-        $request['created_by'] = Auth::id();
-        $request['updated_by'] = Auth::id();
-         return $this->ApiHelper->return(
-            $this->CustomerRepository->create($request->validated()),
+        return $this->ApiHelper->return(
+            $this->CustomerRepository->create(array_merge($request->validated(),[
+                "code" => $this->ApiHelper->random('CUST'),
+                "created_by" => Auth::id(),
+                "updated_by" => Auth::id()
+            ])),
             'Simpan '.$this->menu
         );
         
     }
     
     public function update($id, CustomerRequest $request){
-        $request['updated_by'] = Auth::id();
         return $this->ApiHelper->return(
-            $this->CustomerRepository->update($request->validated(),$id),
+            $this->CustomerRepository->update(array_merge($request->validated(),[
+                "updated_by" => Auth::id()
+            ]),$id),
             'Ubah '.$this->menu
         );
         

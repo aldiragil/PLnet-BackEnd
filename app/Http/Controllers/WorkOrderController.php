@@ -9,6 +9,7 @@ use App\Http\Requests\WorkOrderRequest;
 use App\Repositories\CustomerRepository;
 use App\Repositories\SettingRepository;
 use App\Repositories\UserRepository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,30 +34,31 @@ class WorkOrderController extends Controller
     public function component(){
         $setting    = $this->SettingRepository->showGroup(['group'=>'WorkOrder']);
         $user       = $this->UserRepository->allUser()->map->only(['id', 'name']);
-        $customer   = $this->CustomerRepository->all()->map->only(['id', 'name']);
         
         return $this->ApiHelper->return(
-            array_merge($setting, ['User'=>$user], ['Customer'=>$customer]),
+            array_merge($setting, ['User'=>$user]),
             'Ambil Semua '.$this->menu
         );
     }
     
-    public function list(){
-        $where = [
-            // "status"=>2
-        ];
-        $return = $this->WorkOrderRepository->getBy($where)->paginate();
+    public function list(Request $request){
+        $where = [];
+        if ($request->customer) {
+            $where['customer_id'] = $request->customer;
+        }
+        $search = $request->search;
         return $this->ApiHelper->return(
-            $return,
+            $this->WorkOrderRepository->getBy($where,$search)->paginate(10),
             'Ambil Semua '.$this->menu
         );
     }
     
     public function create(WorkOrderRequest $request){
         $work_order = $this->WorkOrderRepository->create(array_merge($request->validated(),[
+            "code" => $this->ApiHelper->random('WO'),
             "created_by" => Auth::id(),
             "updated_by" => Auth::id(),
-            "status" => 'Draft'
+            "status" => 'Draft',
         ]))->toArray();
         foreach ($request['user'] as $emp) {
             $data_work_order_emp[] = [

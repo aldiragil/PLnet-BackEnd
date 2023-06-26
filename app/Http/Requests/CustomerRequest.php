@@ -18,21 +18,44 @@ class CustomerRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'integer',
             'group_id' => 'required|integer',
             'payment_id' => 'required|integer',
-            'data' => 'required|array'
+            'nik' => 'required|string',
+            'name' => 'required|string',
+            'location' => 'required|string',
+            'latitude' => 'required|string',
+            'longitude' => 'required|string',
+            'phone' => 'required|string',
+            'area' => 'required|string',
+            'barcode' => 'required|string'
         ];
     }
     
     public function messages()
     {
         return [
-            'id.required' => 'ID tidak boleh kosong',
-            'id.integer' => 'ID tidak valid',
-            'data.required' => 'Data tidak boleh kosong',
-            'data.array' => 'Data tidak valid'
-            
+            'group_id.required' => 'Group tidak boleh kosong',
+            'group_id.string' => 'Group tidak valid',
+            'payment_id.required' => 'Payment tidak boleh kosong',
+            'payment_id.string' => 'Payment tidak valid',
+            'code.required' => 'Code tidak boleh kosong',
+            'code.string' => 'Code tidak valid',
+            'nik.required' => 'NIK tidak boleh kosong',
+            'nik.string' => 'NIK tidak valid',
+            'name.required' => 'Nama tidak boleh kosong',
+            'name.string' => 'Nama tidak valid',
+            'location.required' => 'Lokasi tidak boleh kosong',
+            'location.string' => 'Lokasi tidak valid',
+            'latitude.required' => 'Latitude tidak boleh kosong',
+            'latitude.string' => 'Latitude tidak valid',
+            'longitude.required' => 'Longitude tidak boleh kosong',
+            'longitude.string' => 'Longitude tidak valid',
+            'phone.required' => 'Nomor Telepon tidak boleh kosong',
+            'phone.string' => 'Nomor Telepon tidak valid',
+            'area.required' => 'Area tidak boleh kosong',
+            'area.string' => 'Area tidak valid',
+            'barcode.required' => 'Barcode tidak boleh kosong',
+            'barcode.string' => 'Barcode tidak valid',
         ];
     }
     

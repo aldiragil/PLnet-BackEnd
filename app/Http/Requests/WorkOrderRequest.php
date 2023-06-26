@@ -40,11 +40,11 @@ class WorkOrderRequest extends FormRequest
             'emp'      => 'array'
         ];
 
-        if (in_array($this->method(), ['PUT', 'PATCH'])) {
-            $rules['code'] = ['required','unique:work_orders,code,'. $this->route('id')];
-        }else{
-            $rules['code'] = ['required','unique:work_orders,code'];
-        }
+        // if (in_array($this->method(), ['PUT', 'PATCH'])) {
+        //     $rules['code'] = ['required','unique:work_orders,code,'. $this->route('id')];
+        // }else{
+        //     $rules['code'] = ['required','unique:work_orders,code'];
+        // }
         return $rules;
     }
 

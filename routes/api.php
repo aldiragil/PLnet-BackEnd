@@ -42,6 +42,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('user/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
     });
 
+    Route::controller(App\Http\Controllers\CustomerController::class)->group(function() {
+        Route::get('customer/list','list');
+        Route::post('customer/create','create');
+        Route::put('customer/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
+    });
+
     Route::controller(App\Http\Controllers\MenuController::class)->group(function() {
         Route::get('menu/all','getMenu');
         Route::get('menu/role','getRole');

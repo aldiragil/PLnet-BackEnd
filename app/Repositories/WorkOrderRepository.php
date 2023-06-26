@@ -21,8 +21,12 @@ class WorkOrderRepository implements WorkOrderInterface{
         return $this->work_order->all();
     }
 
-    public function getBy(array $where){
-        return $this->work_order->where($where);
+    public function getBy(array $where,$search){
+        $work_order = $this->work_order->where($where);
+        if ($search) {
+            $work_order = $work_order->where('name', 'like', '%'.$search.'%');
+        }
+        return $work_order;
     }
     
     public function getById($id){

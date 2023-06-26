@@ -80,4 +80,9 @@ class ApiHelper{
 
         return ApiHelper::response(200,$success,$message,$data);
     }
+
+    static function random($data = null){
+        return $data.date('ymd').(rand(1000,9999));
+    }
+
 }
