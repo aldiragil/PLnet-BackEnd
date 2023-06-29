@@ -2,65 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreSurveyRequest;
-use App\Http\Requests\UpdateSurveyRequest;
 use App\Models\Survey;
+use App\Helpers\ApiHelper;
+use App\Http\Requests\SurveyRequest;
+use App\Repositories\SurveyRepository;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SurveyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    private $SurveyRepository, $ApiHelper, $menu = 'Survey';
+    
+    public function __construct(SurveyRepository $surveyRepository,ApiHelper $apiHelper){
+        $this->SurveyRepository = $surveyRepository;
+        $this->ApiHelper        = $apiHelper;
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    
+    public function all(){
+        return $this->ApiHelper->return(
+            $this->SurveyRepository->all(),
+            'List Semua '.$this->menu
+        );
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreSurveyRequest $request)
-    {
-        //
+    
+    public function list(Request $request){
+        $where = [];
+        if ($request->customer) {
+            $where['customer_id'] = $request->customer;
+        }
+        if ($request->odp) {
+            $where['odp_id'] = $request->odp;
+        }
+        if ($request->package) {
+            $where['package_id'] = $request->package;
+        }
+        $search = $request->search;
+        return $this->ApiHelper->return(
+            $this->SurveyRepository->getBy($where,$search)->paginate(10),
+            'Ambil Semua '.$this->menu
+        );
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Survey $survey)
-    {
-        //
+    
+    public function create(SurveyRequest $request){
+        return $this->ApiHelper->return(
+            $this->SurveyRepository->create(array_merge($request->validated(),[
+                "code" => $this->ApiHelper->random('CUST'),
+                "created_by" => Auth::id(),
+                "updated_by" => Auth::id()
+            ])),
+            'Simpan '.$this->menu
+        );
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Survey $survey)
-    {
-        //
+    
+    public function update($id, SurveyRequest $request){
+        $return = [];
+        if ($this->SurveyRepository->update(array_merge($request->validated(),["updated_by" => Auth::id()]),$id)) {
+            $return = $this->SurveyRepository->getById($id);
+        }
+        return $this->ApiHelper->return($return,'Ubah '.$this->menu);
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateSurveyRequest $request, Survey $survey)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Survey $survey)
-    {
-        //
-    }
+    
 }

@@ -10,7 +10,6 @@ use App\Repositories\CustomerRepository;
 use App\Repositories\SettingRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 class WorkOrderController extends Controller

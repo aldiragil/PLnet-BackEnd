@@ -15,11 +15,11 @@ return new class extends Migration
         Schema::create('surveys', function (Blueprint $table) {
             $table->id();
             $table->integer('customer_id');
+            $table->integer('package_id');
             $table->integer('odp_id');
             $table->string('code')->unique();
-            $table->string('paket');
-            $table->string('fee');
-            $table->string('note');
+            $table->integer('fee');
+            $table->string('note')->nullable();
             $table->integer('active');
             $table->integer('created_by');
             $table->integer('updated_by');

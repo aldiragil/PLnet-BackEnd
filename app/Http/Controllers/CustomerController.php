@@ -47,12 +47,11 @@ class CustomerController extends Controller
     }
     
     public function update($id, CustomerRequest $request){
-        return $this->ApiHelper->return(
-            $this->CustomerRepository->update(array_merge($request->validated(),[
-                "updated_by" => Auth::id()
-            ]),$id),
-            'Ubah '.$this->menu
-        );
+        $return = [];
+        if ($this->CustomerRepository->update(array_merge($request->validated(),["updated_by" => Auth::id()]),$id)) {
+            $return = $this->CustomerRepository->getById($id);
+        }
+        return $this->ApiHelper->return($return,'Ubah '.$this->menu);
         
     }
     

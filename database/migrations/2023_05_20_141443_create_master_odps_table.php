@@ -24,9 +24,9 @@ return new class extends Migration
             $table->string('slot');
             $table->string('port');
             $table->string('capacity');
-            $table->string('image');
-            $table->string('note');
-            $table->integer('active');
+            $table->string('image')->nullable();
+            $table->string('note')->nullable();
+            $table->integer('active')->default(1);
             $table->integer('created_by');
             $table->integer('updated_by');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP(0)'));
