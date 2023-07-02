@@ -78,7 +78,7 @@ class CustomerController extends Controller
             "data"=>null
         );
         (!$request['image_ktp'] ?: $save_ktp = $this->ApiHelper->save_image('CUST-KTP-',$request['image_ktp']));
-        (!$request['image_ttd'] ?: $save_ttd = $this->ApiHelper->save_image('CUST-TTD-',$request['image_ktp']));
+        (!$request['image_ttd'] ?: $save_ttd = $this->ApiHelper->save_image('CUST-TTD-',$request['image_ttd']));
 
         if($save_ktp["status"] && $save_ttd["status"]){
             $data = $this->CustomerRepository->create(array_merge($request->validated(),[
