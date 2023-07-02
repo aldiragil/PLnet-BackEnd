@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Customer;
+use App\Models\Setting;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -70,5 +71,32 @@ class CustomerSeeder extends Seeder
             'created_by'  => 1,
             'updated_by'  => 1
         ]);
+
+
+        Setting::create([
+            'id' => 0,
+            'group' => 'Customer',
+            'key' => 'Area',
+            'value' => 'Surabaya',
+            'created_by' => 1,
+            'updated_by' => 1,
+        ]);
+        Setting::create([
+            'id' => 0,
+            'group' => 'Customer',
+            'key' => 'Area',
+            'value' => 'Sidoarjo',
+            'created_by' => 1,
+            'updated_by' => 1,
+        ]);
+        Setting::create([
+            'id' => 0,
+            'group' => 'Customer',
+            'key' => 'Area',
+            'value' => 'Gresik',
+            'created_by' => 1,
+            'updated_by' => 1,
+        ]);
+
     }
 }

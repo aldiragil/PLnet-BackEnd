@@ -43,9 +43,17 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::controller(App\Http\Controllers\CustomerController::class)->group(function() {
+        Route::get('customer/component','component');
         Route::get('customer/list','list');
         Route::post('customer/create','create');
         Route::put('customer/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
+    });
+
+    Route::controller(App\Http\Controllers\SurveyController::class)->group(function() {
+        Route::get('survey/component','component');
+        Route::get('survey/list','list');
+        Route::post('survey/create','create');
+        Route::put('survey/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
     });
 
     Route::controller(App\Http\Controllers\MenuController::class)->group(function() {

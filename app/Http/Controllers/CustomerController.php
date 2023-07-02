@@ -5,16 +5,53 @@ namespace App\Http\Controllers;
 use App\Helpers\ApiHelper;
 use App\Http\Requests\CustomerRequest;
 use App\Repositories\CustomerRepository;
+use App\Repositories\SettingRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
-    private $CustomerRepository, $ApiHelper, $menu = 'Pelanggan';
+    private 
+    $CustomerRepository, 
+    $SettingRepository, 
+    $UserRepository, 
+    $ApiHelper, 
+    $menu = 'Pelanggan';
     
-    public function __construct(CustomerRepository $customerRepository,ApiHelper $apiHelper){
+    public function __construct( CustomerRepository $customerRepository,
+    SettingRepository $SettingRepository,
+    UserRepository $UserRepository,
+    ApiHelper $apiHelper
+    ){
         $this->CustomerRepository   = $customerRepository;
+        $this->SettingRepository    = $SettingRepository;
+        $this->UserRepository       = $UserRepository;
         $this->ApiHelper            = $apiHelper;
+    }
+    
+    public function component(){
+        $payment = array (
+            array(
+                "id"=>1,
+                "name"=>"Prabayar"
+            ),
+            array(
+                "id"=>2,
+                "name"=>"Pascabayar"
+            ),
+            array(
+                "id"=>3,
+                "name"=>"Pascabayar Put Off"
+            ),
+        );
+        $setting    = $this->SettingRepository->showGroup(['group'=>'Customer']);
+        $user       = $this->UserRepository->allUser()->map->only(['id', 'name']);
+        
+        return $this->ApiHelper->return(
+            array_merge($setting, ['User'=>$user],['Payment'=>$payment]),
+            'Ambil Semua '.$this->menu
+        );
     }
     
     
@@ -35,15 +72,27 @@ class CustomerController extends Controller
     
     
     public function create(CustomerRequest $request){
-        return $this->ApiHelper->return(
-            $this->CustomerRepository->create(array_merge($request->validated(),[
+        $path = public_path().'/images/';
+        $save_ttd = $save_ktp = array(
+            "status"=>true,
+            "data"=>null
+        );
+        (!$request['image_ktp'] ?: $save_ktp = $this->ApiHelper->save_image('CUST-KTP-',$request['image_ktp']));
+        (!$request['image_ttd'] ?: $save_ttd = $this->ApiHelper->save_image('CUST-TTD-',$request['image_ktp']));
+
+        if($save_ktp["status"] && $save_ttd["status"]){
+            $data = $this->CustomerRepository->create(array_merge($request->validated(),[
                 "code" => $this->ApiHelper->random('CUST'),
                 "created_by" => Auth::id(),
-                "updated_by" => Auth::id()
-            ])),
-            'Simpan '.$this->menu
-        );
-        
+                "updated_by" => Auth::id(),
+                "image_ktp" => $save_ktp["data"],
+                "image_ttd" => $save_ttd["data"],
+            ]));
+        }else{
+            ($save_ktp['status'] ? unlink($path.$save_ktp['data']) : $data = $save_ktp['data']);
+            ($save_ttd['status'] ? unlink($path.$save_ttd['data']) : $data = $save_ttd['data']);
+        }
+        return $this->ApiHelper->return($data,'Simpan '.$this->menu);
     }
     
     public function update($id, CustomerRequest $request){

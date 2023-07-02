@@ -2,6 +2,11 @@
 
 namespace App\Helpers;
 
+use Exception;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+
 define('SUCCESS', ' Berhasil!');
 define('FAILED', ' Gagal!');
 
@@ -61,11 +66,11 @@ class ApiHelper{
             "success" => $success,
             "message" => $message,
         ];
-
+        
         if ($data !== null) {
             self::$response["data"] = $data;
         }
-
+        
         return response()->json(self::$response,$code);
     }
     
@@ -77,12 +82,38 @@ class ApiHelper{
             $success = false;
             $message = $message.FAILED;
         }
-
+        
         return ApiHelper::response(200,$success,$message,$data);
     }
-
+    
     static function random($data = null){
-        return $data.date('ymd').(rand(1000,9999));
+        return $data.date('ymd').rand(1000,9999);
     }
-
+    
+    static function save_image($name,$image){
+        $imageName = $name.rand(1000,9999).ApiHelper::random().'.'.preg_split('#/#',preg_split('/;/',$image)[0])[1];
+        try {
+            File::put(
+                public_path(). '/images/' . $imageName,
+                base64_decode(
+                    str_replace(
+                        ' ',
+                        '+',
+                        str_replace(
+                            'data:image/png;base64,',
+                            '',
+                            $image
+                        ),
+                    ),
+                ),
+            );
+            $response['status'] = true;
+            $response['data'] = $imageName;
+        } catch (Exception $e) {
+            $response['status'] = false;
+            $response['data']   = $e->getMessage();
+        }
+        return $response;
+    }
+    
 }

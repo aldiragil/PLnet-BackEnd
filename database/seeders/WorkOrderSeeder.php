@@ -17,7 +17,7 @@ class WorkOrderSeeder extends Seeder
 
         // Work Order Category
         Setting::create([
-            'id' => 1,
+            'id' => 0,
             'group' => 'WorkOrder',
             'key' => 'Kategori',
             'value' => 'Gangguan',
@@ -25,7 +25,7 @@ class WorkOrderSeeder extends Seeder
             'updated_by' => 1,
         ]);
         Setting::create([
-            'id' => 2,
+            'id' => 0,
             'group' => 'WorkOrder',
             'key' => 'Kategori',
             'value' => 'Pasang Baru',
@@ -33,7 +33,7 @@ class WorkOrderSeeder extends Seeder
             'updated_by' => 1,
         ]);
         Setting::create([
-            'id' => 3,
+            'id' => 0,
             'group' => 'WorkOrder',
             'key' => 'Kategori',
             'value' => 'Survey',
@@ -41,7 +41,7 @@ class WorkOrderSeeder extends Seeder
             'updated_by' => 1,
         ]);
         Setting::create([
-            'id' => 4,
+            'id' => 0,
             'group' => 'WorkOrder',
             'key' => 'Kategori',
             'value' => 'Setup Jaringan',
@@ -49,7 +49,7 @@ class WorkOrderSeeder extends Seeder
             'updated_by' => 1,
         ]);
         Setting::create([
-            'id' => 5,
+            'id' => 0,
             'group' => 'WorkOrder',
             'key' => 'Kategori',
             'value' => 'Berhenti Berlangganan',
@@ -57,7 +57,7 @@ class WorkOrderSeeder extends Seeder
             'updated_by' => 1,
         ]);
         Setting::create([
-            'id' => 6,
+            'id' => 0,
             'group' => 'WorkOrder',
             'key' => 'Kategori',
             'value' => 'Antar Voucher',
@@ -67,7 +67,7 @@ class WorkOrderSeeder extends Seeder
 
         // Work Order Level
         Setting::create([
-            'id' => 7,
+            'id' => 0,
             'group' => 'WorkOrder',
             'key' => 'Level',
             'value' => 'Low',
@@ -75,7 +75,7 @@ class WorkOrderSeeder extends Seeder
             'updated_by' => 1,
         ]);
         Setting::create([
-            'id' => 8,
+            'id' => 0,
             'group' => 'WorkOrder',
             'key' => 'Level',
             'value' => 'Medium',
@@ -83,7 +83,7 @@ class WorkOrderSeeder extends Seeder
             'updated_by' => 1,
         ]);
         Setting::create([
-            'id' => 9,
+            'id' => 0,
             'group' => 'WorkOrder',
             'key' => 'Level',
             'value' => 'High',

@@ -23,9 +23,6 @@ class SurveyRepository implements SurveyInterface {
     
     public function getBy(array $where,$search){
         $survey = $this->survey->where($where);
-        if ($search) {
-            $survey = $survey->where('name', 'like', '%'.$search.'%');
-        }
         return $survey;
     }
     

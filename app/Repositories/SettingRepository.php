@@ -15,6 +15,7 @@ class SettingRepository implements SettingInterface {
 
     public function showGroup(array $data)
     {
+        $return = [];
         foreach($this->setting->select('key','value')->where($data)->get() as $data){
             $return[$data['key']][] = $data['value'];
         }

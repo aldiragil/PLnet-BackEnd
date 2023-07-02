@@ -18,7 +18,8 @@ class SurveyRequest extends FormRequest
     {
         return [
             'customer_id' => 'required|integer',
-            'package_id' => 'required|integer',
+            'package_id' => 'integer',
+            'package' => 'string',
             'odp_id' => 'required|integer',
             'fee' => 'required|integer',
             'note' => 'string'
@@ -32,6 +33,8 @@ class SurveyRequest extends FormRequest
             'customer_id.integer' => 'Pelanggan tidak valid',
             'package_id.required' => 'Paket tidak boleh kosong',
             'package_id.integer' => 'Paket tidak valid',
+            'package.required' => 'Paket tidak boleh kosong',
+            'package.integer' => 'Paket tidak valid',
             'odp_id.required' => 'ODP tidak boleh kosong',
             'odp_id.integer' => 'ODP tidak valid',
             'fee.required' => 'Biaya pendaftaran tidak boleh kosong',
