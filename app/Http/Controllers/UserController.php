@@ -18,9 +18,9 @@ class UserController extends Controller
     }
     
     
-    public function list(){
+    public function list(Request $request){
         return $this->ApiHelper->return(
-            $this->UserRepository->getUserBy(["tipe_id"=>1]),
+            $this->UserRepository->getUserBy(["tipe_id"=>1])->paginate(10),
             'List '.$this->menu
         );
     }

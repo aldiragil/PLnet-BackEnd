@@ -54,7 +54,6 @@ class CustomerController extends Controller
         );
     }
     
-    
     public function all(){
         return $this->ApiHelper->return(
             $this->CustomerRepository->all(),
@@ -64,6 +63,8 @@ class CustomerController extends Controller
     
     public function list(Request $request){
         $search = $request->search;
+        $request['image_ktp'] = env('APP_URL').'/images/'.$request['image_ktp'];
+        $request['image_ttd'] = env('APP_URL').'/images/'.$request['image_ttd'];
         return $this->ApiHelper->return(
             $this->CustomerRepository->getBy($search)->paginate(10),
             'Ambil Semua '.$this->menu
