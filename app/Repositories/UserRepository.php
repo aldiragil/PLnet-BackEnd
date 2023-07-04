@@ -25,8 +25,12 @@ class UserRepository implements UserInterface{
         return $this->user->find($id);
     }
     
-    public function getUserBy($where){
-        return $this->user->where($where)->get();
+    public function getUserBy($where,$search = null){
+        $query = $this->user->where($where);
+        if ($search) {
+            $query = $query->where('name', 'like', '%'.$search.'%');
+        }
+        return $query;
     }
 
     public function firstUserBy($where){
