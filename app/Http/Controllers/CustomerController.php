@@ -63,14 +63,15 @@ class CustomerController extends Controller
     
     public function list(Request $request){
         $search = $request->search;
-        $request['image_ktp'] = env('APP_URL').'/images/'.$request['image_ktp'];
-        $request['image_ttd'] = env('APP_URL').'/images/'.$request['image_ttd'];
-        return $this->ApiHelper->return(
-            $this->CustomerRepository->getBy($search)->paginate(10),
-            'Ambil Semua '.$this->menu
-        );
+        $data   = $this->CustomerRepository->getBy($search)->paginate(10);
+        if (is_object($data) || is_array($data)) {
+            for ($i=0; $i < count($data); $i++) { 
+                $data[$i]['image_ktp'] = env('APP_URL').'/images/'.$data[$i]['image_ktp'];
+                $data[$i]['image_ttd'] = env('APP_URL').'/images/'.$data[$i]['image_ttd'];
+            }
+        }
+        return $this->ApiHelper->return($data,'Ambil Semua '.$this->menu);
     }
-    
     
     public function create(CustomerRequest $request){
         $path = public_path().'/images/';
