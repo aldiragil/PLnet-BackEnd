@@ -98,21 +98,25 @@ class CustomerController extends Controller
     }
     
     public function update($id, CustomerRequest $request){
-        $path = public_path().'/images/';
+        $before = $this->CustomerRepository->getById($id);
+        $path   = public_path().'/images/';
+        $return = [];
         $save_ttd = $save_ktp = array(
-            "status"=>true,
-            "data"=>null
+            "status" => true,
+            "data"  => null
         );
         (!$request['image_ktp'] ?: $save_ktp = $this->ApiHelper->save_image('CUST-KTP-',$request['image_ktp']));
         (!$request['image_ttd'] ?: $save_ttd = $this->ApiHelper->save_image('CUST-TTD-',$request['image_ttd']));
-
-
-        $return = [];
-        if ($this->CustomerRepository->update(array_merge($request->validated(),[
-            "updated_by" => Auth::id()
-        ]),$id)) {
-            $return = $this->CustomerRepository->getById($id);
-        }
+        
+        
+        $this->CustomerRepository->update(array_merge($request->validated(),[
+            "updated_by"    => Auth::id(),
+            "image_ktp"     => $save_ktp["data"],
+            "image_ttd"     => $save_ttd["data"]
+        ]),$id);
+        
+        $return = $this->CustomerRepository->getById($id);
+        
         return $this->ApiHelper->return($return,'Ubah '.$this->menu);        
     }
     
