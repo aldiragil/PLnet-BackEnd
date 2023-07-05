@@ -56,6 +56,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('survey/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
     });
 
+    Route::controller(App\Http\Controllers\MasterOdpController::class)->group(function() {
+        Route::get('odp/component','component');
+        Route::get('odp/list','list');
+        Route::post('odp/create','create');
+        Route::put('odp/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
+    });
+
+
     Route::controller(App\Http\Controllers\MenuController::class)->group(function() {
         Route::get('menu/all','getMenu');
         Route::get('menu/role','getRole');

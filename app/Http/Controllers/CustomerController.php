@@ -81,7 +81,7 @@ class CustomerController extends Controller
         );
         (!$request['image_ktp'] ?: $save_ktp = $this->ApiHelper->save_image('CUST-KTP-',$request['image_ktp']));
         (!$request['image_ttd'] ?: $save_ttd = $this->ApiHelper->save_image('CUST-TTD-',$request['image_ttd']));
-
+        
         if($save_ktp["status"] && $save_ttd["status"]){
             $data = $this->CustomerRepository->create(array_merge($request->validated(),[
                 "code" => $this->ApiHelper->random('CUST'),
@@ -98,8 +98,19 @@ class CustomerController extends Controller
     }
     
     public function update($id, CustomerRequest $request){
+        $path = public_path().'/images/';
+        $save_ttd = $save_ktp = array(
+            "status"=>true,
+            "data"=>null
+        );
+        (!$request['image_ktp'] ?: $save_ktp = $this->ApiHelper->save_image('CUST-KTP-',$request['image_ktp']));
+        (!$request['image_ttd'] ?: $save_ttd = $this->ApiHelper->save_image('CUST-TTD-',$request['image_ttd']));
+
+
         $return = [];
-        if ($this->CustomerRepository->update(array_merge($request->validated(),["updated_by" => Auth::id()]),$id)) {
+        if ($this->CustomerRepository->update(array_merge($request->validated(),[
+            "updated_by" => Auth::id()
+        ]),$id)) {
             $return = $this->CustomerRepository->getById($id);
         }
         return $this->ApiHelper->return($return,'Ubah '.$this->menu);        

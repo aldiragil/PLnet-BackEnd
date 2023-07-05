@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Customer;
+use App\Models\MasterOdp;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -16,8 +17,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(CustomerSeeder::class);
+        $this->call(MasterOdpSeeder::class);
         $this->call(WorkOrderSeeder::class);
+        $this->call(CustomerSeeder::class);
         $this->call(MenuSeeder::class);
 
         User::create([
