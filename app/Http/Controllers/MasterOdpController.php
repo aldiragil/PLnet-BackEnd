@@ -41,22 +41,41 @@ class MasterOdpController extends Controller
     }
     
     public function create(MasterOdpRequest $request){
-        // dd($request)
-        return $this->ApiHelper->return(
-            $this->MasterOdpRepository->create(array_merge($request->validated(),[
+        $path = public_path().'/images/';
+        $save_image = array(
+            "status"=>true,
+            "data"=>null
+        );
+        (!$request['image'] ?: $save_image = $this->ApiHelper->save_image('ODP-',$request['image']));
+        if($save_image["status"]){
+            $data = $this->MasterOdpRepository->create(array_merge($request->validated(),[
                 "code" => $this->ApiHelper->random('ODP'),
                 "created_by" => Auth::id(),
                 "updated_by" => Auth::id()
-            ])),
-            'Simpan '.$this->menu
-        );
+            ]));
+            $data['image'] = ($data['image']?$path.$data['image']:'');
+        }else{
+            $data = $save_image['data'];
+        }
+        
+        return $this->ApiHelper->return($data,'Simpan '.$this->menu);
+        
     }
     
     public function update($id, MasterOdpRequest $request){
-        $return = [];
-        if ($this->MasterOdpRepository->update(array_merge($request->validated(),["updated_by" => Auth::id()]),$id)) {
-            $return = $this->MasterOdpRepository->getById($id);
-        }
+        $before                 = $this->MasterOdpRepository->getById($id);
+        $path                   = public_path().'/images/';
+        $update['updated_by']   = Auth::id();
+        $save_image             = array(
+            "status" => false,
+            "data"  => null
+        );
+        (!$request['image']     ?: $save_image = $this->ApiHelper->save_image('ODP-',$request['image']));
+        (!$save_image['status'] ? $save_image['status'] = true : $update['image'] = $save_image["data"]);
+        $this->MasterOdpRepository->update(array_merge($request->validated(),$update),$id);
+        (!$save_image['status'] ?: unlink($path.$before->image));
+        $return = $this->MasterOdpRepository->getById($id);
+        
         return $this->ApiHelper->return($return,'Ubah '.$this->menu);
     }
     

@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class WorkOrderImage extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'work_order_detail_id',
+        'image',
+    ];
+    public $timestamps = false; 
 }

@@ -20,9 +20,16 @@ class WorkOrderRepository implements WorkOrderInterface{
     public function all(){
         return $this->work_order->all();
     }
-
-    public function getBy(array $where,$search){
-        $work_order = $this->work_order->where($where);
+    
+    public function getBy(array $where,$search = null,$date = null,$emp_id = null){
+        if($emp_id){
+            $work_order = $this->work_order->whereHas('user', function($q) use($emp_id) {
+                $q->where('work_order_emps.user_id', $emp_id);
+            });
+        }else{
+            $work_order = $this->work_order->with('user')->where($where);
+        }
+        (!$date?:$work_order = $work_order->whereRaw('DATE_FORMAT(date,"%Y-%m") = "'.$date.'"'));
         if ($search) {
             $work_order = $work_order->where('name', 'like', '%'.$search.'%');
         }
@@ -56,7 +63,7 @@ class WorkOrderRepository implements WorkOrderInterface{
             return $e->getMessage();
         }
     }
-
+    
     public function update($data, $id){
         try {
             DB::beginTransaction();
@@ -74,7 +81,7 @@ class WorkOrderRepository implements WorkOrderInterface{
     {
         return $this->work_order->destroy($id);
     }
-
+    
     public function deleteEmp($id)
     {
         return $this->work_order_emp->destroy($id);

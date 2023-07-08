@@ -17,8 +17,10 @@ class CustomerController extends Controller
     $SettingRepository, 
     $UserRepository, 
     $ApiHelper, 
-    $menu = 'Pelanggan';
-    
+    $menu = 'Pelanggan',
+    $order  = [5,10,50,100],
+    $default_order = 5;
+ 
     public function __construct( CustomerRepository $customerRepository,
     SettingRepository $SettingRepository,
     UserRepository $UserRepository,
@@ -62,12 +64,13 @@ class CustomerController extends Controller
     }
     
     public function list(Request $request){
+        // dd(env('APP_URL'));
         $search = $request->search;
-        $data   = $this->CustomerRepository->getBy($search)->paginate(10);
+        $data   = $this->CustomerRepository->getBy($search)->paginate($this->default_order);
         if (is_object($data) || is_array($data)) {
             for ($i=0; $i < count($data); $i++) { 
-                $data[$i]['image_ktp'] = env('APP_URL').'/images/'.$data[$i]['image_ktp'];
-                $data[$i]['image_ttd'] = env('APP_URL').'/images/'.$data[$i]['image_ttd'];
+                $data[$i]['image_ktp'] = ($data[$i]['image_ktp']?env('APP_URL').'/images/'.$data[$i]['image_ktp']:'');
+                $data[$i]['image_ttd'] = ($data[$i]['image_ttd']?env('APP_URL').'/images/'.$data[$i]['image_ttd']:'');
             }
         }
         return $this->ApiHelper->return($data,'Ambil Semua '.$this->menu);
@@ -98,26 +101,23 @@ class CustomerController extends Controller
     }
     
     public function update($id, CustomerRequest $request){
-        $before = $this->CustomerRepository->getById($id);
-        $path   = public_path().'/images/';
-        $return = [];
-        $save_ttd = $save_ktp = array(
-            "status" => true,
+        $before                 = $this->CustomerRepository->getById($id);
+        $path                   = public_path().'/images/';
+        $update['updated_by']   = Auth::id();
+        $save_ttd = $save_ktp   = array(
+            "status" => false,
             "data"  => null
         );
         (!$request['image_ktp'] ?: $save_ktp = $this->ApiHelper->save_image('CUST-KTP-',$request['image_ktp']));
         (!$request['image_ttd'] ?: $save_ttd = $this->ApiHelper->save_image('CUST-TTD-',$request['image_ttd']));
+
+        (!$save_ktp['status'] ?: $update['image_ktp'] = $save_ktp["data"]);
+        (!$save_ttd['status'] ?: $update['image_ttd'] = $save_ttd["data"]);               
+        $this->CustomerRepository->update(array_merge($request->validated(),$update),$id);
+        (!$save_ktp['status'] ?: unlink($path.$before->image_ktp));
+        (!$save_ttd['status'] ?: unlink($path.$before->image_ttd));
         
-        
-        $this->CustomerRepository->update(array_merge($request->validated(),[
-            "updated_by"    => Auth::id(),
-            "image_ktp"     => $save_ktp["data"],
-            "image_ttd"     => $save_ttd["data"]
-        ]),$id);
-        
-        $return = $this->CustomerRepository->getById($id);
-        
-        return $this->ApiHelper->return($return,'Ubah '.$this->menu);        
+        return $this->ApiHelper->return($this->CustomerRepository->getById($id),'Ubah '.$this->menu);
     }
     
 }

@@ -20,9 +20,8 @@ return new class extends Migration
             $table->dateTime('end_order');
             $table->string('constraint');
             $table->string('solution');
-            $table->string('image');
             $table->string('note');
-            $table->integer('active');
+            $table->integer('active')->default(1);
             $table->integer('created_by');
             $table->integer('updated_by');
             $table->timestamps();

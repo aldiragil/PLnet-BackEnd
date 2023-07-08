@@ -26,7 +26,7 @@ class WorkOrderRequest extends FormRequest
     {
         $rules =  [
             'user_id'   => 'nullable|exists:users,id',
-            'date'      => 'required|date',
+            'date'      => 'required|date|date_format:Y-m-d H:i',
             'category'  => 'required|string',
             'name'      => 'required|string',
             'phone'     => 'required',

@@ -4,30 +4,42 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ApiHelper;
 use App\Http\Requests\StatusRequest;
+use App\Http\Requests\WorkOrderDetailRequest;
 use App\Repositories\WorkOrderRepository;
 use App\Http\Requests\WorkOrderRequest;
+use App\Models\WorkOrder;
+use App\Models\WorkOrderDetail;
+use App\Models\WorkOrderImage;
 use App\Repositories\CustomerRepository;
 use App\Repositories\SettingRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class WorkOrderController extends Controller
 {
     
-    private $WorkOrderRepository, $SettingRepository, $UserRepository, $CustomerRepository, $ApiHelper, $menu = "Work Order";
+    private $WorkOrderRepository, 
+    $SettingRepository, 
+    $UserRepository, 
+    $CustomerRepository, 
+    $ApiHelper, 
+    $menu   = "Work Order",
+    $order  = [5,10,50,100],
+    $status = ['Draft','Create','Pending','Process','End'],
+    $default_order = 5;
     
-    public function __construct(
-        WorkOrderRepository $workOrderRepository,
-        SettingRepository $settingRepository,
-        UserRepository $userRepository,
-        CustomerRepository $customerRepository,
-        ApiHelper $ApiHelper) {
-            $this->WorkOrderRepository  = $workOrderRepository;
-            $this->SettingRepository    = $settingRepository;
-            $this->UserRepository       = $userRepository;
-            $this->CustomerRepository   = $customerRepository;
-            $this->ApiHelper            = $ApiHelper;
+    public function __construct(WorkOrderRepository $workOrderRepository,
+    SettingRepository $settingRepository,
+    UserRepository $userRepository,
+    CustomerRepository $customerRepository,
+    ApiHelper $ApiHelper) {
+        $this->WorkOrderRepository  = $workOrderRepository;
+        $this->SettingRepository    = $settingRepository;
+        $this->UserRepository       = $userRepository;
+        $this->CustomerRepository   = $customerRepository;
+        $this->ApiHelper            = $ApiHelper;
     }
     
     public function component(){
@@ -40,25 +52,51 @@ class WorkOrderController extends Controller
         );
     }
     
+    public function component_list(){
+        $category = WorkOrder::groupBy('category')->pluck('category')->toArray();
+        $date = WorkOrder::select(DB::raw("(DATE_FORMAT(date,'%Y-%m')) date"))->groupBy(DB::raw("date_format(date,'%Y-%m')"))->pluck('date')->toArray();
+        return $this->ApiHelper->return(array(
+            "order" => $this->order,
+            "category" => $category,
+            "status" => $this->status,
+            "date" => $date,
+        ),'Ambil Semua '.$this->menu);
+    }
+    
     public function list(Request $request){
         $where = [];
-        if ($request->customer) {
-            $where['customer_id'] = $request->customer;
-        }
-        $search = $request->search;
+        (!$request->order?:$this->default_order = $request->order);
+        (!$request->customer?:$where['customer_id'] = $request->customer);
+        (!$request->status?:$where['category'] = $request->category);
+        (!$request->status?:$where['status'] =$request->status);
         return $this->ApiHelper->return(
-            $this->WorkOrderRepository->getBy($where,$search)->paginate(10),
+            $this->WorkOrderRepository->getBy($where,$request->search,$request->date)->paginate($this->default_order),
+            'Ambil Semua '.$this->menu
+        );
+    }
+    
+    public function detail($id){
+        return $this->ApiHelper->return($this->WorkOrderRepository->getById($id),'Detail '.$this->menu);
+    }
+    
+    public function list_emp(Request $request){
+        $where = [];
+        (!$request->order?:$this->default_order = $request->order);
+        (!$request->customer?:$where['customer_id'] = $request->customer);
+        (!$request->status?:$where['category'] = $request->category);
+        (!$request->status?:$where['status'] =$request->status);
+        return $this->ApiHelper->return(
+            $this->WorkOrderRepository->getBy($where,$request->search,$request->date,Auth::id())->paginate($this->default_order),
             'Ambil Semua '.$this->menu
         );
     }
     
     public function create(WorkOrderRequest $request){
-        $work_order = $this->WorkOrderRepository->create(array_merge($request->validated(),[
-            "code" => $this->ApiHelper->random('WO'),
-            "created_by" => Auth::id(),
-            "updated_by" => Auth::id(),
-            "status" => 'Draft',
-        ]))->toArray();
+        $work_order = $this->WorkOrderRepository->create(array_merge($request->validated(),
+        ["code" => $this->ApiHelper->random('WO'),
+        "created_by" => Auth::id(),
+        "updated_by" => Auth::id(),
+        "status" => 'Draft']))->toArray();
         foreach ($request['user'] as $emp) {
             $data_work_order_emp[] = [
                 'work_order_id' => $work_order['id'],
@@ -66,6 +104,39 @@ class WorkOrderController extends Controller
             ];
         }
         $this->WorkOrderRepository->createEmp($data_work_order_emp);
+        return $this->ApiHelper->return($work_order,'Simpan '.$this->menu);
+    }
+    
+    public function create_detail_emp(WorkOrderDetailRequest $request){
+        $path = public_path().'/images/';
+        $status_image = array(
+            "status"=>true,
+            "data"=>null
+        );
+        $work_order = WorkOrderDetail::create(array_merge($request->validated(),
+        ["code"         => $this->ApiHelper->random('WO-D'),
+        "emp_id"        => Auth::id(),
+        "created_by"    => Auth::id(),
+        "updated_by"    => Auth::id(),
+        "start_order"   => date('Y-m-d H:i:s'),
+        "end_order"     => date('Y-m-d H:i:s')]));
+        
+        if (is_array($request['image'])) {
+            $data_work_order_image = array();
+            foreach ($request['image'] as $image) {
+                $save_image = $this->ApiHelper->save_image('Work-Order-',$image);
+                if (!$save_image['status']) {
+                    $status_image['status'] = $save_image['status']; 
+                    $status_image['data'] = $save_image['data']; 
+                }else{
+                    $data_work_order_image[] = [
+                        'work_order_detail_id' => $work_order->id,
+                        'image' => $save_image['data']
+                    ];
+                }
+            }
+            WorkOrderImage::insert($data_work_order_image);
+        }
         return $this->ApiHelper->return($work_order,'Simpan '.$this->menu);
     }
     

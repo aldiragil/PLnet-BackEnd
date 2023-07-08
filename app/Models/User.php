@@ -31,6 +31,7 @@ class User extends Authenticatable
     * @var array<int, string>
     */
     protected $hidden = [
+        'pivot',
         'password',
         'remember_token',
     ];
@@ -61,6 +62,6 @@ class User extends Authenticatable
             'tipe_id',
             'menu_id'
         )->where('menus.active',1)->where('menus.tipe_id',1);
-    }    
+    }
     
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('customer_id')->nullable();
             $table->integer('id_status')->default(0);
             $table->string('code')->unique();
-            $table->date('date');
+            $table->dateTime('date');
             $table->string('category');
             $table->string('name');
             $table->string('location');

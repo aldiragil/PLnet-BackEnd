@@ -72,7 +72,7 @@ class MenuSeeder extends Seeder
                     'menu'      => 'Kinerja',
                     'tipe_id'      => 1,
                     'icon'      => '',
-                    'order'     => 1
+                    'order'     => 2
                 ]);
                 Menu::create([
                     'id'        => 0,
@@ -80,7 +80,7 @@ class MenuSeeder extends Seeder
                     'menu'      => 'Tracking User',
                     'tipe_id'      => 1,
                     'icon'      => '',
-                    'order'     => 1
+                    'order'     => 3
                 ]);
                 Menu::create([
                     'id'        => 0,
@@ -88,7 +88,7 @@ class MenuSeeder extends Seeder
                     'menu'      => 'Setting',
                     'tipe_id'      => 1,
                     'icon'      => '',
-                    'order'     => 1
+                    'order'     => 4
                 ]);
 
             Menu::create([
@@ -97,7 +97,7 @@ class MenuSeeder extends Seeder
                 'menu'      => 'Master ODP',
                 'tipe_id'      => 1,
                 'icon'      => '',
-                'order'     => 2
+                'order'     => 3
             ]);
                 Menu::create([
                     'id'        => 0,
@@ -131,7 +131,7 @@ class MenuSeeder extends Seeder
                 'menu'      => 'Customer',
                 'tipe_id'      => 1,
                 'icon'      => '',
-                'order'     => 3
+                'order'     => 4
             ]);
                 Menu::create([
                     'id'        => 0,
@@ -156,7 +156,7 @@ class MenuSeeder extends Seeder
                 'menu'      => 'Survey',
                 'tipe_id'      => 1,
                 'icon'      => '',
-                'order'     => 4
+                'order'     => 5
             ]);
                 Menu::create([
                     'id'        => 0,
@@ -393,7 +393,7 @@ class MenuSeeder extends Seeder
             'icon'      => '',
             'order'     => 1
         ]);
-        $menu = Menu::create([
+        Menu::create([
             'id'        => 0,
             'parent_id' => 0,
             'menu'      => 'Laporan Isolir',
@@ -401,8 +401,19 @@ class MenuSeeder extends Seeder
             'icon'      => '',
             'order'     => 2
         ]);
+
+        $menu = Menu::create([
+            'id'        => 0,
+            'parent_id' => 1,
+            'menu'      => '[EMP] Work Order',
+            'tipe_id'      => 1,
+            'icon'      => '',
+            'order'     => 2
+        ]);
+
         
-        for ($i=0; $i < $menu->id; $i++) { 
+
+        for ($i=1; $i <= $menu->id; $i++) { 
             MenuAccess::create([
                 'tipe_id'   => 1,
                 'menu_id' => $i,
@@ -434,6 +445,46 @@ class MenuSeeder extends Seeder
             'menu_id' => 6,
         ]);  
 
+        MenuAccess::create([
+            'tipe_id'   => 4,
+            'menu_id' => 1,
+        ]);  
+        MenuAccess::create([
+            'tipe_id'   => 4,
+            'menu_id' => 11,
+        ]);  
+        MenuAccess::create([
+            'tipe_id'   => 4,
+            'menu_id' => 15,
+        ]);  
+        MenuAccess::create([
+            'tipe_id'   => 4,
+            'menu_id' => 18,
+        ]);  
+        MenuAccess::create([
+            'tipe_id'   => 4,
+            'menu_id' => 43,
+        ]);  
+        MenuAccess::create([
+            'tipe_id'   => 5,
+            'menu_id' => 1,
+        ]);  
+        MenuAccess::create([
+            'tipe_id'   => 5,
+            'menu_id' => 11,
+        ]);  
+        MenuAccess::create([
+            'tipe_id'   => 5,
+            'menu_id' => 15,
+        ]);  
+        MenuAccess::create([
+            'tipe_id'   => 5,
+            'menu_id' => 18,
+        ]);  
+        MenuAccess::create([
+            'tipe_id'   => 5,
+            'menu_id' => 43,
+        ]); 
 
     }
 }
