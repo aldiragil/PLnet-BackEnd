@@ -16,4 +16,9 @@ class WorkOrder extends Model
         return $this->belongsToMany(User::class,'work_order_emps');
     }
 
+    public function detail()
+    {
+        return $this->hasMany(WorkOrderDetail::class);
+    }
+
 }

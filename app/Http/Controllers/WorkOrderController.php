@@ -62,6 +62,19 @@ class WorkOrderController extends Controller
             "date" => $date,
         ),'Ambil Semua '.$this->menu);
     }
+
+    public function component_list_emp(){
+        $status = $this->status;
+        array_splice($status,0,1);
+        $category = WorkOrder::groupBy('category')->pluck('category')->toArray();
+        $date = WorkOrder::select(DB::raw("(DATE_FORMAT(date,'%Y-%m')) date"))->groupBy(DB::raw("date_format(date,'%Y-%m')"))->pluck('date')->toArray();
+        return $this->ApiHelper->return(array(
+            "order" => $this->order,
+            "category" => $category,
+            "status" => $status,
+            "date" => $date,
+        ),'Ambil Semua '.$this->menu);
+    }
     
     public function list(Request $request){
         $where = [];
@@ -83,8 +96,9 @@ class WorkOrderController extends Controller
         $where = [];
         (!$request->order?:$this->default_order = $request->order);
         (!$request->customer?:$where['customer_id'] = $request->customer);
-        (!$request->status?:$where['category'] = $request->category);
-        (!$request->status?:$where['status'] =$request->status);
+        (!$request->category?:$where['category'] = $request->category);
+        (!$request->status?:$where['status'] = $request->status);
+        // dd($where);
         return $this->ApiHelper->return(
             $this->WorkOrderRepository->getBy($where,$request->search,$request->date,Auth::id())->paginate($this->default_order),
             'Ambil Semua '.$this->menu
@@ -108,12 +122,11 @@ class WorkOrderController extends Controller
     }
     
     public function create_detail_emp(WorkOrderDetailRequest $request){
-        $path = public_path().'/images/';
         $status_image = array(
             "status"=>true,
             "data"=>null
         );
-        $work_order = WorkOrderDetail::create(array_merge($request->validated(),
+        $work_order_detail = WorkOrderDetail::create(array_merge($request->validated(),
         ["code"         => $this->ApiHelper->random('WO-D'),
         "emp_id"        => Auth::id(),
         "created_by"    => Auth::id(),
@@ -130,14 +143,20 @@ class WorkOrderController extends Controller
                     $status_image['data'] = $save_image['data']; 
                 }else{
                     $data_work_order_image[] = [
-                        'work_order_detail_id' => $work_order->id,
+                        'work_order_detail_id' => $work_order_detail->id,
                         'image' => $save_image['data']
                     ];
                 }
             }
             WorkOrderImage::insert($data_work_order_image);
+            $this->WorkOrderRepository->update([
+                "updated_by" => Auth::id(),
+                "id_status" => 4,
+                "status" => 'End'
+            ], $request['work_order_id']);
         }
-        return $this->ApiHelper->return($work_order,'Simpan '.$this->menu);
+
+        return $this->ApiHelper->return($work_order_detail,'Simpan '.$this->menu);
     }
     
     public function update($id, WorkOrderRequest $request){

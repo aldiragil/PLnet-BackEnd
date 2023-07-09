@@ -25,7 +25,7 @@ class WorkOrderRepository implements WorkOrderInterface{
         if($emp_id){
             $work_order = $this->work_order->whereHas('user', function($q) use($emp_id) {
                 $q->where('work_order_emps.user_id', $emp_id);
-            });
+            })->where($where);
         }else{
             $work_order = $this->work_order->with('user')->where($where);
         }
@@ -37,7 +37,7 @@ class WorkOrderRepository implements WorkOrderInterface{
     }
     
     public function getById($id){
-        return $this->work_order->find($id);
+        return $this->work_order->with(['detail','detail.user','detail.image'])->find($id);
     }
     
     public function create(array $data){
