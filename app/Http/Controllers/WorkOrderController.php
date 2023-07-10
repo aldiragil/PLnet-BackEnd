@@ -80,7 +80,7 @@ class WorkOrderController extends Controller
         $where = [];
         (!$request->order?:$this->default_order = $request->order);
         (!$request->customer?:$where['customer_id'] = $request->customer);
-        (!$request->status?:$where['category'] = $request->category);
+        (!$request->category?:$where['category'] = $request->category);
         (!$request->status?:$where['status'] =$request->status);
         return $this->ApiHelper->return(
             $this->WorkOrderRepository->getBy($where,$request->search,$request->date)->paginate($this->default_order),
