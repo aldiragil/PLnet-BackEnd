@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Validation\ValidationException;
-
 
 class MasterOdpRequest extends FormRequest
 {
@@ -18,6 +17,7 @@ class MasterOdpRequest extends FormRequest
     public function rules()
     {
         return [
+            'work_order_id' => 'required',
             'name' => 'required|string',
             'serial' => 'required||string',
             'location'  => 'required|string',
@@ -33,6 +33,7 @@ class MasterOdpRequest extends FormRequest
     public function messages()
     {
         return [
+            'work_order_id.required' => 'Work Order tidak boleh kosong',
             'name.required' => 'Nama ODP tidak boleh kosong',
             'name.string' => 'Nama ODP tidak valid',
             'serial.required' => 'Serial ODP tidak boleh kosong',

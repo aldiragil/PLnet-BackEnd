@@ -17,6 +17,7 @@ class SurveyRequest extends FormRequest
     public function rules()
     {
         return [
+            'work_order_id' => 'required|integer',
             'customer_id' => 'required|integer',
             'package_id' => 'integer',
             'package' => 'string',
@@ -29,6 +30,8 @@ class SurveyRequest extends FormRequest
     public function messages()
     {
         return [
+            'work_order_id.required' => 'Work Order tidak boleh kosong',
+            'work_order_id.integer' => 'Work Order tidak valid',
             'customer_id.required' => 'Pelanggan tidak boleh kosong',
             'customer_id.integer' => 'Pelanggan tidak valid',
             'package_id.required' => 'Paket tidak boleh kosong',

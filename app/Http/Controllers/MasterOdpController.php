@@ -50,10 +50,11 @@ class MasterOdpController extends Controller
         if($save_image["status"]){
             $data = $this->MasterOdpRepository->create(array_merge($request->validated(),[
                 "code" => $this->ApiHelper->random('ODP'),
+                "image" => ($save_image['status']?$save_image['data']:''),
                 "created_by" => Auth::id(),
                 "updated_by" => Auth::id()
             ]));
-            $data['image'] = ($data['image']?$path.$data['image']:'');
+            $data['image'] = ($data['image']?$data['image']:'');
         }else{
             $data = $save_image['data'];
         }

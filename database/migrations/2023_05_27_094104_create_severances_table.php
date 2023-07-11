@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('severances', function (Blueprint $table) {
             $table->id();
+            $table->integer('work_order_id');
             $table->integer('instalation_id');
             $table->string('code')->unique();
             $table->date('date');
