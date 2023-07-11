@@ -33,10 +33,13 @@ class WorkOrderRepository implements WorkOrderInterface{
         }else{
             $work_order = $this->work_order->with('user')->where($where);
         }
+
         (!$date?:$work_order = $work_order->whereRaw('DATE_FORMAT(date,"%Y-%m") = "'.$date.'"'));
+        
         if ($search) {
             $work_order = $work_order->where('name', 'like', '%'.$search.'%');
         }
+        
         return $work_order;
     }
     
@@ -92,9 +95,9 @@ class WorkOrderRepository implements WorkOrderInterface{
         return $this->work_order->destroy($id);
     }
     
-    public function deleteEmp($id)
+    public function deleteEmp(array $where)
     {
-        return $this->work_order_emp->destroy($id);
+        return $this->work_order_emp->where($where)->destroy();
     }
     
 }

@@ -63,5 +63,14 @@ class User extends Authenticatable
             'menu_id'
         )->where('menus.active',1)->where('menus.tipe_id',1);
     }
-    
+
+    public function workOrderEmp()
+    {
+        return $this->belongsToMany(
+            WorkOrder::class,
+            'work_order_emps'
+        );
+    }
+
+
 }

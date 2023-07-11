@@ -10,4 +10,9 @@ class WorkOrderEmp extends Model
     use HasFactory;
     protected $guarded = [];
     public $timestamps = false;
+
+    public function work_order() {
+        return $this->belongsTo(WorkOrder::class,'work_order_id');
+    }
+
 }

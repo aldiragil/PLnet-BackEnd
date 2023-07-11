@@ -7,6 +7,7 @@ use App\Http\Requests\StatusRequest;
 use App\Http\Requests\WorkOrderDetailRequest;
 use App\Repositories\WorkOrderRepository;
 use App\Http\Requests\WorkOrderRequest;
+use App\Models\User;
 use App\Models\WorkOrder;
 use App\Models\WorkOrderDetail;
 use App\Models\WorkOrderImage;
@@ -62,7 +63,7 @@ class WorkOrderController extends Controller
             "date" => $date,
         ),'Ambil Semua '.$this->menu);
     }
-
+    
     public function component_list_emp(){
         $status = $this->status;
         array_splice($status,0,1);
@@ -88,14 +89,6 @@ class WorkOrderController extends Controller
         );
     }
     
-    public function detail($id){
-        return $this->ApiHelper->return($this->WorkOrderRepository->getById($id),'Detail '.$this->menu);
-    }
-
-    public function detail_emp($id){
-        return $this->ApiHelper->return($this->WorkOrderRepository->getById($id,Auth::id()),'Detail '.$this->menu);
-    }
-
     public function list_emp(Request $request){
         $where = [];
         (!$request->order?:$this->default_order = $request->order);
@@ -107,6 +100,28 @@ class WorkOrderController extends Controller
             $this->WorkOrderRepository->getBy($where,$request->search,$request->date,Auth::id())->paginate($this->default_order),
             'Ambil Semua '.$this->menu
         );
+    }
+    
+    public function search_by_emp(Request $request){
+        $search = $request->search;
+        $work_order = User::find(Auth::id())->workOrderEmp();
+        if ($search) {
+            $work_order
+            ->where('code', 'like', '%'.$search.'%')
+            ->orWhere('name', 'like', '%'.$search.'%');
+        }
+        return $this->ApiHelper->return(
+            $work_order->paginate($this->default_order),
+            'Cari '.$this->menu
+        );
+    }
+    
+    public function detail($id){
+        return $this->ApiHelper->return($this->WorkOrderRepository->getById($id),'Detail '.$this->menu);
+    }
+    
+    public function detail_emp($id){
+        return $this->ApiHelper->return($this->WorkOrderRepository->getById($id,Auth::id()),'Detail '.$this->menu);
     }
     
     public function create(WorkOrderRequest $request){
@@ -160,32 +175,28 @@ class WorkOrderController extends Controller
                 "status" => 'End'
             ], $request['work_order_id']);
         }
-
+        
         return $this->ApiHelper->return($work_order_detail,'Simpan '.$this->menu);
     }
     
     public function update($id, WorkOrderRequest $request){
-        $work_order = $this->WorkOrderRepository->create(array_merge($request->validated(),
-        ["code" => $this->ApiHelper->random('WO'),
-        "created_by" => Auth::id(),
-        "updated_by" => Auth::id(),
-        "status" => 'Draft']))->toArray();
-        
-        foreach ($request['user'] as $emp) {
-            $data_work_order_emp[] = [
-                'work_order_id' => $work_order['id'],
-                'user_id' => $emp['id']
-            ];
+        $this->WorkOrderRepository->deleteEmp(["work_order_id"=>$id]);
+        if (is_array($request['user'])||is_object($request['user'])) {
+            foreach ($request['user'] as $emp) {
+                $data_work_order_emp[] = [
+                    'work_order_id' => $id,
+                    'user_id' => $emp['id']
+                ];
+            }
+            $this->WorkOrderRepository->createEmp($data_work_order_emp);
         }
-        $this->WorkOrderRepository->update($request->validated(), $id);
-        $this->WorkOrderRepository->createEmp($data_work_order_emp);
-        return $this->ApiHelper->return($work_order,'Simpan '.$this->menu);
-
-
-        // return $this->ApiHelper->return(
-        //     ,
-        //     'Ubah '.$this->menu
-        // );
+        return $this->ApiHelper->return(
+            $this->WorkOrderRepository->update(array_merge($request->validated(),[
+                "updated_by" => Auth::id()
+            ]), $id),
+            'Simpan '.$this->menu
+        );
+        
     }
     
     public function status($id, StatusRequest $request){

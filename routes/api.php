@@ -43,6 +43,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('work-order/emp/list','list_emp');
         Route::post('work-order/emp/create-detail','create_detail_emp');
 
+        Route::get('work-order/emp/search','search_by_emp');
+
     });
 
     Route::controller(App\Http\Controllers\UserController::class)->group(function() {
