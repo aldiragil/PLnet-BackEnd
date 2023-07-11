@@ -29,6 +29,7 @@ class WorkOrderController extends Controller
     $menu   = "Work Order",
     $order  = [5,10,50,100],
     $status = ['Draft','Create','Pending','Process','End'],
+    $category = ['odp','survey','instalasi','pemutusan'],
     $default_order = 5;
     
     public function __construct(WorkOrderRepository $workOrderRepository,
@@ -105,10 +106,12 @@ class WorkOrderController extends Controller
     public function search_by_emp(Request $request){
         $search = $request->search;
         $work_order = User::find(Auth::id())->workOrderEmp();
+        $work_order->where('category',$request->category);
         if ($search) {
-            $work_order
-            ->where('code', 'like', '%'.$search.'%')
-            ->orWhere('name', 'like', '%'.$search.'%');
+            $work_order->where(function($query) use($search) {
+                $query->where('code', 'like', '%'.$search.'%')
+                ->orWhere('name', 'like', '%'.$search.'%');
+            });
         }
         return $this->ApiHelper->return(
             $work_order->paginate($this->default_order),
