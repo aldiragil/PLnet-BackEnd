@@ -91,7 +91,11 @@ class WorkOrderController extends Controller
     public function detail($id){
         return $this->ApiHelper->return($this->WorkOrderRepository->getById($id),'Detail '.$this->menu);
     }
-    
+
+    public function detail_emp($id){
+        return $this->ApiHelper->return($this->WorkOrderRepository->getById($id,Auth::id()),'Detail '.$this->menu);
+    }
+
     public function list_emp(Request $request){
         $where = [];
         (!$request->order?:$this->default_order = $request->order);
@@ -150,6 +154,7 @@ class WorkOrderController extends Controller
             }
             WorkOrderImage::insert($data_work_order_image);
             $this->WorkOrderRepository->update([
+                "end_order" => date('Y-m-d H:i:s'),
                 "updated_by" => Auth::id(),
                 "id_status" => 4,
                 "status" => 'End'
@@ -160,10 +165,27 @@ class WorkOrderController extends Controller
     }
     
     public function update($id, WorkOrderRequest $request){
-        return $this->ApiHelper->return(
-            $this->WorkOrderRepository->update($request->validated(), $id),
-            'Ubah '.$this->menu
-        );
+        $work_order = $this->WorkOrderRepository->create(array_merge($request->validated(),
+        ["code" => $this->ApiHelper->random('WO'),
+        "created_by" => Auth::id(),
+        "updated_by" => Auth::id(),
+        "status" => 'Draft']))->toArray();
+        
+        foreach ($request['user'] as $emp) {
+            $data_work_order_emp[] = [
+                'work_order_id' => $work_order['id'],
+                'user_id' => $emp['id']
+            ];
+        }
+        $this->WorkOrderRepository->update($request->validated(), $id);
+        $this->WorkOrderRepository->createEmp($data_work_order_emp);
+        return $this->ApiHelper->return($work_order,'Simpan '.$this->menu);
+
+
+        // return $this->ApiHelper->return(
+        //     ,
+        //     'Ubah '.$this->menu
+        // );
     }
     
     public function status($id, StatusRequest $request){

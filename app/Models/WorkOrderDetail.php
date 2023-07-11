@@ -17,5 +17,9 @@ class WorkOrderDetail extends Model
     {
         return $this->belongsTo(User::class,'emp_id');
     }
+    public function work_order()
+    {
+        return $this->belongsTo(WorkOrder::class,'work_order_id');
+    }
 
 }

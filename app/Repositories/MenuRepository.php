@@ -28,7 +28,7 @@ class MenuRepository implements MenuInterface {
     
     public function role()
     {
-        return $this->role->whereNotIN('id','!=',2)->get()->toArray();
+        return $this->role->where('id','!=',2)->get()->toArray();
     }
     
     public function getRoleMenu($id)

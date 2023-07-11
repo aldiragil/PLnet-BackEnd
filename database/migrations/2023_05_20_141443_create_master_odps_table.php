@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('master_odps', function (Blueprint $table) {
             $table->id();
+            $table->integer('work_order_id');
             $table->string('code')->unique();
             $table->string('name');
             $table->string('serial');

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\WorkOrderInterface;
 use App\Models\WorkOrder;
+use App\Models\WorkOrderDetail;
 use App\Models\WorkOrderEmp;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -11,10 +12,13 @@ use Exception;
 
 class WorkOrderRepository implements WorkOrderInterface{
     
-    private $work_order,$work_order_emp;
-    public function __construct(WorkOrder $work_order,WorkOrderEmp $work_order_emp){
+    private $work_order,$work_order_emp,$work_order_detail;
+    public function __construct(WorkOrder $work_order,
+    WorkOrderEmp $work_order_emp,
+    WorkOrderDetail $work_order_detail) {
         $this->work_order = $work_order;
         $this->work_order_emp = $work_order_emp;
+        $this->work_order_detail = $work_order_detail;
     }
     
     public function all(){
@@ -36,8 +40,14 @@ class WorkOrderRepository implements WorkOrderInterface{
         return $work_order;
     }
     
-    public function getById($id){
-        return $this->work_order->with(['detail','detail.user','detail.image'])->find($id);
+    public function getById($id,$emp = null){
+        if ($emp) {
+            $work_order = $this->work_order_detail->with(['work_order','user','image'])->where('emp_id', '=', $emp)->find($id);
+        }else{
+            $work_order = $this->work_order->with(['detail','detail.user','detail.image'])->find($id);
+            
+        }
+        return $work_order;
     }
     
     public function create(array $data){
