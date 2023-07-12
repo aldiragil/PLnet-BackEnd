@@ -70,7 +70,7 @@ class MasterOdpController extends Controller
             }
             MasterOdpImage::insert($data_odp_image);
         }
-        WorkOrder::where('id',$request['work_order_id'])->update(["detail" => true]);        
+        WorkOrder::where('id',$request['work_order_id'])->update(["create_allowed" => true]);
         return $this->ApiHelper->return($data,'Simpan '.$this->menu);
         
     }

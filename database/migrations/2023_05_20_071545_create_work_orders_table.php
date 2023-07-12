@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('level');
             $table->string('note')->nullable();
             $table->string('status');
-            $table->boolean('detail')->default(false);
+            $table->boolean('create_allowed')->default(false);
             $table->integer('active')->default(1);
             $table->dateTime('start_order')->default(DB::raw('CURRENT_TIMESTAMP(0)'));
             $table->dateTime('end_order')->nullable();

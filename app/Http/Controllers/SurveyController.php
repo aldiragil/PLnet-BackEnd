@@ -82,7 +82,7 @@ class SurveyController extends Controller
             }
             SurveyImage::insert($data_survey_image);
         }
-        WorkOrder::where('id',$request['work_order_id'])->update(["detail" => true]);
+        WorkOrder::where('id',$request['work_order_id'])->update(["create_allowed" => true]);
         return $this->ApiHelper->return($survey,'Simpan '.$this->menu);
     }
     
