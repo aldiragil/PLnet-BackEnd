@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ApiHelper;
 use App\Http\Requests\MasterOdpRequest;
+use App\Models\MasterOdpImage;
+use App\Models\WorkOrder;
 use App\Repositories\MasterOdpRepository;
 use App\Repositories\SettingRepository;
 use Illuminate\Http\Request;
@@ -46,19 +48,29 @@ class MasterOdpController extends Controller
             "status"=>true,
             "data"=>null
         );
-        (!$request['image'] ?: $save_image = $this->ApiHelper->save_image('ODP-',$request['image']));
-        if($save_image["status"]){
-            $data = $this->MasterOdpRepository->create(array_merge($request->validated(),[
-                "code" => $this->ApiHelper->random('ODP'),
-                "image" => ($save_image['status']?$save_image['data']:''),
-                "created_by" => Auth::id(),
-                "updated_by" => Auth::id()
-            ]));
-            $data['image'] = ($data['image']?$data['image']:'');
-        }else{
-            $data = $save_image['data'];
+
+        $data = $this->MasterOdpRepository->create(array_merge($request->validated(),[
+            "code" => $this->ApiHelper->random('ODP'),
+            "created_by" => Auth::id(),
+            "updated_by" => Auth::id()
+        ]));
+        if (is_array($request['image'])) {
+            $data_odp_image = array();
+            foreach ($request['image'] as $image) {
+                $save_image = $this->ApiHelper->save_image('Master-ODP-',$image);
+                if (!$save_image['status']) {
+                    $status_image['status'] = $save_image['status']; 
+                    $status_image['data'] = $save_image['data']; 
+                }else{
+                    $data_odp_image[] = [
+                        'master_odp_id' => $data->id,
+                        'image' => $save_image['data']
+                    ];
+                }
+            }
+            MasterOdpImage::insert($data_odp_image);
         }
-        
+        WorkOrder::where('id',$request['work_order_id'])->update(["detail" => true]);        
         return $this->ApiHelper->return($data,'Simpan '.$this->menu);
         
     }

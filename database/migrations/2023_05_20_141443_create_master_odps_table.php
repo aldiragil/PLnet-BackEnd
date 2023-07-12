@@ -25,7 +25,6 @@ return new class extends Migration
             $table->string('slot');
             $table->string('port');
             $table->string('capacity');
-            $table->string('image')->nullable();
             $table->string('note')->nullable();
             $table->integer('active')->default(1);
             $table->integer('created_by');

@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class SurveyImage extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+    public $timestamps = false;
 }

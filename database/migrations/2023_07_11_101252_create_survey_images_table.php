@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('survey_images', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->integer('survey_id');
+            $table->string('image');
         });
     }
 

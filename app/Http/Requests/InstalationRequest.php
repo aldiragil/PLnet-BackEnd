@@ -17,7 +17,8 @@ class InstalationRequest extends FormRequest
     public function rules()
     {
         return [
-            'customer_id' => 'required|integer',
+            'work_order_id' => 'required|integer',
+            'customer_id' => 'integer',
             'package_id' => 'integer',
             'package' => 'string',
             'odp_id' => 'required|integer',
@@ -29,7 +30,8 @@ class InstalationRequest extends FormRequest
     public function messages()
     {
         return [
-            'customer_id.required' => 'Pelanggan tidak boleh kosong',
+            'work_order_id.required' => 'Pelanggan tidak boleh kosong',
+            'work_order_id.integer' => 'Pelanggan tidak valid',
             'customer_id.integer' => 'Pelanggan tidak valid',
             'package_id.required' => 'Paket tidak boleh kosong',
             'package_id.integer' => 'Paket tidak valid',

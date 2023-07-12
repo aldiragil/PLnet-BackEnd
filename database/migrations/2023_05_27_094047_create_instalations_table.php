@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->date('date');
             $table->integer('work_order_id');
-            $table->integer('customer_id');
+            $table->integer('customer_id')->nullable();
             $table->integer('package_id');
             $table->integer('odp_id');
             $table->string('serial');
