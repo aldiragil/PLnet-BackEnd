@@ -404,7 +404,7 @@ class MenuSeeder extends Seeder
 
         $menu = Menu::create([
             'id'        => 0,
-            'parent_id' => 1,
+            'parent_id' => 2,
             'menu'      => '[EMP] Work Order',
             'tipe_id'      => 1,
             'icon'      => '',
