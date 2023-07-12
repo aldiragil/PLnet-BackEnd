@@ -97,7 +97,7 @@ class WorkOrderRepository implements WorkOrderInterface{
     
     public function deleteEmp(array $where)
     {
-        return $this->work_order_emp->where($where)->destroy();
+        return $this->work_order_emp->where($where)->delete();
     }
     
 }

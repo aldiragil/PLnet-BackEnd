@@ -171,14 +171,14 @@ class WorkOrderController extends Controller
                 }
             }
             WorkOrderImage::insert($data_work_order_image);
-            $this->WorkOrderRepository->update([
-                "end_order" => date('Y-m-d H:i:s'),
-                "updated_by" => Auth::id(),
-                "id_status" => 4,
-                "status" => 'End'
-            ], $request['work_order_id']);
         }
-        
+        $this->WorkOrderRepository->update([
+            "end_order" => date('Y-m-d H:i:s'),
+            "updated_by" => Auth::id(),
+            "id_status" => 4,
+            "status" => 'End'
+        ], $request['work_order_id']);
+    
         return $this->ApiHelper->return($work_order_detail,'Simpan '.$this->menu);
     }
     
