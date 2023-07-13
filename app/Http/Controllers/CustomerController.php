@@ -114,8 +114,8 @@ class CustomerController extends Controller
         (!$save_ktp['status'] ?: $update['image_ktp'] = $save_ktp["data"]);
         (!$save_ttd['status'] ?: $update['image_ttd'] = $save_ttd["data"]);               
         $this->CustomerRepository->update(array_merge($request->validated(),$update),$id);
-        (!$save_ktp['status'] ?: unlink($path.$before->image_ktp));
-        (!$save_ttd['status'] ?: unlink($path.$before->image_ttd));
+        (!$save_ktp['status'] ?: (!$before->image_ktp?:unlink($path.$before->image_ktp)));
+        (!$save_ttd['status'] ?: (!$before->image_ttd?:unlink($path.$before->image_ttd)));
         
         return $this->ApiHelper->return($this->CustomerRepository->getById($id),'Ubah '.$this->menu);
     }
