@@ -29,7 +29,7 @@ class Handler extends ExceptionHandler
         $this->renderable(function (\Illuminate\Auth\AuthenticationException $e, $request) {
             if ($request->is('api/*')) {
                 return response()->json([
-                    'status' => false,
+                    'success' => false,
                     'message' => 'Not authenticated'
                 ], 401);
             }
