@@ -4,20 +4,20 @@ namespace App\Repositories;
 
 use App\Interfaces\MasterOdpInterface;
 use App\Models\MasterOdp;
+use App\Models\MasterOdpImage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
 class MasterOdpRepository implements MasterOdpInterface {
     
-    private $masterOdp;
-    public function __construct(MasterOdp $masterOdp)
-    {
+    private $masterOdp, $image;
+    public function __construct(MasterOdp $masterOdp,MasterOdpImage $image){
         $this->masterOdp = $masterOdp;
+        $this->image = $image;
     }
     
-    public function all()
-    {
+    public function all(){
         return $this->masterOdp->all();
     }
     
@@ -29,18 +29,15 @@ class MasterOdpRepository implements MasterOdpInterface {
         return $masterOdp;
     }
     
-    public function getById($id)
-    {
-        return $this->masterOdp->find($id);
+    public function getById($id){
+        return $this->masterOdp->with(['image'])->where('id',$id)->first();
     }
     
-    public function firsBy($where)
-    {
-        return $this->masterOdp->where($where)->first();
+    public function firsBy($where){
+        return $this->masterOdp->with(['image'])->where($where)->first();
     }
     
-    public function create(array $data)
-    {
+    public function create(array $data){
         try {
             DB::beginTransaction();
             $response = $this->masterOdp->create($data);
@@ -52,8 +49,7 @@ class MasterOdpRepository implements MasterOdpInterface {
         return $response;
     }
     
-    public function update(array $data, $id)
-    {
+    public function update(array $data, $id){
         $data['updated_by'] = Auth::id();
         try {
             DB::beginTransaction();
@@ -66,8 +62,11 @@ class MasterOdpRepository implements MasterOdpInterface {
         return $response;
     }
     
-    public function delete($id)
-    {
+    public function delete($id){
         return $this->masterOdp->destroy($id);
+    }
+
+    public function deleteImage($id){
+        return $this->image->where('master_odp_id',$id)->delete();
     }
  }

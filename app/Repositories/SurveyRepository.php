@@ -4,20 +4,20 @@ namespace App\Repositories;
 
 use App\Interfaces\SurveyInterface;
 use App\Models\Survey;
+use App\Models\SurveyImage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
 class SurveyRepository implements SurveyInterface {
     
-    private $survey;
-    public function __construct(Survey $survey)
-    {
+    private $survey,$image;
+    public function __construct(Survey $survey,SurveyImage $image){
         $this->survey = $survey;
+        $this->image = $image;
     }
     
-    public function all()
-    {
+    public function all(){
         return $this->survey->all();
     }
     
@@ -26,18 +26,15 @@ class SurveyRepository implements SurveyInterface {
         return $survey;
     }
     
-    public function getById($id)
-    {
-        return $this->survey->find($id);
+    public function getById($id){
+        return $this->survey->with(['image'])->where('id',$id)->first();
     }
     
-    public function firsBy($where)
-    {
-        return $this->survey->where($where)->first();
+    public function firsBy($where){
+        return $this->survey->with(['image'])->where($where)->first();
     }
     
-    public function create(array $data)
-    {
+    public function create(array $data){
         try {
             DB::beginTransaction();
             $data = $this->survey->create($data);
@@ -49,8 +46,7 @@ class SurveyRepository implements SurveyInterface {
         }
     }
     
-    public function update(array $data, $id)
-    {
+    public function update(array $data, $id){
         $data['updated_by'] = Auth::id();
         try {
             DB::beginTransaction();
@@ -63,8 +59,11 @@ class SurveyRepository implements SurveyInterface {
         return $response;
     }
     
-    public function delete($id)
-    {
+    public function delete($id){
         return $this->survey->destroy($id);
+    }
+
+    public function deleteImage($id){
+        return $this->image->where('survey_id',$id)->delete();
     }
  }

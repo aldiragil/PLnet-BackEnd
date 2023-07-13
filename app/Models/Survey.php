@@ -9,4 +9,9 @@ class Survey extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function image(){
+        return $this->hasMany(SurveyImage::class);
+    }
+
 }

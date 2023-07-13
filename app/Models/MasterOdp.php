@@ -9,4 +9,8 @@ class MasterOdp extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    public function image(){
+        return $this->hasMany(MasterOdpImage::class);
+    }
+
 }

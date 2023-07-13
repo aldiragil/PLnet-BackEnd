@@ -27,11 +27,11 @@ class SurveyController extends Controller
         $this->MasterOdpRepository = $MasterOdpRepository;
         $this->ApiHelper        = $apiHelper;
     }
-
+    
     public function component(){
         $setting    = $this->SettingRepository->showGroup(['group'=>'Survey']);
         $odp        = $this->MasterOdpRepository->all()->map->only(['id', 'name', 'serial']);
-
+        
         return $this->ApiHelper->return(
             array_merge($setting, ['masterOdp'=>$odp]),
             'Ambil Semua '.$this->menu
@@ -87,11 +87,40 @@ class SurveyController extends Controller
     }
     
     public function update($id, SurveyRequest $request){
-        $return = [];
-        if ($this->SurveyRepository->update(array_merge($request->validated(),["updated_by" => Auth::id()]),$id)) {
-            $return = $this->SurveyRepository->getById($id);
+        $before         = $this->SurveyRepository->getById($id);
+        $path           = public_path().'/images/';
+        $status_image   = array(
+            "status"=>true,
+            "data"=>null
+        );
+        
+        $survey = $this->SurveyRepository->update(array_merge($request->validated(),[
+            "updated_by" => Auth::id()]
+        ),$id);
+        
+        if ($survey == 1 && is_array($request['image'])) {
+            $data_survey_image = array();
+            foreach ($request['image'] as $image) {
+                $save_image = $this->ApiHelper->save_image('Survey-',$image);
+                if (!$save_image['status']) {
+                    $status_image['status'] = $save_image['status']; 
+                    $status_image['data'] = $save_image['data']; 
+                }else{
+                    $data_survey_image[] = [
+                        'survey_id' => $id,
+                        'image' => $save_image['data']
+                    ];
+                }
+            }
+            if ($save_image['status'] && is_array($before->image)) {
+                foreach ($before->image as $img) {
+                    unlink($path.$img['image']);
+                }
+            }
+            $this->SurveyRepository->deleteImage($id);
+            SurveyImage::insert($data_survey_image);
         }
-        return $this->ApiHelper->return($return,'Ubah '.$this->menu);
+        return $this->ApiHelper->return($this->SurveyRepository->getById($id),'Ubah '.$this->menu);
     }
     
 }

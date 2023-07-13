@@ -6,6 +6,7 @@ use App\Helpers\ApiHelper;
 use App\Http\Requests\MasterOdpRequest;
 use App\Models\MasterOdpImage;
 use App\Models\WorkOrder;
+use App\Models\WorkOrderImage;
 use App\Repositories\MasterOdpRepository;
 use App\Repositories\SettingRepository;
 use Illuminate\Http\Request;
@@ -48,7 +49,7 @@ class MasterOdpController extends Controller
             "status"=>true,
             "data"=>null
         );
-
+        
         $data = $this->MasterOdpRepository->create(array_merge($request->validated(),[
             "code" => $this->ApiHelper->random('ODP'),
             "created_by" => Auth::id(),
@@ -76,20 +77,39 @@ class MasterOdpController extends Controller
     }
     
     public function update($id, MasterOdpRequest $request){
-        $before                 = $this->MasterOdpRepository->getById($id);
-        $path                   = public_path().'/images/';
-        $update['updated_by']   = Auth::id();
-        $save_image             = array(
-            "status" => false,
-            "data"  => null
+        $before         = $this->MasterOdpRepository->getById($id);
+        $path           = public_path().'/images/';
+        $status_image   = array(
+            "status"=>true,
+            "data"=>null
         );
-        (!$request['image']     ?: $save_image = $this->ApiHelper->save_image('ODP-',$request['image']));
-        (!$save_image['status'] ? $save_image['status'] = true : $update['image'] = $save_image["data"]);
-        $this->MasterOdpRepository->update(array_merge($request->validated(),$update),$id);
-        (!$save_image['status'] ?: unlink($path.$before->image));
-        $return = $this->MasterOdpRepository->getById($id);
         
-        return $this->ApiHelper->return($return,'Ubah '.$this->menu);
+        $this->MasterOdpRepository->update(array_merge($request->validated(),[
+            "updated_by" => Auth::id()
+        ]),$id);
+        if (is_array($request['image'])) {
+            $data_odp_image = array();
+            foreach ($request['image'] as $image) {
+                $save_image = $this->ApiHelper->save_image('Survey-',$image);
+                if (!$save_image['status']) {
+                    $status_image['status'] = $save_image['status']; 
+                    $status_image['data'] = $save_image['data']; 
+                }else{
+                    $data_odp_image[] = [
+                        'master_odp_id' => $id,
+                        'image' => $save_image['data']
+                    ];
+                }
+            }
+            if ($save_image['status'] && is_array($before->image)) {
+                foreach ($before->image as $img) {
+                    unlink($path.$img['image']);
+                }
+            }
+            $this->MasterOdpRepository->deleteImage($id);
+            MasterOdpImage::insert($data_odp_image);
+        }
+        return $this->ApiHelper->return($this->MasterOdpRepository->getById($id),'Ubah '.$this->menu);        
     }
     
 }
