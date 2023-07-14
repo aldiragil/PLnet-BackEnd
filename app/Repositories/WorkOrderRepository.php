@@ -45,9 +45,9 @@ class WorkOrderRepository implements WorkOrderInterface{
     
     public function getById($id,$emp = null){
         if ($emp) {
-            $work_order = $this->work_order_detail->with(['work_order','user','images'])->where('emp_id', '=', $emp)->find($id);
+            $work_order = $this->work_order_detail->with(['work_order','user','image'])->where('emp_id', '=', $emp)->find($id);
         }else{
-            $work_order = $this->work_order->with(['detail','detail.user','detail.images'])->find($id);
+            $work_order = $this->work_order->with(['detail','detail.user','detail.image'])->find($id);
             
         }
         return $work_order;

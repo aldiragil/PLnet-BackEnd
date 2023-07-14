@@ -9,7 +9,7 @@ class WorkOrderDetail extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    public function images() {
+    public function image() {
         return $this->hasMany(WorkOrderImage::class);
     }
     public function user() {
