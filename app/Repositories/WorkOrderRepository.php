@@ -25,13 +25,13 @@ class WorkOrderRepository implements WorkOrderInterface{
         return $this->work_order->all();
     }
     
-    public function getBy(array $where,$search = null,$date = null,$emp_id = null){
+    public function getBy(array $where, $search = null, $date = null, $emp_id = null){
         if($emp_id){
-            $work_order = $this->work_order->whereHas('user', function($q) use($emp_id) {
+            $work_order = $this->work_order->with(['user'])->whereHas('user', function($q) use($emp_id) {
                 $q->where('work_order_emps.user_id', $emp_id);
             })->where($where);
         }else{
-            $work_order = $this->work_order->with('user')->where($where);
+            $work_order = $this->work_order->with(['user'])->where($where);
         }
 
         (!$date?:$work_order = $work_order->whereRaw('DATE_FORMAT(date,"%Y-%m") = "'.$date.'"'));
@@ -45,9 +45,9 @@ class WorkOrderRepository implements WorkOrderInterface{
     
     public function getById($id,$emp = null){
         if ($emp) {
-            $work_order = $this->work_order_detail->with(['work_order','user','image'])->where('emp_id', '=', $emp)->find($id);
+            $work_order = $this->work_order_detail->with(['work_order','user','images'])->where('emp_id', '=', $emp)->find($id);
         }else{
-            $work_order = $this->work_order->with(['detail','detail.user','detail.image'])->find($id);
+            $work_order = $this->work_order->with(['detail','detail.user','detail.images'])->find($id);
             
         }
         return $work_order;

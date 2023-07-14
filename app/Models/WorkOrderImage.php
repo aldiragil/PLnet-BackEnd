@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class WorkOrderImage extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'work_order_detail_id',
-        'image',
-    ];
+    protected $guarded = [];
     public $timestamps = false; 
+
+    public function work_order_detail() {
+        return $this->belongsTo(WorkOrderDetail::class,'work_order_detail_id');
+    }
+
 }

@@ -9,16 +9,13 @@ class WorkOrderDetail extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    public function image()
-    {
+    public function images() {
         return $this->hasMany(WorkOrderImage::class);
     }
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo(User::class,'emp_id');
     }
-    public function work_order()
-    {
+    public function work_order() {
         return $this->belongsTo(WorkOrder::class,'work_order_id');
     }
 
