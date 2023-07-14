@@ -22,7 +22,7 @@ class MasterOdpRepository implements MasterOdpInterface {
     }
     
     public function getBy(array $where,$search){
-        $masterOdp = $this->masterOdp->where($where);
+        $masterOdp = $this->masterOdp->with(['image'])->where($where);
         if ($search) {
             $masterOdp = $masterOdp->where('name', 'like', '%'.$search.'%');
         }

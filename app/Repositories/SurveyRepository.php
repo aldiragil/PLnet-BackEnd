@@ -22,12 +22,12 @@ class SurveyRepository implements SurveyInterface {
     }
     
     public function getBy(array $where,$search){
-        $survey = $this->survey->where($where);
+        $survey = $this->survey->with(['image'])->where($where);
         return $survey;
     }
     
     public function getById($id){
-        return $this->survey->with(['image'])->where('id',$id)->first();
+        return $this->survey->with(['image'])->with(['image'])->where('id',$id)->first();
     }
     
     public function firsBy($where){

@@ -35,10 +35,18 @@ class MasterOdpController extends Controller
             'List Semua '.$this->menu
         );
     }
+
+    public function detail($id){
+        return $this->ApiHelper->return(
+            $this->MasterOdpRepository->getById($id),
+            'List Semua '.$this->menu
+        );
+    }
     
     public function list(Request $request){
+        $where = [];
         return $this->ApiHelper->return(
-            $this->MasterOdpRepository->getBy([],$request->search)->paginate(10),
+            $this->MasterOdpRepository->getBy($where,$request->search)->paginate(10),
             'Ambil Semua '.$this->menu
         );
     }

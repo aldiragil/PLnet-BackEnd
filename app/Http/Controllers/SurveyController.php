@@ -37,14 +37,11 @@ class SurveyController extends Controller
             'Ambil Semua '.$this->menu
         );
     }
-    
-    public function all(){
-        return $this->ApiHelper->return(
-            $this->SurveyRepository->all(),
-            'List Semua '.$this->menu
-        );
+
+    public function detail($id){
+        return $this->ApiHelper->return($this->SurveyRepository->getById($id),'Detail '.$this->menu);
     }
-    
+
     public function list(Request $request){
         $where = [];
         (!$request->customer?: $where['customer_id'] = $request->customer);
@@ -55,7 +52,7 @@ class SurveyController extends Controller
             'Ambil Semua '.$this->menu
         );
     }
-    
+
     public function create(SurveyRequest $request){
         $status_image = array(
             "status"=>true,

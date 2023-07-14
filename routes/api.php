@@ -63,6 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(App\Http\Controllers\SurveyController::class)->group(function() {
         Route::get('survey/component','component');
         Route::get('survey/list','list');
+        Route::get('survey/detail/{id}','detail')->where([ 'id' => '[0-9]+' ]);
         Route::post('survey/create','create');
         Route::put('survey/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
     });
@@ -70,6 +71,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(App\Http\Controllers\MasterOdpController::class)->group(function() {
         Route::get('odp/component','component');
         Route::get('odp/list','list');
+        Route::get('odp/detail/{id}','detail')->where([ 'id' => '[0-9]+' ]);
         Route::post('odp/create','create');
         Route::put('odp/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
     });
