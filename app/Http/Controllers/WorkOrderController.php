@@ -17,6 +17,7 @@ use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class WorkOrderController extends Controller
 {
@@ -26,10 +27,10 @@ class WorkOrderController extends Controller
     $UserRepository, 
     $CustomerRepository, 
     $ApiHelper, 
-    $menu   = "Work Order",
-    $order  = [5,10,50,100],
-    $status = ['Draft','Create','Pending','Process','End'],
-    $category = ['odp','survey','instalasi','pemutusan'],
+    $menu       = "Work Order",
+    $order      = [5,10,50,100],
+    $status     = ['Draft','Create','Pending','Process','End','Cancel'],
+    $category   = ['odp','survey','instalasi','pemutusan'],
     $default_order = 5;
     
     public function __construct(WorkOrderRepository $workOrderRepository,
@@ -58,18 +59,18 @@ class WorkOrderController extends Controller
         $category = WorkOrder::groupBy('category')->pluck('category')->toArray();
         $date = WorkOrder::select(DB::raw("(DATE_FORMAT(date,'%Y-%m')) date"))->groupBy(DB::raw("date_format(date,'%Y-%m')"))->pluck('date')->toArray();
         return $this->ApiHelper->return(array(
-            "order" => $this->order,
-            "category" => $category,
-            "status" => $this->status,
-            "date" => $date,
+            "order"     => $this->order,
+            "category"  => $category,
+            "status"    => $this->status,
+            "date"      => $date,
         ),'Ambil Semua '.$this->menu);
     }
     
     public function component_list_emp(){
         $status = $this->status;
         array_splice($status,0,1);
-        $category = WorkOrder::groupBy('category')->pluck('category')->toArray();
-        $date = WorkOrder::select(DB::raw("(DATE_FORMAT(date,'%Y-%m')) date"))->groupBy(DB::raw("date_format(date,'%Y-%m')"))->pluck('date')->toArray();
+        $category   = WorkOrder::groupBy('category')->pluck('category')->toArray();
+        $date       = WorkOrder::select(DB::raw("(DATE_FORMAT(date,'%Y-%m')) date"))->groupBy(DB::raw("date_format(date,'%Y-%m')"))->pluck('date')->toArray();
         return $this->ApiHelper->return(array(
             "order" => $this->order,
             "category" => $category,
@@ -96,7 +97,6 @@ class WorkOrderController extends Controller
         (!$request->customer?:$where['customer_id'] = $request->customer);
         (!$request->category?:$where['category'] = $request->category);
         (!$request->status?:$where['status'] = $request->status);
-        // dd($where);
         return $this->ApiHelper->return(
             $this->WorkOrderRepository->getBy($where,$request->search,$request->date,Auth::id())->paginate($this->default_order),
             'Ambil Semua '.$this->menu
@@ -104,9 +104,9 @@ class WorkOrderController extends Controller
     }
     
     public function search_by_emp(Request $request){
-        $search = $request->search;
+        $search     = $request->search;
         $work_order = User::find(Auth::id())->workOrderEmp();
-        $work_order->where('category',$request->category);
+        $work_order->where('category',$request->category)->where('id_status','2');
         if ($search) {
             $work_order->where(function($query) use($search) {
                 $query->where('code', 'like', '%'.$search.'%')
@@ -127,12 +127,13 @@ class WorkOrderController extends Controller
         return $this->ApiHelper->return($this->WorkOrderRepository->getById($id,Auth::id()),'Detail '.$this->menu);
     }
     
-    public function create(WorkOrderRequest $request){
+    public function create(WorkOrderRequest $request) {
         $work_order = $this->WorkOrderRepository->create(array_merge($request->validated(),
         ["code" => $this->ApiHelper->random('WO'),
         "created_by" => Auth::id(),
         "updated_by" => Auth::id(),
-        "status" => 'Draft']))->toArray();
+        "id_status" => 1,
+        "status" => 'Create']))->toArray();
         foreach ($request['user'] as $emp) {
             $data_work_order_emp[] = [
                 'work_order_id' => $work_order['id'],
@@ -146,15 +147,20 @@ class WorkOrderController extends Controller
     public function create_detail_emp(WorkOrderDetailRequest $request){
         $status_image = array(
             "status"=>true,
-            "data"=>null
+            "data"  =>null
         );
-        $work_order_detail = WorkOrderDetail::create(array_merge($request->validated(),
-        ["code"         => $this->ApiHelper->random('WO-D'),
-        "emp_id"        => Auth::id(),
-        "created_by"    => Auth::id(),
-        "updated_by"    => Auth::id(),
-        "start_order"   => date('Y-m-d H:i:s'),
-        "end_order"     => date('Y-m-d H:i:s')]));
+        if (WorkOrderDetail::where(['work_order_id'=>$request['work_order_id'], 'emp_id'=>Auth::id()])
+        ->update(array_merge($request->validated(),["end_order"=>Carbon::now()->format('Y-m-d H:i:s')]))) {
+            $work_order_detail = WorkOrderDetail::where(['work_order_id'=>$request['work_order_id'], 'emp_id'=>Auth::id()])->first();
+        }else{
+            $work_order_detail = WorkOrderDetail::create(array_merge($request->validated(),
+            ["code"         => $this->ApiHelper->random('WO-D'),
+            "emp_id"        => Auth::id(),
+            "created_by"    => Auth::id(),
+            "updated_by"    => Auth::id(),
+            "start_order"   => Carbon::now()->format('Y-m-d H:i:s'),
+            "end_order"     => Carbon::now()->format('Y-m-d H:i:s')]));            
+        }
         
         if (is_array($request['image'])) {
             $data_work_order_image = array();
@@ -173,12 +179,12 @@ class WorkOrderController extends Controller
             WorkOrderImage::insert($data_work_order_image);
         }
         $this->WorkOrderRepository->update([
-            "end_order" => date('Y-m-d H:i:s'),
-            "updated_by" => Auth::id(),
-            "id_status" => 4,
-            "status" => 'End'
+            "end_order"     => Carbon::now()->format('Y-m-d H:i:s'),
+            "updated_by"    => Auth::id(),
+            "id_status"     => 4,
+            "status"        => 'End'
         ], $request['work_order_id']);
-    
+        
         return $this->ApiHelper->return($work_order_detail,'Simpan '.$this->menu);
     }
     
@@ -186,9 +192,9 @@ class WorkOrderController extends Controller
         $this->WorkOrderRepository->deleteEmp(["work_order_id"=>$id]);
         if (is_array($request['user'])||is_object($request['user'])) {
             foreach ($request['user'] as $emp) {
-                $data_work_order_emp[] = [
+                $data_work_order_emp = [
                     'work_order_id' => $id,
-                    'user_id' => $emp['id']
+                    'user_id'       => $emp['id']
                 ];
             }
             $this->WorkOrderRepository->createEmp($data_work_order_emp);
@@ -204,19 +210,32 @@ class WorkOrderController extends Controller
     
     public function status($id, StatusRequest $request){
         $request->validated();
-        $id_status = 0;
-        $status = 'Draft';
         if ($request['status']) {
+            $update     = [];
             $id_status  = $request['status'];
-            $status     = ($request['status'] == 0?'Draft': ($request['status'] == 1?'Create':($request['status'] == 2?'Pending':($request['status'] == 3?'Process':'End'))));
+            $status     = ($request['status'] == 0 ? 'Draft' : ($request['status'] == 1?'Create':($request['status'] == 2?'Pending':($request['status'] == 3?'Process':($request['status'] == 4?'End':'Cancel')))));
+            if($id_status==2)
+            $update     = ['start_order'=>Carbon::now()->format('Y-m-d H:i:s')];
+            if($id_status==3)
+            WorkOrderDetail::insert([
+                "code"          => $this->ApiHelper->random('WO-D'),
+                "work_order_id" => $id,
+                "emp_id"        => Auth::id(),
+                "created_by"    => Auth::id(),
+                "updated_by"    => Auth::id(),
+                "start_order"   => Carbon::now()->format('Y-m-d H:i:s')
+            ]);
+            if($id_status==4)
+            $update     = ['end_order'=>Carbon::now()->format('Y-m-d H:i:s')];
+            
+            return $this->ApiHelper->return(
+                $this->WorkOrderRepository->update(array_merge($update,[
+                    "updated_by" => Auth::id(),
+                    "id_status" => $id_status,
+                    "status" => $status
+                ]), $id),
+                'Ubah Status '.$this->menu
+            );
         }
-        return $this->ApiHelper->return(
-            $this->WorkOrderRepository->update([
-                "updated_by" => Auth::id(),
-                "id_status" => $id_status,
-                "status" => $status
-            ], $id),
-            'Ubah Status '.$this->menu
-        );
     }
 }

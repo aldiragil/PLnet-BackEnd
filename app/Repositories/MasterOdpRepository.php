@@ -12,32 +12,32 @@ use Exception;
 class MasterOdpRepository implements MasterOdpInterface {
     
     private $masterOdp, $image;
-    public function __construct(MasterOdp $masterOdp,MasterOdpImage $image){
+    public function __construct(MasterOdp $masterOdp,MasterOdpImage $image) {
         $this->masterOdp = $masterOdp;
         $this->image = $image;
     }
     
-    public function all(){
+    public function all() {
         return $this->masterOdp->all();
     }
     
-    public function getBy(array $where,$search){
-        $masterOdp = $this->masterOdp->with(['image'])->where($where);
+    public function getBy(array $where,$search) {
+        $masterOdp = $this->masterOdp->with(['image','work_order'])->where($where);
         if ($search) {
             $masterOdp = $masterOdp->where('name', 'like', '%'.$search.'%');
         }
         return $masterOdp;
     }
     
-    public function getById($id){
-        return $this->masterOdp->with(['image'])->where('id',$id)->first();
+    public function getById($id) {
+        return $this->masterOdp->with(['image','work_order'])->where('id',$id)->first();
     }
     
-    public function firsBy($where){
-        return $this->masterOdp->with(['image'])->where($where)->first();
+    public function firsBy($where) {
+        return $this->masterOdp->with(['image','work_order'])->where($where)->first();
     }
     
-    public function create(array $data){
+    public function create(array $data) {
         try {
             DB::beginTransaction();
             $response = $this->masterOdp->create($data);
@@ -49,7 +49,7 @@ class MasterOdpRepository implements MasterOdpInterface {
         return $response;
     }
     
-    public function update(array $data, $id){
+    public function update(array $data, $id) {
         $data['updated_by'] = Auth::id();
         try {
             DB::beginTransaction();
@@ -62,11 +62,11 @@ class MasterOdpRepository implements MasterOdpInterface {
         return $response;
     }
     
-    public function delete($id){
+    public function delete($id) {
         return $this->masterOdp->destroy($id);
     }
 
-    public function deleteImage($id){
+    public function deleteImage($id) {
         return $this->image->where('master_odp_id',$id)->delete();
     }
  }

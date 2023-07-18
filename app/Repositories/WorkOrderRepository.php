@@ -33,7 +33,7 @@ class WorkOrderRepository implements WorkOrderInterface{
         }else{
             $work_order = $this->work_order->with(['user'])->where($where);
         }
-
+        
         (!$date?:$work_order = $work_order->whereRaw('DATE_FORMAT(date,"%Y-%m") = "'.$date.'"'));
         
         if ($search) {

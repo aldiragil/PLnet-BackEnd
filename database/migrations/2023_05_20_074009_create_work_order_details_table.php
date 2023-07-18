@@ -17,10 +17,10 @@ return new class extends Migration
             $table->integer('emp_id');
             $table->string('code')->unique();
             $table->dateTime('start_order');
-            $table->dateTime('end_order');
-            $table->string('constraint');
-            $table->string('solution');
-            $table->string('note');
+            $table->dateTime('end_order')->nullable();
+            $table->string('constraint')->nullable();
+            $table->string('solution')->nullable();
+            $table->string('note')->nullable();
             $table->integer('active')->default(1);
             $table->integer('created_by');
             $table->integer('updated_by');

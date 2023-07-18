@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('status');
             $table->boolean('create_allowed')->default(false);
             $table->integer('active')->default(1);
-            $table->dateTime('start_order')->default(DB::raw('CURRENT_TIMESTAMP(0)'));
+            $table->dateTime('start_order')->nullable();
             $table->dateTime('end_order')->nullable();
             $table->integer('created_by');
             $table->integer('updated_by');
