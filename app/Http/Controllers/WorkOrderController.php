@@ -106,7 +106,7 @@ class WorkOrderController extends Controller
     public function search_by_emp(Request $request){
         $search     = $request->search;
         $work_order = User::find(Auth::id())->workOrderEmp();
-        $work_order->where('category',$request->category)->where('id_status','2');
+        $work_order->where('category',$request->category)->where('id_status','3');
         if ($search) {
             $work_order->where(function($query) use($search) {
                 $query->where('code', 'like', '%'.$search.'%')
