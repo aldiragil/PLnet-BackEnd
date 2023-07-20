@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\Customer;
 use App\Models\MasterOdp;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -25,6 +26,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'id'        => 0,
             'tipe_id'   => 1,
+            'team_id'   => 1,
             'name'      => 'Admin',
             'email'     => 'admin@admin.com',
             'password'  => 'admin'
@@ -32,6 +34,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'id'        => 0,
             'tipe_id'   => 1,
+            'team_id'   => 1,
             'name'      => 'Pegawai 1',
             'email'     => 'pegawai1@admin.com',
             'password'  => 'admin'
@@ -39,9 +42,14 @@ class DatabaseSeeder extends Seeder
         User::create([
             'id'        => 0,
             'tipe_id'   => 1,
+            'team_id'   => 1,
             'name'      => 'Pegawai 2',
             'email'     => 'pegawai2@admin.com',
             'password'  => 'admin'
+        ]);
+        Team::create([
+            'id'        => 0,
+            'name'      => 'Team 1'
         ]);
 
     }

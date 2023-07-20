@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -45,17 +46,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
     
-    public function setPasswordAttribute($value)
-    {
+    public function setPasswordAttribute($value) {
         $this->attributes['password'] = bcrypt($value);
     }
     
-    function role(){
+    function role() {
         return $this->belongsTo(MenuRole::class,'tipe_id');
     }
     
-    public function menuEmp()
-    {
+    public function menuEmp() {
         return $this->belongsToMany(
             Menu::class,
             'menu_accesses',
@@ -64,13 +63,15 @@ class User extends Authenticatable
         )->where('menus.active',1)->where('menus.tipe_id',1);
     }
 
-    public function workOrderEmp()
-    {
+    public function workOrderEmp() {
         return $this->belongsToMany(
             WorkOrder::class,
             'work_order_emps'
         );
     }
 
+    public function team(): BelongsTo {
+        return $this->belongsTo(Team::class,'team_id');
+    }
 
 }

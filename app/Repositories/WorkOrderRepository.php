@@ -25,21 +25,15 @@ class WorkOrderRepository implements WorkOrderInterface{
         return $this->work_order->all();
     }
     
-    public function getBy(array $where, $search = null, $date = null, $emp_id = null){
-        if($emp_id){
-            $work_order = $this->work_order->with(['user'])->whereHas('user', function($q) use($emp_id) {
-                $q->where('work_order_emps.user_id', $emp_id);
-            })->where($where);
-        }else{
-            $work_order = $this->work_order->with(['user'])->where($where);
-        }
-        
+    public function getBy(array $where, $search = null, $date = null){
+        $work_order = $this->work_order->with(['user'])->where($where);
         (!$date?:$work_order = $work_order->whereRaw('DATE_FORMAT(date,"%Y-%m") = "'.$date.'"'));
-        
         if ($search) {
-            $work_order = $work_order->where('name', 'like', '%'.$search.'%');
+            $work_order = $work_order->where(function($query) use($search){
+                $query->where('code', 'like', '%'.$search.'%');
+                $query->orWhere('name', 'like', '%'.$search.'%');
+            });
         }
-        
         return $work_order;
     }
     

@@ -45,7 +45,7 @@ class WorkOrderController extends Controller
         $this->ApiHelper            = $ApiHelper;
     }
     
-    public function component(){
+    public function component() {
         $setting    = $this->SettingRepository->showGroup(['group'=>'WorkOrder']);
         $user       = $this->UserRepository->allUser()->map->only(['id', 'name']);
         
@@ -55,7 +55,7 @@ class WorkOrderController extends Controller
         );
     }
     
-    public function component_list(){
+    public function component_list() {
         $category = WorkOrder::groupBy('category')->pluck('category')->toArray();
         $date = WorkOrder::select(DB::raw("(DATE_FORMAT(date,'%Y-%m')) date"))->groupBy(DB::raw("date_format(date,'%Y-%m')"))->pluck('date')->toArray();
         return $this->ApiHelper->return(array(
@@ -66,7 +66,7 @@ class WorkOrderController extends Controller
         ),'Ambil Semua '.$this->menu);
     }
     
-    public function component_list_emp(){
+    public function component_list_emp() {
         $status = $this->status;
         array_splice($status,0,1);
         $category   = WorkOrder::groupBy('category')->pluck('category')->toArray();
@@ -79,31 +79,30 @@ class WorkOrderController extends Controller
         ),'Ambil Semua '.$this->menu);
     }
     
-    public function list(Request $request){
+    public function list(Request $request) {
         $where = [];
-        (!$request->order?:$this->default_order = $request->order);
+        (!$request->order?:$this->default_order     = $request->order);
         (!$request->customer?:$where['customer_id'] = $request->customer);
-        (!$request->category?:$where['category'] = $request->category);
-        (!$request->status?:$where['status'] =$request->status);
+        (!$request->category?:$where['category']    = $request->category);
+        (!$request->status?:$where['status']        = $request->status);
         return $this->ApiHelper->return(
             $this->WorkOrderRepository->getBy($where,$request->search,$request->date)->paginate($this->default_order),
             'Ambil Semua '.$this->menu
         );
     }
     
-    public function list_emp(Request $request){
-        $where = [];
+    public function list_emp(Request $request) {
+        $where = ['id_status'=>2];
         (!$request->order?:$this->default_order = $request->order);
         (!$request->customer?:$where['customer_id'] = $request->customer);
-        (!$request->category?:$where['category'] = $request->category);
-        (!$request->status?:$where['status'] = $request->status);
+        (!$request->category?:$where['category']    = $request->category);
         return $this->ApiHelper->return(
-            $this->WorkOrderRepository->getBy($where,$request->search,$request->date,Auth::id())->paginate($this->default_order),
+            $this->WorkOrderRepository->getBy($where,$request->search,$request->date)->paginate($this->default_order),
             'Ambil Semua '.$this->menu
         );
     }
     
-    public function search_by_emp(Request $request){
+    public function search_by_emp(Request $request) {
         $search     = $request->search;
         $work_order = User::find(Auth::id())->workOrderEmp();
         $work_order->where('category',$request->category)->where('id_status','3');
@@ -119,7 +118,7 @@ class WorkOrderController extends Controller
         );
     }
     
-    public function detail($id){
+    public function detail($id) {
         return $this->ApiHelper->return($this->WorkOrderRepository->getById($id),'Detail '.$this->menu);
     }
     
@@ -144,7 +143,7 @@ class WorkOrderController extends Controller
         return $this->ApiHelper->return($work_order,'Simpan '.$this->menu);
     }
     
-    public function create_detail_emp(WorkOrderDetailRequest $request){
+    public function create_detail_emp(WorkOrderDetailRequest $request) {
         $status_image = array(
             "status"=>true,
             "data"  =>null
@@ -209,33 +208,62 @@ class WorkOrderController extends Controller
     }
     
     public function status($id, StatusRequest $request){
-        $request->validated();
-        if ($request['status']) {
+        $reqStatus  = false;
+        $message    = 'Ubah Status '.$this->menu.' Gagal';
+        $reqData    = '';
+        if ($request->validated()) {
             $update     = [];
+            $user_id    = Auth::id();
             $id_status  = $request['status'];
-            $status     = ($request['status'] == 0 ? 'Draft' : ($request['status'] == 1?'Create':($request['status'] == 2?'Pending':($request['status'] == 3?'Process':($request['status'] == 4?'End':'Cancel')))));
-            if($id_status==2)
-            $update     = ['start_order'=>Carbon::now()->format('Y-m-d H:i:s')];
-            if($id_status==3)
-            WorkOrderDetail::insert([
-                "code"          => $this->ApiHelper->random('WO-D'),
-                "work_order_id" => $id,
-                "emp_id"        => Auth::id(),
-                "created_by"    => Auth::id(),
-                "updated_by"    => Auth::id(),
-                "start_order"   => Carbon::now()->format('Y-m-d H:i:s')
-            ]);
-            if($id_status==4)
-            $update     = ['end_order'=>Carbon::now()->format('Y-m-d H:i:s')];
+            $status     = $this->status[$request['status']];
             
-            return $this->ApiHelper->return(
-                $this->WorkOrderRepository->update(array_merge($update,[
+            if($id_status==2) {
+                $update     = ['start_order'=>Carbon::now()->format('Y-m-d H:i:s')];
+                $reqStatus  = true;
+            }
+            
+            if($id_status==3) {
+                $checkAccess = WorkOrder::with(['user'])->where('id',$id)
+                ->whereHas('user', function($q) use($user_id){
+                    $q->where('work_order_emps.user_id', $user_id);
+                })->first();
+                if ($checkAccess) {
+                    $checkWorkOrder = WorkOrder::with(['user'])->where('id_status',3)
+                    ->whereHas('user', function($q) use($user_id){
+                        $q->where('work_order_emps.user_id', $user_id);
+                    })->first();
+                    if (!$checkWorkOrder) {
+                        WorkOrderDetail::insert([
+                            "code"          => $this->ApiHelper->random('WO-D'),
+                            "work_order_id" => $id,
+                            "emp_id"        => $user_id,
+                            "created_by"    => $user_id,
+                            "updated_by"    => $user_id,
+                            "start_order"   => Carbon::now()->format('Y-m-d H:i:s')
+                        ]);
+                        $reqStatus = true;
+                    }else{
+                        $message    = 'Anda masih memiliki '.$this->menu;
+                    }
+                }else{
+                    $message    = 'Anda tidak memiliki akses';
+                }
+            }
+            
+            if($id_status==4) {
+                $update = ['end_order'=>Carbon::now()->format('Y-m-d H:i:s')];
+                $reqStatus = true;
+            }
+            
+            if ($reqStatus) {
+                $reqData = $this->WorkOrderRepository->update(array_merge($update,[
                     "updated_by" => Auth::id(),
                     "id_status" => $id_status,
                     "status" => $status
-                ]), $id),
-                'Ubah Status '.$this->menu
-            );
+                ]), $id);
+                $message = 'Ubah Status '.$this->menu.' Berhasil';
+            }
         }
+        return $this->ApiHelper->response(200,$reqStatus,$message,$reqData);
     }
 }
