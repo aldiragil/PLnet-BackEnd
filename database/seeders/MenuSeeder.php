@@ -61,7 +61,7 @@ class MenuSeeder extends Seeder
                 Menu::create([
                     'id'        => 0,
                     'parent_id' => 2,
-                    'menu'      => 'List',
+                    'menu'      => 'Ticketing',
                     'tipe_id'      => 1,
                     'icon'      => '',
                     'order'     => 1
@@ -402,13 +402,22 @@ class MenuSeeder extends Seeder
             'order'     => 2
         ]);
 
-        $menu = Menu::create([
+        Menu::create([
             'id'        => 0,
             'parent_id' => 2,
-            'menu'      => '[EMP] Work Order',
+            'menu'      => 'Ticketing List',
             'tipe_id'      => 1,
             'icon'      => '',
             'order'     => 2
+        ]);
+
+        $menu = Menu::create([
+            'id'        => 0,
+            'parent_id' => 1,
+            'menu'      => 'Pemutusan',
+            'tipe_id'      => 1,
+            'icon'      => '',
+            'order'     => 5
         ]);
 
         

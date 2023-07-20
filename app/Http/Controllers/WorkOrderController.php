@@ -109,8 +109,8 @@ class WorkOrderController extends Controller
         $work_order->where('category',$request->category)->where('id_status','3');
         if ($search) {
             $work_order->where(function($query) use($search) {
-                $query->where('code', 'like', '%'.$search.'%')
-                ->orWhere('name', 'like', '%'.$search.'%');
+                $query->whereRaw('lower(code) like (?)',["%{$search}%"])
+                ->orWhereRaw('lower(name) like (?)',["%{$search}%"]);
             });
         }
         return $this->ApiHelper->return(
