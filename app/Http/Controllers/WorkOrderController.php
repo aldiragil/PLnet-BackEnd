@@ -92,12 +92,14 @@ class WorkOrderController extends Controller
     }
     
     public function list_emp(Request $request) {
-        $where = ['id_status'=>2];
+        $where = [];
         (!$request->order?:$this->default_order = $request->order);
         (!$request->customer?:$where['customer_id'] = $request->customer);
         (!$request->category?:$where['category']    = $request->category);
         return $this->ApiHelper->return(
-            $this->WorkOrderRepository->getBy($where,$request->search,$request->date)->paginate($this->default_order),
+            $this->WorkOrderRepository->getBy($where,$request->search,$request->date)
+            ->whereIn('id_status',[2,3])
+            ->paginate($this->default_order),
             'Ambil Semua '.$this->menu
         );
     }
