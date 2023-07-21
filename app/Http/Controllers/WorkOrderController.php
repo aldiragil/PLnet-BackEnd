@@ -98,7 +98,15 @@ class WorkOrderController extends Controller
         (!$request->category?:$where['category']    = $request->category);
         return $this->ApiHelper->return(
             $this->WorkOrderRepository->getBy($where,$request->search,$request->date)
-            ->whereIn('id_status',[2,3])
+            ->where(function($query){
+                $query->whereIn('id_status',[2,3])
+                ->orWhere(function($query){
+                    $query->where('id_status',4)
+                    ->whereHas('user', function($q) {
+                        $q->where('user_id', Auth::id());
+                    });
+                });
+            })
             ->paginate($this->default_order),
             'Ambil Semua '.$this->menu
         );
