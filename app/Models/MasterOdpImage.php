@@ -11,7 +11,7 @@ class MasterOdpImage extends Model
     protected $guarded = [];
     public $timestamps = false;
     public function odp(){
-        return $this->belongsTo(MasterOdpImage::class,'master_odp_id_id');
+        return $this->belongsTo(MasterOdpImage::class,'master_odp_id');
     }
 
 }

@@ -26,6 +26,7 @@ class WorkOrderRequest extends FormRequest
     {
         $rules =  [
             'user_id'   => 'nullable|exists:users,id',
+            'customer_id'=> 'nullable|exists:customers,id',
             'date'      => 'required|date|date_format:Y-m-d H:i',
             'category'  => 'required|string',
             'name'      => 'required|string',
@@ -51,7 +52,8 @@ class WorkOrderRequest extends FormRequest
     public function messages()
     {
         return [
-            'user_id.exists' => 'User tidak ditemukan',
+            'user_id.exists' => 'Pengguna tidak ditemukan',
+            'customer_id.exists' => 'Konsumen tidak ditemukan',
             'date.required' => 'Tanggal tidak boleh kosong',
             'date.date' => 'Tanggal tidak valid',
             'code.required' => 'Kode Work Order tidak boleh kosong',
