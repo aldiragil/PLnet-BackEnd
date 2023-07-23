@@ -26,12 +26,20 @@ class WorkOrderRepository implements WorkOrderInterface{
     }
     
     public function getBy(array $where, $search = null, $date = null){
-        $work_order = $this->work_order->with(['user'])->where($where);
+        $work_order = $this->work_order->with(['user','customer'])->where($where);
         (!$date?:$work_order = $work_order->whereRaw('DATE_FORMAT(date,"%Y-%m") = "'.$date.'"'));
         if ($search) {
             $work_order = $work_order->where(function($query) use($search){
                 $query->where('code', 'like', '%'.$search.'%');
                 $query->orWhere('name', 'like', '%'.$search.'%');
+                $query->orWhere('referensi', 'like', '%'.$search.'%');
+                $query->orWhere('category', 'like', '%'.$search.'%');
+                $query->orWhere('location', 'like', '%'.$search.'%');
+                $query->orWhere('phone', 'like', '%'.$search.'%');
+                $query->orWhere('order', 'like', '%'.$search.'%');
+                $query->orWhere('description', 'like', '%'.$search.'%');
+                $query->orWhere('level', 'like', '%'.$search.'%');
+                $query->orWhere('note', 'like', '%'.$search.'%');
             });
         }
         return $work_order;

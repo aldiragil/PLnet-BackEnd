@@ -11,14 +11,16 @@ class WorkOrder extends Model
     protected $guarded = [];
     protected $hidden = ['pivot'];
 
-    public function user()
-    {
+    public function user() {
         return $this->belongsToMany(User::class,'work_order_emps');
     }
 
-    public function detail()
-    {
+    public function detail() {
         return $this->hasMany(WorkOrderDetail::class);
+    }
+
+    public function customer() {
+        return $this->belongsTo(WorkOrder::class,'customer_id');
     }
 
 }

@@ -96,6 +96,7 @@ class WorkOrderController extends Controller
         (!$request->order?:$this->default_order = $request->order);
         (!$request->customer?:$where['customer_id'] = $request->customer);
         (!$request->category?:$where['category']    = $request->category);
+        (!$request->status?:$where['status']        = $request->status);
         return $this->ApiHelper->return(
             $this->WorkOrderRepository->getBy($where,$request->search,$request->date)
             ->where(function($query){
@@ -253,7 +254,7 @@ class WorkOrderController extends Controller
                         ]);
                         $reqStatus = true;
                     }else{
-                        $message    = 'Anda masih memiliki '.$this->menu;
+                        $message    = 'Tiket '.$checkWorkOrder->code.' belum selesai';
                     }
                 }else{
                     $message    = 'Anda tidak memiliki akses';
