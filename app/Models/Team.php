@@ -9,4 +9,9 @@ class Team extends Model {
     use HasFactory;
     protected $guarded = [];
     public $timestamps = false;
+
+    public function team() {
+        return $this->belongsTo(team::class,'team_id');
+    }
+
 }

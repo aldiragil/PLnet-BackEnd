@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             'id'        => 0,
             'tipe_id'   => 1,
             'team_id'   => 1,
+            'code'      => 'ADMIN1111',
             'name'      => 'Admin',
             'email'     => 'admin@admin.com',
             'password'  => 'admin'
@@ -35,6 +36,7 @@ class DatabaseSeeder extends Seeder
             'id'        => 0,
             'tipe_id'   => 1,
             'team_id'   => 1,
+            'code'      => 'EMP1111',
             'name'      => 'Pegawai 1',
             'email'     => 'pegawai1@admin.com',
             'password'  => 'admin'
@@ -43,13 +45,27 @@ class DatabaseSeeder extends Seeder
             'id'        => 0,
             'tipe_id'   => 1,
             'team_id'   => 1,
+            'code'      => 'EMP2222',
             'name'      => 'Pegawai 2',
             'email'     => 'pegawai2@admin.com',
+            'password'  => 'admin'
+        ]);
+        User::create([
+            'id'        => 0,
+            'tipe_id'   => 1,
+            'team_id'   => 2,
+            'code'      => 'EMP3333',
+            'name'      => 'Pegawai 3',
+            'email'     => 'pegawai3@admin.com',
             'password'  => 'admin'
         ]);
         Team::create([
             'id'        => 0,
             'name'      => 'Team 1'
+        ]);
+        Team::create([
+            'id'        => 0,
+            'name'      => 'Team 2'
         ]);
 
     }

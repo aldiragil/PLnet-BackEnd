@@ -97,20 +97,22 @@ class WorkOrderController extends Controller
         (!$request->customer?:$where['customer_id'] = $request->customer);
         (!$request->category?:$where['category']    = $request->category);
         (!$request->status?:$where['status']        = $request->status);
-        return $this->ApiHelper->return(
-            $this->WorkOrderRepository->getBy($where,$request->search,$request->date)
-            ->where(function($query){
-                $query->whereIn('id_status',[2,3])
-                ->orWhere(function($query){
-                    $query->where('id_status',4)
-                    ->whereHas('user', function($q) {
-                        $q->where('user_id', Auth::id());
-                    });
+        
+        $work_order = $this->WorkOrderRepository->getBy($where,$request->search,$request->date)
+        ->where(function($query){
+            $query->whereIn('id_status',[2,3])
+            ->orWhere(function($query){
+                $query->where('id_status',4)
+                ->whereHas('user', function($q) {
+                    $q->where('user_id', Auth::id());
                 });
-            })
-            ->paginate($this->default_order),
-            'Ambil Semua '.$this->menu
-        );
+            });
+        })->paginate($this->default_order);
+        
+        for ($i=0; $i < count($work_order); $i++) { 
+            $work_order[$i]['date'] = substr($work_order[$i]['date'],0,-3);
+        }
+        return $this->ApiHelper->return($work_order,'Ambil Semua '.$this->menu);
     }
     
     public function search_by_emp(Request $request) {
