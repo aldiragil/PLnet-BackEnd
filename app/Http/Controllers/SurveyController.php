@@ -34,7 +34,7 @@ class SurveyController extends Controller
         
         return $this->ApiHelper->return(
             array_merge($setting, ['masterOdp'=>$odp]),
-            'Ambil Semua '.$this->menu
+            'Komponen '.$this->menu
         );
     }
 

@@ -85,7 +85,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('menu/update-role','updateAccess');
     });
 
-    Route::get('setting/{group}',[App\Http\Controllers\SettingController::class,'show_group'])->where([ 'group' => '[A-Za-z]+']);
+    Route::controller(App\Http\Controllers\SettingController::class)->group(function() {
+        Route::get('setting/component/{group}','show_group')->where([ 'group' => '[A-Za-z]+']);
+        Route::post('setting/create/{group}','create')->where([ 'group' => '[A-Za-z]+']);
+        Route::patch('setting/delete/{group}','delete')->where([ 'group' => '[A-Za-z]+']);
+    });
+
     Route::get('menu/show/{tipe}/{id}',[App\Http\Controllers\MenuController::class,'show'])->where([ 'tipe' => '[0-9]+', 'id' => '[0-9]+' ]);
 
 });
