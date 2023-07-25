@@ -267,7 +267,12 @@ class WorkOrderController extends Controller
                 $update = ['end_order'=>Carbon::now()->format('Y-m-d H:i:s')];
                 $reqStatus = true;
             }
-            
+
+            if($id_status==5) {
+                $update = [];
+                $reqStatus = true;
+            }
+
             if ($reqStatus) {
                 $reqData = $this->WorkOrderRepository->update(array_merge($update,[
                     "updated_by" => Auth::id(),
