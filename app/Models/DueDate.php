@@ -5,14 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Package extends Model
+class DueDate extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    public $timestamps = false;
     protected $hidden = [
-        'created_by',
-        'updated_by',
-        'created_at',
-        'updated_at'
+        'time_id',
     ];
+
+    public function time(){
+        return $this->belongsTo(Time::class,'time_id');
+    }
+
 }

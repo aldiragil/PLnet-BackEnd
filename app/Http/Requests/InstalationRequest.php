@@ -18,29 +18,30 @@ class InstalationRequest extends FormRequest
     {
         return [
             'work_order_id' => 'required|integer',
-            'customer_id' => 'integer',
-            'package_id' => 'integer',
-            'package' => 'string',
+            'customer_id' => 'required|integer',
+            'package_id' => 'required|integer',
+            'duedate_id' => 'required|integer',
             'odp_id' => 'required|integer',
-            'fee' => 'required|integer',
-            'note' => 'string'
+            'date' => 'required|date',
+            'note' => 'nullable|string'
         ];
     }
     
     public function messages()
     {
         return [
-            'work_order_id.required' => 'Pelanggan tidak boleh kosong',
-            'work_order_id.integer' => 'Pelanggan tidak valid',
+            'work_order_id.required' => 'Work Order tidak boleh kosong',
+            'work_order_id.integer' => 'Work Order tidak valid',
+            'customer_id.required' => 'Pelanggan tidak boleh kosong',
             'customer_id.integer' => 'Pelanggan tidak valid',
             'package_id.required' => 'Paket tidak boleh kosong',
             'package_id.integer' => 'Paket tidak valid',
-            'package.required' => 'Paket tidak boleh kosong',
-            'package.integer' => 'Paket tidak valid',
+            'duedate_id.required' => 'Jatuh Tempo tidak boleh kosong',
+            'duedate_id.integer' => 'Jatuh Tempo tidak valid',
             'odp_id.required' => 'ODP tidak boleh kosong',
             'odp_id.integer' => 'ODP tidak valid',
-            'fee.required' => 'Biaya pendaftaran tidak boleh kosong',
-            'fee.integer' => 'Biaya pendaftaran harus nominal',
+            'date.required' => 'Tanggal tidak boleh kosong',
+            'date.date' => 'Tanggal tidak valid',
             'note.string' => 'Catatan tidak valid',
         ];
     }

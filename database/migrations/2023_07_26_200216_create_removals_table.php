@@ -12,14 +12,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('severances', function (Blueprint $table) {
+        Schema::create('removals', function (Blueprint $table) {
             $table->id();
-            $table->integer('work_order_id');
-            $table->integer('instalation_id');
             $table->string('code')->unique();
-            $table->date('date');
+            $table->integer('instalation_id');
+            $table->integer('status_id')->default(1);
+            $table->dateTime('date');
             $table->string('reason');
-            $table->string('status');
             $table->string('note')->nullable();
             $table->integer('created_by');
             $table->integer('updated_by');
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('severances');
+        Schema::dropIfExists('removals');
     }
 };

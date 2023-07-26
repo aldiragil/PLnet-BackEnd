@@ -6,19 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Customer extends Model
+class Time extends Model
 {
     use HasFactory;
     protected $guarded = [];
     protected $hidden = [
-        'created_by',
-        'updated_by',
-        'created_at',
-        'updated_at'
+        'id',
     ];
-
-    public function work_order(): HasMany {
-        return $this->hasMany(work_order::class);
+    public $timestamps = false;
+    public function due_date(): HasMany {
+        return $this->hasMany(DueDate::class);
     }
-
 }

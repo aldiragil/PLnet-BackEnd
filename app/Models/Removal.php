@@ -4,10 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Customer extends Model
-{
+class Removal extends Model {
     use HasFactory;
     protected $guarded = [];
     protected $hidden = [
@@ -17,8 +16,8 @@ class Customer extends Model
         'updated_at'
     ];
 
-    public function work_order(): HasMany {
-        return $this->hasMany(work_order::class);
-    }
 
+    public function instalation():BelongsTo {
+        return $this->belongsTo(Instalation::class,'instalation_id');
+    }
 }

@@ -15,13 +15,14 @@ return new class extends Migration
         Schema::create('instalations', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
-            $table->date('date');
             $table->integer('work_order_id');
-            $table->integer('customer_id')->nullable();
+            $table->integer('customer_id');
             $table->integer('package_id');
+            $table->integer('duedate_id');
             $table->integer('odp_id');
-            $table->string('serial');
-            $table->string('due_date');
+            $table->integer('status_id')->default(1);
+            $table->dateTime('date');
+            $table->string('event')->nullable();
             $table->string('note')->nullable();
             $table->integer('status')->default(0);
             $table->integer('active')->default(1);

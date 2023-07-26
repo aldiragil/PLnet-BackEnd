@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SurveyImage extends Model
+class InstalationImage extends Model
 {
     use HasFactory;
     protected $guarded = [];
     public $timestamps = false;
 
-    public function survey(){
-        return $this->belongsTo(Survey::class,'survey_id');
+    public function instalation(){
+        return $this->belongsTo(Instalation::class,'instalation_id');
     }
 }

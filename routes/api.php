@@ -68,6 +68,21 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('survey/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
     });
 
+    Route::controller(App\Http\Controllers\InstalationController::class)->group(function() {
+        Route::get('instalation/component','component');
+        Route::get('instalation/list','list');
+        Route::get('instalation/detail/{id}','detail')->where([ 'id' => '[0-9]+' ]);
+        Route::post('instalation/create','create');
+        Route::put('instalation/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
+    });
+
+    Route::controller(App\Http\Controllers\RemovalController::class)->group(function() {
+        Route::get('removal/list','list');
+        Route::get('removal/detail/{id}','detail')->where([ 'id' => '[0-9]+' ]);
+        Route::post('removal/create','create');
+        Route::put('removal/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
+    });
+
     Route::controller(App\Http\Controllers\MasterOdpController::class)->group(function() {
         Route::get('odp/component','component');
         Route::get('odp/list','list');

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Customer;
+use App\Models\Instalation;
 use App\Models\MasterOdp;
 use App\Models\Team;
 use App\Models\User;
@@ -18,6 +19,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(InstalationSeeder::class);
         $this->call(MasterOdpSeeder::class);
         $this->call(WorkOrderSeeder::class);
         $this->call(CustomerSeeder::class);

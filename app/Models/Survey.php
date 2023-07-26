@@ -21,7 +21,7 @@ class Survey extends Model {
     }
 
     public function odp():BelongsTo {
-        return $this->belongsTo(WorkOrder::class,'odp_id');
+        return $this->belongsTo(MasterOdp::class,'odp_id');
     }
 
 }

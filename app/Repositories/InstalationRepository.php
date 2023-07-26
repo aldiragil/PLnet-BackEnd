@@ -4,49 +4,38 @@ namespace App\Repositories;
 
 use App\Interfaces\InstalationInterface;
 use App\Models\Instalation;
+use App\Models\InstalationImage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
 class InstalationRepository implements InstalationInterface {
     
-    private $instalation;
-    public function __construct(Instalation $instalation)
-    {
+    private $instalation,$image;
+    public function __construct(Instalation $instalation,InstalationImage $image) {
         $this->instalation = $instalation;
+        $this->image = $image;
+    }
+        
+    public function getBy(array $where) {
+        $survey = $this->instalation->with(['work_order','customer','package','due_date','due_date.time','odp'])->where($where);
+        return $survey;
     }
     
-    public function all()
-    {
-        return $this->instalation->all();
+    public function getById($id) {
+        return $this->instalation->with(['work_order','customer','package','due_date','due_date.time','odp'])->find($id);
     }
-    
-    public function getBy(array $where,$search){
-        $instalation = $this->instalation->where($where);
-        return $instalation;
-    }
-    
-    public function getById($id)
-    {
-        return $this->instalation->find($id);
-    }
-    
-    public function firsBy($where)
-    {
-        return $this->instalation->where($where)->first();
-    }
-    
-    public function create(array $data)
-    {
+        
+    public function create(array $data) {
         try {
             DB::beginTransaction();
             $data = $this->instalation->create($data);
             DB::commit();
-            return $data;
         } catch (Exception $e) {
             DB::rollBack();
-            return $e->getMessage();
+            $data = $e->getMessage();
         }
+        return $data;
     }
     
     public function update(array $data, $id)
@@ -67,4 +56,9 @@ class InstalationRepository implements InstalationInterface {
     {
         return $this->instalation->destroy($id);
     }
- }
+
+    public function deleteImage($id) {
+        return $this->image->where('survey_id',$id)->delete();
+    }
+
+}
