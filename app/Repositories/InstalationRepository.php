@@ -18,12 +18,12 @@ class InstalationRepository implements InstalationInterface {
     }
         
     public function getBy(array $where) {
-        $survey = $this->instalation->with(['work_order','customer','package','due_date','due_date.time','odp'])->where($where);
+        $survey = $this->instalation->with(['work_order','customer','package','due_date','due_date.time','odp','images'])->where($where);
         return $survey;
     }
     
     public function getById($id) {
-        return $this->instalation->with(['work_order','customer','package','due_date','due_date.time','odp'])->find($id);
+        return $this->instalation->with(['work_order','customer','package','due_date','due_date.time','odp','images'])->find($id);
     }
         
     public function create(array $data) {
