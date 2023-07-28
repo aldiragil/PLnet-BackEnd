@@ -22,7 +22,7 @@ class InstalationRepository implements InstalationInterface {
         ->with(['work_order','customer','package','due_date','due_date.time','odp','images'])
         ->where($where);
         if ($search) {
-            $work_order = $work_order->where(function($query) use($search){
+            $instalation = $instalation->where(function($query) use($search){
                 $query->where('id', 'like', '%'.$search.'%');
                 $query->orWhere('code', 'like', '%'.$search.'%');
                 $query->orWhereHas('work_order', function($query) use($search){
