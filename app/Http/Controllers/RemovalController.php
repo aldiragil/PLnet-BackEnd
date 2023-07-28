@@ -6,6 +6,7 @@ use App\Helpers\ApiHelper;
 use App\Http\Requests\RemovalRequest;
 use App\Models\Removal;
 use App\Models\WorkOrder;
+use App\Models\Instalation;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,6 +53,7 @@ class RemovalController extends Controller
                 "created_by" => Auth::id(),
                 "updated_by" => Auth::id()
             ]));
+            Instalation::where('id',$request['instalation_id'])->update(['active'=>0]);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

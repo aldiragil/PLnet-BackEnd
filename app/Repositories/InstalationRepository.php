@@ -18,8 +18,8 @@ class InstalationRepository implements InstalationInterface {
     }
         
     public function getBy(array $where) {
-        $survey = $this->instalation->with(['work_order','customer','package','due_date','due_date.time','odp','images'])->where($where);
-        return $survey;
+        $instalation = $this->instalation->with(['work_order','customer','package','due_date','due_date.time','odp','images'])->where($where);
+        return $instalation;
     }
     
     public function getById($id) {
@@ -58,7 +58,7 @@ class InstalationRepository implements InstalationInterface {
     }
 
     public function deleteImage($id) {
-        return $this->image->where('survey_id',$id)->delete();
+        return $this->image->where('instalation_id',$id)->delete();
     }
 
 }

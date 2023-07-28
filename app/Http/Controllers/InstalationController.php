@@ -71,10 +71,28 @@ class InstalationController extends Controller
         (!$request->odp?:$where['odp_id'] = $request->odp);
         $search = $request->search;
         $instalation = $this->InstalationRepository->getBy($where,$search)->paginate($this->default_order);
-        for ($i=0; $i < count($instalation); $i++) { 
-            $instalation[$i]['due_date']['name'] = $instalation[$i]['due_date']['number'].' '.$instalation[$i]['due_date']['time']['name'];
+        if (is_array($instalation)) {
+            for ($i=0; $i < count($instalation); $i++) { 
+                $instalation[$i]['due_date']['name'] = $instalation[$i]['due_date']['number'].' '.$instalation[$i]['due_date']['time']['name'];
+            }
         }
-
+        
+        return $this->ApiHelper->return(
+            $instalation,
+            'Ambil Semua '.$this->menu
+        );
+    }
+    
+    public function search(Request $request){
+        $where = ['active'=>1];
+        $search = $request->search;
+        $instalation = $this->InstalationRepository->getBy($where,$search)->paginate($this->default_order);
+        if (is_array($instalation)) {
+            for ($i=0; $i < count($instalation); $i++) { 
+                $instalation[$i]['due_date']['name'] = $instalation[$i]['due_date']['number'].' '.$instalation[$i]['due_date']['time']['name'];
+            }
+        }
+        
         return $this->ApiHelper->return(
             $instalation,
             'Ambil Semua '.$this->menu
@@ -122,7 +140,7 @@ class InstalationController extends Controller
         $instalation = $this->InstalationRepository->update(array_merge($request->validated(),[
             "updated_by" => Auth::id()]
         ),$id);
-        if ($instalation == 1 && is_array($request['image'])) {
+        if (is_array($request['image'])) {
             $data_instalation_image = array();
             foreach ($request['image'] as $image) {
                 $save_image = $this->ApiHelper->save_image('Instalation-',$image);

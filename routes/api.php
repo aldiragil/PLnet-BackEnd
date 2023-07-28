@@ -71,6 +71,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(App\Http\Controllers\InstalationController::class)->group(function() {
         Route::get('instalation/component','component');
         Route::get('instalation/list','list');
+        Route::get('instalation/search','search');
         Route::get('instalation/detail/{id}','detail')->where([ 'id' => '[0-9]+' ]);
         Route::post('instalation/create','create');
         Route::put('instalation/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
