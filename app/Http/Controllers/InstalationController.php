@@ -71,10 +71,8 @@ class InstalationController extends Controller
         (!$request->odp?:$where['odp_id'] = $request->odp);
         $search = $request->search;
         $instalation = $this->InstalationRepository->getBy($where,$search)->paginate($this->default_order);
-        if (is_array($instalation)) {
-            for ($i=0; $i < count($instalation); $i++) { 
-                $instalation[$i]['due_date']['name'] = $instalation[$i]['due_date']['number'].' '.$instalation[$i]['due_date']['time']['name'];
-            }
+        for ($i=0; $i < count($instalation); $i++) { 
+            $instalation[$i]['due_date']['name'] = $instalation[$i]['due_date']['number'].' '.$instalation[$i]['due_date']['time']['name'];
         }
         
         return $this->ApiHelper->return(
@@ -87,10 +85,8 @@ class InstalationController extends Controller
         $where = ['active'=>1];
         $search = $request->search;
         $instalation = $this->InstalationRepository->getBy($where,$search)->paginate($this->default_order);
-        if (is_array($instalation)) {
-            for ($i=0; $i < count($instalation); $i++) { 
-                $instalation[$i]['due_date']['name'] = $instalation[$i]['due_date']['number'].' '.$instalation[$i]['due_date']['time']['name'];
-            }
+        for ($i=0; $i < count($instalation); $i++) { 
+            $instalation[$i]['due_date']['name'] = $instalation[$i]['due_date']['number'].' '.$instalation[$i]['due_date']['time']['name'];
         }
         
         return $this->ApiHelper->return(
