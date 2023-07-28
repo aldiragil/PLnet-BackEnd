@@ -16,16 +16,36 @@ class InstalationRepository implements InstalationInterface {
         $this->instalation = $instalation;
         $this->image = $image;
     }
-        
-    public function getBy(array $where) {
-        $instalation = $this->instalation->with(['work_order','customer','package','due_date','due_date.time','odp','images'])->where($where);
+    
+    public function getBy(array $where,$search) {
+        $instalation = $this->instalation
+        ->with(['work_order','customer','package','due_date','due_date.time','odp','images'])
+        ->where($where);
+        if ($search) {
+            $work_order = $work_order->where(function($query) use($search){
+                $query->where('id', 'like', '%'.$search.'%');
+                $query->orWhere('code', 'like', '%'.$search.'%');
+                $query->orWhereHas('work_order', function($query) use($search){
+                    $query->where('name', 'like', '%'.$search.'%');
+                });
+                $query->orWhereHas('customer', function($query) use($search){
+                    $query->where('name', 'like', '%'.$search.'%');
+                });
+                $query->orWhereHas('package', function($query) use($search){
+                    $query->where('name', 'like', '%'.$search.'%');
+                });
+                $query->orWhereHas('odp', function($query) use($search){
+                    $query->where('name', 'like', '%'.$search.'%');
+                });
+            });
+        }
         return $instalation;
     }
     
     public function getById($id) {
         return $this->instalation->with(['work_order','customer','package','due_date','due_date.time','odp','images'])->find($id);
     }
-        
+    
     public function create(array $data) {
         try {
             DB::beginTransaction();
@@ -56,9 +76,9 @@ class InstalationRepository implements InstalationInterface {
     {
         return $this->instalation->destroy($id);
     }
-
+    
     public function deleteImage($id) {
         return $this->image->where('instalation_id',$id)->delete();
     }
-
+    
 }

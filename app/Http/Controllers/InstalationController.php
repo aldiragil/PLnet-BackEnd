@@ -66,11 +66,13 @@ class InstalationController extends Controller
     
     public function list(Request $request){
         $where = [];
-        (!$request->order?:$this->default_order     = $request->order);
+        (!$request->order?:$this->default_order = $request->order);
         (!$request->customer?: $where['customer_id'] = $request->customer);
         (!$request->odp?:$where['odp_id'] = $request->odp);
         $search = $request->search;
-        $instalation = $this->InstalationRepository->getBy($where,$search)->paginate($this->default_order);
+        $instalation = $this->InstalationRepository
+        ->getBy($where,$search)
+        ->paginate($this->default_order);
         for ($i=0; $i < count($instalation); $i++) { 
             $instalation[$i]['due_date']['name'] = $instalation[$i]['due_date']['number'].' '.$instalation[$i]['due_date']['time']['name'];
         }
@@ -83,8 +85,11 @@ class InstalationController extends Controller
     
     public function search(Request $request){
         $where = ['active'=>1];
+        (!$request->order?:$this->default_order = $request->order);
         $search = $request->search;
-        $instalation = $this->InstalationRepository->getBy($where,$search)->paginate($this->default_order);
+        $instalation = $this->InstalationRepository
+        ->getBy($where,$search)
+        ->paginate($this->default_order);
         for ($i=0; $i < count($instalation); $i++) { 
             $instalation[$i]['due_date']['name'] = $instalation[$i]['due_date']['number'].' '.$instalation[$i]['due_date']['time']['name'];
         }
