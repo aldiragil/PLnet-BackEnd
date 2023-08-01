@@ -88,6 +88,7 @@ class CustomerController extends Controller
         if($save_ktp["status"] && $save_ttd["status"]){
             $data = $this->CustomerRepository->create(array_merge($request->validated(),[
                 "code" => $this->ApiHelper->random('CUST'),
+                "status"     => 1,
                 "created_by" => Auth::id(),
                 "updated_by" => Auth::id(),
                 "image_ktp" => $save_ktp["data"],

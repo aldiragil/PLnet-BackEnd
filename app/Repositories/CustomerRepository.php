@@ -23,7 +23,13 @@ class CustomerRepository implements CustomerInterface {
     
     public function getBy($search){
         if ($search) {
-            return $this->customer->where('name', 'like', '%'.$search.'%');
+            return $this->customer->where( function($query) use($search){
+                $this->customer->where('code', 'like', '%'.$search.'%');
+                $this->customer->Orwhere('nik', 'like', '%'.$search.'%');
+                $this->customer->Orwhere('name', 'like', '%'.$search.'%');
+                $this->customer->Orwhere('location', 'like', '%'.$search.'%');
+                $this->customer->Orwhere('phone', 'like', '%'.$search.'%');
+            });
         }else{
             return $this->customer->orderBy('name');
         }

@@ -17,7 +17,7 @@ class MasterOdpRequest extends FormRequest
     public function rules()
     {
         return [
-            'work_order_id' => 'required',
+            'work_order_id' => 'required|integer|unique:master_odps,work_order_id',
             'name' => 'required|string',
             'serial' => 'required||string',
             'location'  => 'required|string',
@@ -34,6 +34,8 @@ class MasterOdpRequest extends FormRequest
     {
         return [
             'work_order_id.required' => 'Work Order tidak boleh kosong',
+            'work_order_id.integer' => 'Work Order tidak valid',
+            'work_order_id.unique' => 'Work Order sudah digunakan',
             'name.required' => 'Nama ODP tidak boleh kosong',
             'name.string' => 'Nama ODP tidak valid',
             'serial.required' => 'Serial ODP tidak boleh kosong',
@@ -51,10 +53,15 @@ class MasterOdpRequest extends FormRequest
     
     protected function failedValidation(Validator $validator)
     {
+        $error = $validator->messages()->toArray();
+        $message = '';
+        foreach ($error as $key => $value) {
+            $message .= $value[0].'/n ';
+        }
         $response = new JsonResponse([
-            'success' => false, 
-            'message' => 'Informasi', 
-            'data' => $validator->errors()
+            'success'   => false, 
+            'message'   => $message,
+            'data'      => ''
         ], 422);
          
         throw new ValidationException($validator, $response);

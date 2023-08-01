@@ -22,16 +22,16 @@ class SurveyRepository implements SurveyInterface {
     }
     
     public function getBy(array $where) {
-        $survey = $this->survey->with(['image','work_order','odp'])->where($where);
+        $survey = $this->survey->with(['image','work_order','odp','package'])->where($where);
         return $survey;
     }
     
     public function getById($id) {
-        return $this->survey->with(['image','work_order','odp'])->where('id',$id)->first();
+        return $this->survey->with(['image','work_order','odp','package'])->where('id',$id)->first();
     }
     
     public function firsBy($where) {
-        return $this->survey->with(['image','work_order','odp'])->where($where)->first();
+        return $this->survey->with(['image','work_order','odp','package'])->where($where)->first();
     }
     
     public function create(array $data) {

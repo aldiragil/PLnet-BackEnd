@@ -79,10 +79,15 @@ class WorkOrderRequest extends FormRequest
     
     protected function failedValidation(Validator $validator)
     {
+        $error = $validator->messages()->toArray();
+        $message = '';
+        foreach ($error as $key => $value) {
+            $message .= $value[0].'/n ';
+        }
         $response = new JsonResponse([
-            'success' => false, 
-            'message' => 'Informasi', 
-            'data' => $validator->errors()
+            'success'   => false, 
+            'message'   => $message,
+            'data'      => ''
         ], 422);
         
         throw new ValidationException($validator, $response);

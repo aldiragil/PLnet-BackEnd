@@ -21,7 +21,6 @@ class RemovalController extends Controller
     $status     = ['Draft','New','Closed'],
     $default_order = 5;
     
-    
     public function __construct(ApiHelper $apiHelper){
         $this->ApiHelper        = $apiHelper;
     }

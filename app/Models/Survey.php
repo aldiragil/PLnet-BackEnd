@@ -20,6 +20,10 @@ class Survey extends Model {
         return $this->belongsTo(WorkOrder::class,'work_order_id');
     }
 
+    public function package():BelongsTo {
+        return $this->belongsTo(Package::class,'package_id');
+    }
+
     public function odp():BelongsTo {
         return $this->belongsTo(MasterOdp::class,'odp_id');
     }

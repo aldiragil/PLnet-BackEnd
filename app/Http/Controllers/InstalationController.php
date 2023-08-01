@@ -13,6 +13,7 @@ use App\Http\Requests\InstalationRequest;
 use App\Models\DueDate;
 use App\Models\MasterOdp;
 use App\Models\Package;
+use App\Models\Survey;
 
 class InstalationController extends Controller
 {
@@ -36,12 +37,26 @@ class InstalationController extends Controller
     }
     
     public function component(){
-        $work_order = WorkOrder::with(['user','customer'])
+        
+        foreach (WorkOrder::with(['user','customer'])
         ->where(['id_status'=>3,'category'=>'Pasang Baru'])
         ->whereHas('user', function($query){
             $query->where('users.id',Auth::id());
         })
-        ->get();
+        ->get() as $data) {
+            $survey = Survey::whereHas('work_order', function($query) use($data) {
+                $query->where('customer_id',$data->customer_id);
+            })
+            ->latest()->first();
+            if ($survey) {
+                $work_order['id'] = $data->id;
+                $work_order['code'] = $data->code;
+                $work_order['name'] = $data->name;
+                $work_order['customer'] = $data->customer;
+                $work_order['survey'] = $survey;
+            }
+        }
+        
         $duedate    =[];
         foreach (DueDate::with(['time'])->get()->toArray() as $value) {
             $duedate[] = ['id'=>$value['id'],'name'=>$value['number'].' '.$value['time']['name'],];

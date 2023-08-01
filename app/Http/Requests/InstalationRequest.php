@@ -17,7 +17,7 @@ class InstalationRequest extends FormRequest
     public function rules()
     {
         return [
-            'work_order_id' => 'required|integer',
+            'work_order_id' => 'required|integer|unique:instalations,work_order_id',
             'customer_id' => 'required|integer',
             'package_id' => 'required|integer',
             'duedate_id' => 'required|integer',
@@ -48,10 +48,15 @@ class InstalationRequest extends FormRequest
     
     protected function failedValidation(Validator $validator)
     {
+        $error = $validator->messages()->toArray();
+        $message = '';
+        foreach ($error as $key => $value) {
+            $message .= $value[0].'/n ';
+        }
         $response = new JsonResponse([
-            'success' => false, 
-            'message' => 'Informasi', 
-            'data' => $validator->errors()
+            'success'   => false, 
+            'message'   => $message,
+            'data'      => ''
         ], 422);
         
         throw new ValidationException($validator, $response);
