@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('removals', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
+            $table->integer('work_order_id');
             $table->integer('instalation_id');
             $table->integer('status_id')->default(1);
             $table->dateTime('date');

@@ -56,8 +56,8 @@ class WorkOrderRequest extends FormRequest
             'customer_id.exists' => 'Konsumen tidak ditemukan',
             'date.required' => 'Tanggal tidak boleh kosong',
             'date.date' => 'Tanggal tidak valid',
-            'code.required' => 'Kode Work Order tidak boleh kosong',
-            'code.unique' => 'Kode Work Order tidak boleh sama',
+            'code.required' => 'Kode Tiket tidak boleh kosong',
+            'code.unique' => 'Kode Tiket tidak boleh sama',
             'category.required' => 'Kategori tidak boleh kosong',
             'category.string' => 'Kategori tidak valid',
             'name.required' => 'Nama Pelanggan tidak boleh kosong',
@@ -82,7 +82,7 @@ class WorkOrderRequest extends FormRequest
         $error = $validator->messages()->toArray();
         $message = '';
         foreach ($error as $key => $value) {
-            $message .= $value[0].'/n ';
+            $message .= $value[0].'\n ';
         }
         $response = new JsonResponse([
             'success'   => false, 

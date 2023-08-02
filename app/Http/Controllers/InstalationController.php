@@ -37,7 +37,7 @@ class InstalationController extends Controller
     }
     
     public function component(){
-        
+        $work_order = [];
         foreach (WorkOrder::with(['user','customer'])
         ->where(['id_status'=>3,'category'=>'Pasang Baru'])
         ->whereHas('user', function($query){

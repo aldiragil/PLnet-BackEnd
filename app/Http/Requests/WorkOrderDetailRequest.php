@@ -42,8 +42,8 @@ class WorkOrderDetailRequest extends FormRequest
     public function messages()
     {
         return [
-            'work_order_id.exists' => 'Work Order tidak ditemukan',
-            'work_order_id.required' => 'Work Order tidak boleh kosong',
+            'work_order_id.exists' => 'Tiket tidak ditemukan',
+            'work_order_id.required' => 'Tiket tidak boleh kosong',
             'constraint.required' => 'Kendala tidak boleh kosong',
             'solution.required' => 'Solusi tidak boleh kosong',
             'image.required' => 'Foto tidak valid',
@@ -55,7 +55,7 @@ class WorkOrderDetailRequest extends FormRequest
         $error = $validator->messages()->toArray();
         $message = '';
         foreach ($error as $key => $value) {
-            $message .= $value[0].'/n ';
+            $message .= $value[0].'\n ';
         }
         $response = new JsonResponse([
             'success'   => false, 

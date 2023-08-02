@@ -20,11 +20,19 @@ class RemovalRequest extends FormRequest
             'date' => 'required|date',
             'note' => 'nullable|string'
         ];
+        if (in_array($this->method(), ['PUT', 'PATCH'])) {
+            $rules['work_order_id'] = ['required','integer','unique:removals,work_order_id,'. $this->route('id')];
+        }else{
+            $rules['work_order_id'] = ['required','integer','unique:removals,work_order_id'];
+        }
     }
     
     public function messages()
     {
         return [
+            'work_order_id.required' => 'Tiket tidak boleh kosong',
+            'work_order_id.integer' => 'Tiket tidak valid',
+            'work_order_id.unique' => 'Tiket Sudah terpakai',
             'instalation_id.required' => 'KODE pemasangan tidak boleh kosong',
             'instalation_id.integer' => 'KODE pemasangan tidak valid',
             'reason.required' => 'Alasan tidak boleh kosong',
@@ -40,7 +48,7 @@ class RemovalRequest extends FormRequest
         $error = $validator->messages()->toArray();
         $message = '';
         foreach ($error as $key => $value) {
-            $message .= $value[0].'/n ';
+            $message .= $value[0].'\n ';
         }
         $response = new JsonResponse([
             'success'   => false, 

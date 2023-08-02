@@ -63,7 +63,7 @@ class CustomerRequest extends FormRequest
         $error = $validator->messages()->toArray();
         $message = '';
         foreach ($error as $key => $value) {
-            $message .= $value[0].'/n ';
+            $message .= $value[0].'\n ';
         }
         $response = new JsonResponse([
             'success'   => false, 

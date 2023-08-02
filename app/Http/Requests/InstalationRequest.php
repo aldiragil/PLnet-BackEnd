@@ -17,7 +17,7 @@ class InstalationRequest extends FormRequest
     public function rules()
     {
         return [
-            'work_order_id' => 'required|integer|unique:instalations,work_order_id',
+            // 'work_order_id' => 'required|integer|unique:instalations,work_order_id',
             'customer_id' => 'required|integer',
             'package_id' => 'required|integer',
             'duedate_id' => 'required|integer',
@@ -25,13 +25,19 @@ class InstalationRequest extends FormRequest
             'date' => 'required|date',
             'note' => 'nullable|string'
         ];
+        if (in_array($this->method(), ['PUT', 'PATCH'])) {
+            $rules['work_order_id'] = ['required','integer','unique:instalations,work_order_id,'. $this->route('id')];
+        }else{
+            $rules['work_order_id'] = ['required','integer','unique:instalations,work_order_id'];
+        }
     }
     
     public function messages()
     {
         return [
-            'work_order_id.required' => 'Work Order tidak boleh kosong',
-            'work_order_id.integer' => 'Work Order tidak valid',
+            'work_order_id.required' => 'Tiket tidak boleh kosong',
+            'work_order_id.integer' => 'Tiket tidak valid',
+            'work_order_id.unique' => 'Tiket sudah digunakan',
             'customer_id.required' => 'Pelanggan tidak boleh kosong',
             'customer_id.integer' => 'Pelanggan tidak valid',
             'package_id.required' => 'Paket tidak boleh kosong',
@@ -51,7 +57,7 @@ class InstalationRequest extends FormRequest
         $error = $validator->messages()->toArray();
         $message = '';
         foreach ($error as $key => $value) {
-            $message .= $value[0].'/n ';
+            $message .= $value[0].'\n ';
         }
         $response = new JsonResponse([
             'success'   => false, 
