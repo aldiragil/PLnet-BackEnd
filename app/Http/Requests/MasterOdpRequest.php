@@ -16,7 +16,7 @@ class MasterOdpRequest extends FormRequest
     
     public function rules()
     {
-        return [
+        $rules = [
             // 'work_order_id' => 'required|integer|unique:master_odps,work_order_id',
             'name' => 'required|string',
             'serial' => 'required||string',
@@ -33,6 +33,7 @@ class MasterOdpRequest extends FormRequest
         }else{
             $rules['work_order_id'] = ['required','integer','unique:master_odps,work_order_id'];
         }
+        return $rules;
     }
     
     public function messages()

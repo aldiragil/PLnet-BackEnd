@@ -16,7 +16,7 @@ class InstalationRequest extends FormRequest
     
     public function rules()
     {
-        return [
+        $rules = [
             // 'work_order_id' => 'required|integer|unique:instalations,work_order_id',
             'customer_id' => 'required|integer',
             'package_id' => 'required|integer',
@@ -30,6 +30,7 @@ class InstalationRequest extends FormRequest
         }else{
             $rules['work_order_id'] = ['required','integer','unique:instalations,work_order_id'];
         }
+        return $rules;
     }
     
     public function messages()

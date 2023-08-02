@@ -14,7 +14,7 @@ class RemovalRequest extends FormRequest
     }
     
     public function rules() {
-        return [
+        $rules = [
             'instalation_id' => 'required|integer',
             'reason' => 'required|string',
             'date' => 'required|date',
@@ -25,6 +25,7 @@ class RemovalRequest extends FormRequest
         }else{
             $rules['work_order_id'] = ['required','integer','unique:removals,work_order_id'];
         }
+        return $rules;
     }
     
     public function messages()
