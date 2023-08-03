@@ -47,7 +47,7 @@ class WorkOrderController extends Controller
     
     public function component() {
         $setting    = $this->SettingRepository->showGroup(['group'=>'WorkOrder']);
-        $user       = $this->UserRepository->empUser()->map->only(['id', 'code', 'name']);
+        $user       = $this->UserRepository->empUser()->setVisible(['id','code','name','team']);
         
         return $this->ApiHelper->return(
             array_merge($setting, ['User'=>$user]),
@@ -140,6 +140,10 @@ class WorkOrderController extends Controller
     }
     
     public function create(WorkOrderRequest $request) {
+        if (in_array($request['category'], ['Survey','Pasang Baru','Berhenti Berlangganan']) && !$request['customer_id']) {
+            return $this->ApiHelper->return(false,'Kategori '.$request['category'].' pelanggan tidak boleh kosong ');
+            die();
+        }
         $work_order = $this->WorkOrderRepository->create(array_merge($request->validated(),
         ["code" => $this->ApiHelper->random('WO'),
         "created_by" => Auth::id(),
@@ -203,11 +207,12 @@ class WorkOrderController extends Controller
     public function update($id, WorkOrderRequest $request){
         $this->WorkOrderRepository->deleteEmp(["work_order_id"=>$id]);
         if (is_array($request['user'])||is_object($request['user'])) {
+            $data_work_order_emp = [];
             foreach ($request['user'] as $emp) {
-                $data_work_order_emp = [
+                $data_work_order_emp = array_merge($data_work_order_emp,[
                     'work_order_id' => $id,
                     'user_id'       => $emp['id']
-                ];
+                ]);
             }
             $this->WorkOrderRepository->createEmp($data_work_order_emp);
         }
@@ -267,12 +272,12 @@ class WorkOrderController extends Controller
                 $update = ['end_order'=>Carbon::now()->format('Y-m-d H:i:s')];
                 $reqStatus = true;
             }
-
+            
             if($id_status==5) {
                 $update = [];
                 $reqStatus = true;
             }
-
+            
             if ($reqStatus) {
                 $reqData = $this->WorkOrderRepository->update(array_merge($update,[
                     "updated_by" => Auth::id(),

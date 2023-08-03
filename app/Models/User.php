@@ -19,11 +19,16 @@ class User extends Authenticatable
     * @var array<int, string>
     */
     protected $fillable = [
+        'code',
         'tipe_id',
+        'team_id',
         'name',
-        'email',
         'phone',
+        'email',
         'password',
+        'active',
+        'created_by',
+        'updated_by',
     ];
     
     /**
@@ -33,8 +38,13 @@ class User extends Authenticatable
     */
     protected $hidden = [
         'pivot',
-        // 'password',
+        'password',
+        'email_verified_at',
         'remember_token',
+        'created_by',
+        'updated_by',
+        'created_at',
+        'updated_at'
     ];
     
     /**
@@ -55,23 +65,18 @@ class User extends Authenticatable
     }
     
     public function menuEmp() {
-        return $this->belongsToMany(
-            Menu::class,
-            'menu_accesses',
-            'tipe_id',
-            'menu_id'
-        )->where('menus.active',1)->where('menus.tipe_id',1);
+        return $this->belongsToMany(Menu::class,'menu_accesses','tipe_id')->where('menus.active',1);
     }
-
+    
     public function workOrderEmp() {
         return $this->belongsToMany(
             WorkOrder::class,
             'work_order_emps'
         );
     }
-
+    
     public function team(): BelongsTo {
         return $this->belongsTo(Team::class,'team_id');
     }
-
+    
 }

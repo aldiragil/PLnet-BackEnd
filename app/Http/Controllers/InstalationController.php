@@ -14,6 +14,7 @@ use App\Models\DueDate;
 use App\Models\MasterOdp;
 use App\Models\Package;
 use App\Models\Survey;
+use Carbon\Carbon;
 
 class InstalationController extends Controller
 {
@@ -45,10 +46,7 @@ class InstalationController extends Controller
         })
         ->orderByDesc('date')
         ->get() as $data) {
-            $survey = Survey::whereHas('work_order', function($query) use($data) {
-                $query->where('customer_id',$data->customer_id);
-            })
-            ->latest()->first();
+            $survey = Survey::with(['work_order','odp','package'])->where('customer_id',$data->customer_id)->latest()->first();
             if ($survey) {
                 $work_order['id'] = $data->id;
                 $work_order['code'] = $data->code;
@@ -125,6 +123,7 @@ class InstalationController extends Controller
         );
         $instalation = $this->InstalationRepository->create(array_merge($request->validated(),[
             "code" => $this->ApiHelper->random('INST'),
+            "date" => Carbon::now()->format('Y-m-d H:i:s'),
             "created_by" => Auth::id(),
             "updated_by" => Auth::id()
         ]));
@@ -183,7 +182,4 @@ class InstalationController extends Controller
         }
         return $this->ApiHelper->return($this->InstalationRepository->getById($id),'Ubah '.$this->menu);
     }
-    
-    
-    
 }

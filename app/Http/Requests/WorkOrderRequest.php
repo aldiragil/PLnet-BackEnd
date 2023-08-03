@@ -30,7 +30,7 @@ class WorkOrderRequest extends FormRequest
             'date'      => 'required|date|date_format:Y-m-d H:i',
             'category'  => 'required|string',
             'name'      => 'required|string',
-            'phone'     => 'required',
+            'phone'     => 'required|numeric',
             'location'  => 'required|string',
             'latitude'  => 'required',
             'longitude' => 'required',

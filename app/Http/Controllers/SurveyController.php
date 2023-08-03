@@ -32,11 +32,20 @@ class SurveyController extends Controller
     public function component(){
         $setting    = $this->SettingRepository->showGroup(['group'=>'Survey']);
         $odp        = $this->MasterOdpRepository->all()->map->only(['id', 'name', 'serial']);
+        $work_order = WorkOrder::with(['user','customer'])
+        ->where(['id_status'=>3,'category'=>'Survey'])
+        ->whereHas('user', function($query){
+            $query->where('users.id',Auth::id());
+        })
+        ->orderByDesc('date')
+        ->get()
+        ->setVisible(['id','code','order','customer']);
         
         return $this->ApiHelper->return(
             array_merge($setting, [
-                'masterOdp'=>$odp,
-                'package'   => Package::all()
+                'work_order'    =>$work_order,
+                'masterOdp'     =>$odp,
+                'package'       => Package::all()
             ]),
             'Komponen '.$this->menu
         );
@@ -62,29 +71,35 @@ class SurveyController extends Controller
             "status"=>true,
             "data"=>null
         );
-        $survey = $this->SurveyRepository->create(array_merge($request->validated(),[
-            "code" => $this->ApiHelper->random('SRVY'),
-            "created_by" => Auth::id(),
-            "updated_by" => Auth::id()
-        ]));
-        if (is_array($request['image'])) {
-            $data_survey_image = array();
-            foreach ($request['image'] as $image) {
-                $save_image = $this->ApiHelper->save_image('Survey-',$image);
-                if (!$save_image['status']) {
-                    $status_image['status'] = $save_image['status']; 
-                    $status_image['data'] = $save_image['data']; 
-                }else{
-                    $data_survey_image[] = [
-                        'survey_id' => $survey->id,
-                        'image' => $save_image['data']
-                    ];
+        $wo = WorkOrder::find($request['work_order_id']);
+        if ($wo->customer_id) {
+            $survey = $this->SurveyRepository->create(array_merge($request->validated(),[
+                "code"          => $this->ApiHelper->random('SRVY'),
+                "customer_id"   => $wo->customer_id,
+                "created_by"    => Auth::id(),
+                "updated_by"    => Auth::id()
+            ]));
+            if (is_array($request['image'])) {
+                $data_survey_image = array();
+                foreach ($request['image'] as $image) {
+                    $save_image = $this->ApiHelper->save_image('Survey-',$image);
+                    if (!$save_image['status']) {
+                        $status_image['status'] = $save_image['status']; 
+                        $status_image['data'] = $save_image['data']; 
+                    }else{
+                        $data_survey_image[] = [
+                            'survey_id' => $survey->id,
+                            'image' => $save_image['data']
+                        ];
+                    }
                 }
+                SurveyImage::insert($data_survey_image);
             }
-            SurveyImage::insert($data_survey_image);
+            WorkOrder::where('id',$request['work_order_id'])->update(["create_allowed" => true]);
+            return $this->ApiHelper->return($survey,'Simpan '.$this->menu);
+        }else{
+            return $this->ApiHelper->return(false,'Customer di tiket kosong ');
         }
-        WorkOrder::where('id',$request['work_order_id'])->update(["create_allowed" => true]);
-        return $this->ApiHelper->return($survey,'Simpan '.$this->menu);
     }
     
     public function update($id, SurveyRequest $request){

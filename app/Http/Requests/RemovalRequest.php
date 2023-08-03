@@ -15,15 +15,16 @@ class RemovalRequest extends FormRequest
     
     public function rules() {
         $rules = [
-            'instalation_id' => 'required|integer',
+            // 'instalation_id'    => 'required|integer',
             'reason' => 'required|string',
-            'date' => 'required|date',
             'note' => 'nullable|string'
         ];
         if (in_array($this->method(), ['PUT', 'PATCH'])) {
-            $rules['work_order_id'] = ['required','integer','unique:removals,work_order_id,'. $this->route('id')];
+            $rules['work_order_id'] = ['required','integer','exists:work_orders,id','unique:removals,work_order_id,'. $this->route('id')];
+            $rules['instalation_id'] = ['required','integer','exists:instalations,id','unique:removals,instalation_id,'. $this->route('id')];
         }else{
-            $rules['work_order_id'] = ['required','integer','unique:removals,work_order_id'];
+            $rules['work_order_id'] = ['required','integer','exists:work_orders,id','unique:removals,work_order_id'];
+            $rules['instalation_id'] = ['required','integer','exists:instalations,id','unique:removals,instalation_id'];
         }
         return $rules;
     }
@@ -33,9 +34,12 @@ class RemovalRequest extends FormRequest
         return [
             'work_order_id.required' => 'Tiket tidak boleh kosong',
             'work_order_id.integer' => 'Tiket tidak valid',
+            'work_order_id.exists' => 'Tiket tidak ditemukan',
             'work_order_id.unique' => 'Tiket Sudah terpakai',
-            'instalation_id.required' => 'KODE pemasangan tidak boleh kosong',
-            'instalation_id.integer' => 'KODE pemasangan tidak valid',
+            'instalation_id.required' => 'Pemasangan tidak boleh kosong',
+            'instalation_id.integer' => 'Pemasangan tidak valid',
+            'instalation_id.exists' => 'Pemasangan tidak ditemukan',
+            'instalation_id.unique' => 'Pemasangan Sudah terpakai',
             'reason.required' => 'Alasan tidak boleh kosong',
             'reason.string' => 'Alasan tidak valid',
             'date.required' => 'Tanggal tidak boleh kosong',

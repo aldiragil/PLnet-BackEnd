@@ -11,6 +11,18 @@ class Survey extends Model {
 
     use HasFactory;
     protected $guarded = [];
+    protected $hidden = [
+        'work_order_id',
+        'customer_id',
+        'package_id',
+        'odp_id',
+        'active',
+        'created_by',
+        'updated_by',
+        'created_at',
+        'updated_at'
+    ];
+
 
     public function image():HasMany {
         return $this->hasMany(SurveyImage::class);

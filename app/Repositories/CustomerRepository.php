@@ -22,17 +22,17 @@ class CustomerRepository implements CustomerInterface {
     }
     
     public function getBy($search){
+        $customer = $this->customer->with('user','group');
         if ($search) {
-            return $this->customer->where( function($query) use($search){
-                $this->customer->where('code', 'like', '%'.$search.'%');
-                $this->customer->Orwhere('nik', 'like', '%'.$search.'%');
-                $this->customer->Orwhere('name', 'like', '%'.$search.'%');
-                $this->customer->Orwhere('location', 'like', '%'.$search.'%');
-                $this->customer->Orwhere('phone', 'like', '%'.$search.'%');
+            $customer->where( function($query) use($search){
+                $query->where('code', 'like', '%'.$search.'%')
+                ->orWhere('nik', 'like', '%'.$search.'%')
+                ->orWhere('name', 'like', '%'.$search.'%')
+                ->orWhere('location', 'like', '%'.$search.'%')
+                ->orWhere('phone', 'like', '%'.$search.'%');
             });
-        }else{
-            return $this->customer->orderBy('name');
         }
+        return $customer->orderBy('name');
     }
     
     public function getById($id)

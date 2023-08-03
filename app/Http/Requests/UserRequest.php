@@ -28,9 +28,10 @@ class UserRequest extends FormRequest
     {
 
         $rules = [
-            'tipe_id' => 'required|numeric',
+            'tipe_id' => 'required|integer|exists:menu_roles,id',
+            'team_id' => 'required|integer|exists:teams,id',
             'name' => 'required|string|min:2',
-            'phone' => 'numeric',
+            'phone' => 'required|numeric',
             'password' => 'required|min:6',
             'confirm_password' => 'required|same:password'
         ];
@@ -49,7 +50,11 @@ class UserRequest extends FormRequest
     {
         return [
             'tipe_id.required' => 'Tipe User tidak boleh kosong.',
-            'tipe_id.number' => 'Tipe User tidak valid',
+            'tipe_id.integer' => 'Tipe User tidak valid',
+            'tipe_id.exists' => 'Tipe User tidak ditemukan',
+            'team_id.required' => 'Tim tidak boleh kosong.',
+            'team_id.integer' => 'Tim tidak valid',
+            'team_id.exists' => 'Tim tidak ditemukan',
             'name.required' => 'Nama tidak boleh kosong.',
             'name.min' => 'Nama harus lebih dari 1 karakter',
             'email.required' => 'Email tidak boleh kosong',
@@ -70,12 +75,17 @@ class UserRequest extends FormRequest
     
     protected function failedValidation(Validator $validator)
     {
+        $error = $validator->messages()->toArray();
+        $message = '';
+        foreach ($error as $key => $value) {
+            $message .= $value[0].'\n ';
+        }
         $response = new JsonResponse([
-            'success' => false, 
-            'message' => 'Informasi', 
-            'data' => $validator->errors()
+            'success'   => false, 
+            'message'   => $message,
+            'data'      => ''
         ], 422);
-        
+       
         throw new ValidationException($validator, $response);
     }
     

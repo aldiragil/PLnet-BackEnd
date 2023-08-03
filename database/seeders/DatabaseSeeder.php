@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
         ]);
         User::create([
             'id'        => 0,
-            'tipe_id'   => 1,
+            'tipe_id'   => 4,
             'team_id'   => 1,
             'code'      => 'EMP1111',
             'name'      => 'Pegawai 1',
@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
         ]);
         User::create([
             'id'        => 0,
-            'tipe_id'   => 1,
+            'tipe_id'   => 4,
             'team_id'   => 1,
             'code'      => 'EMP2222',
             'name'      => 'Pegawai 2',
@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
         ]);
         User::create([
             'id'        => 0,
-            'tipe_id'   => 1,
+            'tipe_id'   => 3,
             'team_id'   => 2,
             'code'      => 'EMP3333',
             'name'      => 'Pegawai 3',

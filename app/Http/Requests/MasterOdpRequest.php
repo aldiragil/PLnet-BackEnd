@@ -29,9 +29,9 @@ class MasterOdpRequest extends FormRequest
             'capacity' => 'required',
         ];
         if (in_array($this->method(), ['PUT', 'PATCH'])) {
-            $rules['work_order_id'] = ['required','integer','unique:master_odps,work_order_id,'. $this->route('id')];
+            $rules['work_order_id'] = ['required','integer','exists:work_orders,id','unique:master_odps,work_order_id,'. $this->route('id')];
         }else{
-            $rules['work_order_id'] = ['required','integer','unique:master_odps,work_order_id'];
+            $rules['work_order_id'] = ['required','integer','exists:work_orders,id','unique:master_odps,work_order_id'];
         }
         return $rules;
     }
@@ -41,6 +41,7 @@ class MasterOdpRequest extends FormRequest
         return [
             'work_order_id.required' => 'Tiket tidak boleh kosong',
             'work_order_id.integer' => 'Tiket tidak valid',
+            'work_order_id.exists' => 'Tiket tidak ditemukan',
             'work_order_id.unique' => 'Tiket sudah digunakan',
             'name.required' => 'Nama ODP tidak boleh kosong',
             'name.string' => 'Nama ODP tidak valid',

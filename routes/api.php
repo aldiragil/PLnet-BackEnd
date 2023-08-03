@@ -78,6 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::controller(App\Http\Controllers\RemovalController::class)->group(function() {
+        Route::get('removal/component','component');
         Route::get('removal/list','list');
         Route::get('removal/detail/{id}','detail')->where([ 'id' => '[0-9]+' ]);
         Route::post('removal/create','create');

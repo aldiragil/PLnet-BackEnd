@@ -22,13 +22,12 @@ class InstalationRequest extends FormRequest
             'package_id' => 'required|integer',
             'duedate_id' => 'required|integer',
             'odp_id' => 'required|integer',
-            'date' => 'required|date',
             'note' => 'nullable|string'
         ];
         if (in_array($this->method(), ['PUT', 'PATCH'])) {
-            $rules['work_order_id'] = ['required','integer','unique:instalations,work_order_id,'. $this->route('id')];
+            $rules['work_order_id'] = ['required','integer','exists:work_orders,id','unique:instalations,work_order_id,'. $this->route('id')];
         }else{
-            $rules['work_order_id'] = ['required','integer','unique:instalations,work_order_id'];
+            $rules['work_order_id'] = ['required','integer','exists:work_orders,id','unique:instalations,work_order_id'];
         }
         return $rules;
     }
@@ -38,6 +37,7 @@ class InstalationRequest extends FormRequest
         return [
             'work_order_id.required' => 'Tiket tidak boleh kosong',
             'work_order_id.integer' => 'Tiket tidak valid',
+            'work_order_id.exists' => 'Tiket tidak ditemukan',
             'work_order_id.unique' => 'Tiket sudah digunakan',
             'customer_id.required' => 'Pelanggan tidak boleh kosong',
             'customer_id.integer' => 'Pelanggan tidak valid',

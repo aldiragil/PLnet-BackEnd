@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('surveys', function (Blueprint $table) {
             $table->id();
-            $table->integer('work_order_id');
+            $table->integer('work_order_id')->unique();
             $table->integer('customer_id')->nullable();
             $table->integer('package_id')->nullable();
             $table->integer('odp_id');

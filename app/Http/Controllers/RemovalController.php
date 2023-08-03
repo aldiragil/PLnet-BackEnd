@@ -7,6 +7,7 @@ use App\Http\Requests\RemovalRequest;
 use App\Models\Removal;
 use App\Models\WorkOrder;
 use App\Models\Instalation;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +26,33 @@ class RemovalController extends Controller
         $this->ApiHelper        = $apiHelper;
     }
     
+
+    public function component(){
+        $work_order = [];
+        foreach (WorkOrder::with(['user','customer'])
+        ->where(['id_status'=>3,'category'=>'Berhenti Berlangganan'])
+        ->whereHas('user', function($query){
+            $query->where('users.id',Auth::id());
+        })
+        ->orderByDesc('date')
+        ->get() as $data) {
+            $instalation = Instalation::whereHas('work_order', function($query) use($data) {
+                $query->where('customer_id',$data->customer_id);
+            })
+            ->latest()->first();
+            if ($instalation) {
+                $work_order['id'] = $data->id;
+                $work_order['code'] = $data->code;
+                $work_order['name'] = $data->name;
+                $work_order['customer'] = $data->customer;
+                $work_order['survey'] = $instalation;
+            }
+        }
+        return $this->ApiHelper->return([
+            'work_order' => $work_order,
+        ],'Komponen '.$this->menu);
+    }
+
     public function detail($id){
         $data = Removal::with('instalation')->find($id)->toArray();
         return $this->ApiHelper->return(
@@ -49,6 +77,7 @@ class RemovalController extends Controller
             DB::beginTransaction();
             $data = Removal::create(array_merge($request->validated(),[
                 "code" => $this->ApiHelper->random('RMVE'),
+                "date" => Carbon::now()->format('Y-m-d H:i:s'),
                 "created_by" => Auth::id(),
                 "updated_by" => Auth::id()
             ]));

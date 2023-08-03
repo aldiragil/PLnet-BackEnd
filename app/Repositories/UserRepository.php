@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Helpers\ApiHelper;
 use App\Interfaces\UserInterface;
 use App\Models\User;
 use Exception;
@@ -20,7 +21,7 @@ class UserRepository implements UserInterface {
     }
 
     public function empUser() {
-        return $this->user->where('tipe_id','!=',2)->get();
+        return $this->user->with(['team'])->where('tipe_id','!=',2)->get();
     }
     
     public function getUserById($id) {
@@ -40,8 +41,6 @@ class UserRepository implements UserInterface {
     }
 
     public function createUser(array $data) {
-        $data['created_by'] = Auth::id();
-        $data['updated_by'] = Auth::id();
         try {
             DB::beginTransaction();
             $data = $this->user->create($data);

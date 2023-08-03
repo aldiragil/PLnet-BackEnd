@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('instalations', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
-            $table->integer('work_order_id');
+            $table->integer('work_order_id')->unique();
             $table->integer('customer_id');
             $table->integer('package_id');
             $table->integer('duedate_id');

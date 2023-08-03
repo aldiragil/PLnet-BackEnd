@@ -46,10 +46,16 @@ class MenuRepository implements MenuInterface {
     public function getUserMenu($tipe_id, $id)
     {
         if ($tipe_id == 2) {
-            $menu = $this->menu->where('active',1)->where('tipe_id',2)->get()->toArray();
+            $menu = $this->menu
+            ->where('active',1)
+            ->where('tipe_id',$tipe_id)
+            ->get()->toArray();
         }else{
-            $query = $this->user->with('menuEmp')->where('id',$id)->first();
-            $menu = $query->menuEmp->toArray();
+            $query = MenuRole::with('menus')
+            ->where('id',$tipe_id)
+            ->first();
+            $menu = $query->menus
+            ->toArray();
         }
         return MenuHelper::ShowMenu(false,$menu,0);
     }

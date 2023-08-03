@@ -6,6 +6,7 @@ use App\Helpers\ApiHelper;
 use App\Http\Requests\UserRequest;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -27,7 +28,13 @@ class UserController extends Controller
     
     public function create(UserRequest $request){
         return $this->ApiHelper->return(
-            $this->UserRepository->createUser($request->validated()),
+            $this->UserRepository->createUser(
+                array_merge($request->validated(),[
+                    'code' => $this->ApiHelper->random('EMP'),
+                    'created_by' => Auth::id(),
+                    'updated_by' => Auth::id(),
+                ])
+            ),
             'Simpan '.$this->menu
         );
         
