@@ -86,7 +86,7 @@ class WorkOrderController extends Controller
         (!$request->category?:$where['category']    = $request->category);
         (!$request->status?:$where['status']        = $request->status);
         return $this->ApiHelper->return(
-            $this->WorkOrderRepository->getBy($where,$request->search,$request->date)->paginate($this->default_order),
+            $this->WorkOrderRepository->getBy($where,$request->search,$request->date)->orderByDesc('date')->paginate($this->default_order),
             'Ambil Semua '.$this->menu
         );
     }
@@ -107,7 +107,7 @@ class WorkOrderController extends Controller
                     $q->where('user_id', Auth::id());
                 });
             });
-        })->paginate($this->default_order);
+        })->orderByDesc('date')->paginate($this->default_order);
         
         for ($i=0; $i < count($work_order); $i++) { 
             $work_order[$i]['date'] = substr($work_order[$i]['date'],0,-3);

@@ -52,7 +52,7 @@ class SurveyController extends Controller
         (!$request->odp?:$where['odp_id'] = $request->odp);
         $search = $request->search;
         return $this->ApiHelper->return(
-            $this->SurveyRepository->getBy($where,$search)->paginate(10),
+            $this->SurveyRepository->getBy($where,$search)->latest()->paginate(10),
             'Ambil Semua '.$this->menu
         );
     }

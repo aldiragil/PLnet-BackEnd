@@ -43,6 +43,7 @@ class InstalationController extends Controller
         ->whereHas('user', function($query){
             $query->where('users.id',Auth::id());
         })
+        ->orderByDesc('date')
         ->get() as $data) {
             $survey = Survey::whereHas('work_order', function($query) use($data) {
                 $query->where('customer_id',$data->customer_id);
@@ -87,6 +88,7 @@ class InstalationController extends Controller
         $search = $request->search;
         $instalation = $this->InstalationRepository
         ->getBy($where,$search)
+        ->latest()
         ->paginate($this->default_order);
         for ($i=0; $i < count($instalation); $i++) { 
             $instalation[$i]['due_date']['name'] = $instalation[$i]['due_date']['number'].' '.$instalation[$i]['due_date']['time']['name'];
@@ -104,6 +106,7 @@ class InstalationController extends Controller
         $search = $request->search;
         $instalation = $this->InstalationRepository
         ->getBy($where,$search)
+        ->latest()
         ->paginate($this->default_order);
         for ($i=0; $i < count($instalation); $i++) { 
             $instalation[$i]['due_date']['name'] = $instalation[$i]['due_date']['number'].' '.$instalation[$i]['due_date']['time']['name'];
