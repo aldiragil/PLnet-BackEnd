@@ -47,7 +47,7 @@ class WorkOrderController extends Controller
     
     public function component() {
         $setting    = $this->SettingRepository->showGroup(['group'=>'WorkOrder']);
-        $user       = $this->UserRepository->allUser()->map->only(['id', 'name']);
+        $user       = $this->UserRepository->empUser()->map->only(['id', 'code', 'name']);
         
         return $this->ApiHelper->return(
             array_merge($setting, ['User'=>$user]),

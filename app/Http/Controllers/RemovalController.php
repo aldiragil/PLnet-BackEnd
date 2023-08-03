@@ -39,7 +39,7 @@ class RemovalController extends Controller
         (!$request->odp?:$where['odp_id'] = $request->odp);
         $search = $request->search;
         return $this->ApiHelper->return(
-            Removal::with(['instalation'])->paginate($this->default_order),
+            Removal::with(['instalation'])->latest()->paginate($this->default_order),
             'Ambil Semua '.$this->menu
         );
     }

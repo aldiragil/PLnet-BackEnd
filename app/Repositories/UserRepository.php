@@ -8,24 +8,26 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class UserRepository implements UserInterface{
+class UserRepository implements UserInterface {
     
     private $user;
-    public function __construct(User $user)
-    {
+    public function __construct(User $user) {
         $this->user = $user;
     }
     
-    public function allUser()
-    {
+    public function allUser() {
         return $this->user->all();
     }
+
+    public function empUser() {
+        return $this->user->where('tipe_id','!=',2)->get();
+    }
     
-    public function getUserById($id){
+    public function getUserById($id) {
         return $this->user->find($id);
     }
     
-    public function getUserBy($where,$search = null){
+    public function getUserBy($where,$search = null) {
         $query = $this->user->where($where);
         if ($search) {
             $query = $query->where('name', 'like', '%'.$search.'%');
@@ -33,12 +35,11 @@ class UserRepository implements UserInterface{
         return $query;
     }
 
-    public function firstUserBy($where){
+    public function firstUserBy($where) {
         return $this->user->where($where)->first();
     }
 
-    public function createUser(array $data)
-    {
+    public function createUser(array $data) {
         $data['created_by'] = Auth::id();
         $data['updated_by'] = Auth::id();
         try {
@@ -52,8 +53,7 @@ class UserRepository implements UserInterface{
         }
     }
     
-    public function updateUser(array $data, $id)
-    {
+    public function updateUser(array $data, $id) {
         unset($data['confirm_password']);
         $data['updated_by'] = Auth::id();
         try {
@@ -67,8 +67,7 @@ class UserRepository implements UserInterface{
         }
     }
     
-    public function deleteUser($id)
-    {
+    public function deleteUser($id) {
         return $this->user->destroy($id);
     }
     
