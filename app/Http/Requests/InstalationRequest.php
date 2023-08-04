@@ -18,11 +18,12 @@ class InstalationRequest extends FormRequest
     {
         $rules = [
             // 'work_order_id' => 'required|integer|unique:instalations,work_order_id',
-            'customer_id' => 'required|integer',
-            'package_id' => 'required|integer',
-            'duedate_id' => 'required|integer',
-            'odp_id' => 'required|integer',
-            'note' => 'nullable|string'
+            'customer_id'   => 'required|integer',
+            'package_id'    => 'required|integer',
+            'duedate_id'    => 'required|integer',
+            'odp_id'    => 'required|integer',
+            'event'     => 'nullable|string',
+            'note'      => 'nullable|string'
         ];
         if (in_array($this->method(), ['PUT', 'PATCH'])) {
             $rules['work_order_id'] = ['required','integer','exists:work_orders,id','unique:instalations,work_order_id,'. $this->route('id')];
@@ -49,6 +50,7 @@ class InstalationRequest extends FormRequest
             'odp_id.integer' => 'ODP tidak valid',
             'date.required' => 'Tanggal tidak boleh kosong',
             'date.date' => 'Tanggal tidak valid',
+            'event.string' => 'Acara tidak valid',
             'note.string' => 'Catatan tidak valid',
         ];
     }

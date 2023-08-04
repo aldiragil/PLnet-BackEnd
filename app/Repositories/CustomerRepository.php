@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\CustomerInterface;
 use App\Models\Customer;
+use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -22,7 +23,7 @@ class CustomerRepository implements CustomerInterface {
     }
     
     public function getBy($search){
-        $customer = $this->customer->with('user','group');
+        $customer = $this->customer->with(['user','group','payment']);
         if ($search) {
             $customer->where( function($query) use($search){
                 $query->where('code', 'like', '%'.$search.'%')
@@ -37,12 +38,12 @@ class CustomerRepository implements CustomerInterface {
     
     public function getById($id)
     {
-        return $this->customer->find($id);
+        return $this->customer->with(['user','group','payment'])->find($id);
     }
     
     public function firsBy($where)
     {
-        return $this->customer->where($where)->first();
+        return $this->customer->with(['user','group','payment'])->where($where)->first();
     }
     
     public function create(array $data)

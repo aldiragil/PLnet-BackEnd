@@ -21,9 +21,27 @@ class SurveyRepository implements SurveyInterface {
         return $this->survey->all();
     }
     
-    public function getBy(array $where) {
-        $survey = $this->survey->with(['image','work_order','odp','package'])->where($where);
-        return $survey;
+    public function getBy(array $where,$search) {
+        $survey = $this->survey->with(['image','work_order','odp','package','customer']);
+        if ($search) {
+            $survey->where(function($query) use($search) {
+                $query->where('code', 'like', '%'.$search.'%')
+                ->orWhere('note', 'like', '%'.$search.'%')
+                ->orWhere('fee', 'like', '%'.$search.'%')
+                ->orWhereHas('work_order', function($odp) use($search){
+                    $odp->where('code', 'like', '%'.$search.'%')
+                    ->orWhere('order', 'like', '%'.$search.'%');
+                })
+                ->orWhereHas('odp', function($odp) use($search){
+                    $odp->where('name', 'like', '%'.$search.'%');
+                })
+                ->orWhereHas('customer', function($customer) use($search){
+                    $customer->where('name', 'like', '%'.$search.'%');
+                });
+
+            });
+        }
+        return $survey->where($where);
     }
     
     public function getById($id) {

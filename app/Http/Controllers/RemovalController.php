@@ -82,6 +82,7 @@ class RemovalController extends Controller
                 "updated_by" => Auth::id()
             ]));
             Instalation::where('id',$request['instalation_id'])->update(['active'=>0]);
+            WorkOrder::where('id',$request['work_order_id'])->update(["create_allowed" => true]);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

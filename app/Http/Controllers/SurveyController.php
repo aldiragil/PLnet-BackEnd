@@ -72,7 +72,13 @@ class SurveyController extends Controller
             "data"=>null
         );
         $wo = WorkOrder::find($request['work_order_id']);
-        if ($wo->customer_id) {
+        $customer_id = 0;
+        if ($wo) {
+            if ($wo->customer_id) {
+                $customer_id = $wo->customer_id;
+            }
+        }
+        if ($customer_id != 0) {
             $survey = $this->SurveyRepository->create(array_merge($request->validated(),[
                 "code"          => $this->ApiHelper->random('SRVY'),
                 "customer_id"   => $wo->customer_id,

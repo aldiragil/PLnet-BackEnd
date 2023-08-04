@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Models\Customer;
 use App\Models\Instalation;
 use App\Models\MasterOdp;
+use App\Models\Payment;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -68,6 +69,18 @@ class DatabaseSeeder extends Seeder
         Team::create([
             'id'        => 0,
             'name'      => 'Team 2'
+        ]);
+        Payment::create([
+            'id'        => 0,
+            'name'      => 'Pra Bayar'
+        ]);
+        Payment::create([
+            'id'        => 0,
+            'name'      => 'Pasca Bayar'
+        ]);
+        Payment::create([
+            'id'        => 0,
+            'name'      => 'Pasca Bayar Put Off'
         ]);
 
     }

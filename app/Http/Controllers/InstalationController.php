@@ -60,12 +60,13 @@ class InstalationController extends Controller
         foreach (DueDate::with(['time'])->get()->toArray() as $value) {
             $duedate[] = ['id'=>$value['id'],'name'=>$value['number'].' '.$value['time']['name'],];
         }
-        return $this->ApiHelper->return([
+        $setting    = $this->SettingRepository->showGroup(['group'=>$this->menu]);
+        return $this->ApiHelper->return(array_merge($setting,[
             'work_order' => $work_order,
             'package'   => Package::all(),
             'odp'       => MasterOdp::all(),
             'due_date'  => $duedate,
-        ],'Komponen '.$this->menu);
+        ]),'Komponen '.$this->menu);
     }
     
     public function detail($id){

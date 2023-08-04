@@ -98,5 +98,32 @@ class CustomerSeeder extends Seeder
             'updated_by' => 1,
         ]);
 
+        Setting::create([
+            'id' => 0,
+            'group' => 'Customer',
+            'key' => 'Area',
+            'value' => 'Gresik',
+            'created_by' => 1,
+            'updated_by' => 1,
+        ]);
+
+        Setting::create([
+            'id' => 0,
+            'group' => 'Instalation',
+            'key' => 'Event',
+            'value' => 'Agustus 50% Off',
+            'created_by' => 1,
+            'updated_by' => 1,
+        ]);
+
+        Setting::create([
+            'id' => 0,
+            'group' => 'Instalation',
+            'key' => 'Event',
+            'value' => 'Gratis Pemasangan',
+            'created_by' => 1,
+            'updated_by' => 1,
+        ]);
+
     }
 }

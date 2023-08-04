@@ -22,11 +22,17 @@ class MasterOdpRepository implements MasterOdpInterface {
     }
     
     public function getBy(array $where,$search) {
-        $masterOdp = $this->masterOdp->with(['image','work_order'])->where($where);
+        $masterOdp = $this->masterOdp->with(['image','work_order']);
         if ($search) {
-            $masterOdp = $masterOdp->where('name', 'like', '%'.$search.'%');
+            $masterOdp->where(function($query) use($search) {
+                $query->where('code', 'like', '%'.$search.'%');
+                $query->orWhere('name', 'like', '%'.$search.'%');
+                $query->orWhere('serial', 'like', '%'.$search.'%');
+                $query->orWhere('location', 'like', '%'.$search.'%');
+                $query->orWhere('device', 'like', '%'.$search.'%');
+            });
         }
-        return $masterOdp;
+        return $masterOdp->where($where);
     }
     
     public function getById($id) {

@@ -19,23 +19,26 @@ class InstalationRepository implements InstalationInterface {
     
     public function getBy(array $where,$search) {
         $instalation = $this->instalation
-        ->with(['work_order','customer','package','due_date','due_date.time','odp','images'])
+        ->with(['work_order','customer','package','odp','due_date','due_date.time','images'])
         ->where($where);
         if ($search) {
             $instalation = $instalation->where(function($query) use($search){
                 $query->where('id', 'like', '%'.$search.'%');
                 $query->orWhere('code', 'like', '%'.$search.'%');
-                $query->orWhereHas('work_order', function($query) use($search){
-                    $query->where('name', 'like', '%'.$search.'%');
+                $query->orWhereHas('work_order', function($work_order) use($search){
+                    $work_order->where('name', 'like', '%'.$search.'%');
                 });
-                $query->orWhereHas('customer', function($query) use($search){
-                    $query->where('name', 'like', '%'.$search.'%');
+                $query->orWhereHas('customer', function($customer) use($search){
+                    $customer->where('name', 'like', '%'.$search.'%');
                 });
-                $query->orWhereHas('package', function($query) use($search){
-                    $query->where('name', 'like', '%'.$search.'%');
+                $query->orWhereHas('package', function($package) use($search){
+                    $package->where('name', 'like', '%'.$search.'%');
                 });
-                $query->orWhereHas('odp', function($query) use($search){
-                    $query->where('name', 'like', '%'.$search.'%');
+                $query->orWhereHas('odp', function($odp) use($search){
+                    $odp->where('name', 'like', '%'.$search.'%');
+                });
+                $query->orWhereHas('due_date', function($due_date) use($search){
+                    $due_date->where('name', 'like', '%'.$search.'%');
                 });
             });
         }
@@ -43,7 +46,10 @@ class InstalationRepository implements InstalationInterface {
     }
     
     public function getById($id) {
-        return $this->instalation->with(['work_order','customer','package','due_date','due_date.time','odp','images'])->find($id);
+        return $this->instalation
+        ->with(['work_order','customer','package','due_date','due_date.time','odp','images'])
+        ->where('id',$id)
+        ->first();
     }
     
     public function create(array $data) {

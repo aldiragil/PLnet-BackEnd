@@ -7,6 +7,7 @@ use App\Http\Requests\CustomerRequest;
 use App\Repositories\CustomerRepository;
 use App\Repositories\SettingRepository;
 use App\Repositories\UserRepository;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,25 +34,15 @@ class CustomerController extends Controller
     }
     
     public function component(){
-        $payment = array (
-            array(
-                "id"=>1,
-                "name"=>"Prabayar"
-            ),
-            array(
-                "id"=>2,
-                "name"=>"Pascabayar"
-            ),
-            array(
-                "id"=>3,
-                "name"=>"Pascabayar Put Off"
-            ),
-        );
+        $payment    = Payment::all();
         $setting    = $this->SettingRepository->showGroup(['group'=>'Customer']);
-        $user       = $this->UserRepository->allUser()->map->only(['id', 'name']);
+        $user       = $this->UserRepository->allUser()->setVisible(['id','code', 'name']);
         
         return $this->ApiHelper->return(
-            array_merge($setting, ['User'=>$user],['Payment'=>$payment]),
+            array_merge($setting,[
+                'User'=>$user,
+                'Payment'=>$payment
+            ]),
             'Ambil Semua '.$this->menu
         );
     }

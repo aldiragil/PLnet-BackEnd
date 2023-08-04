@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
@@ -33,6 +33,10 @@ class Customer extends Model
 
     public function group(): BelongsTo {
         return $this->belongsTo(User::class,'group_id');
+    }
+
+    public function payment(): BelongsTo {
+        return $this->belongsTo(Payment::class,'payment_id');
     }
 
 }

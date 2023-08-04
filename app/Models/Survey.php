@@ -40,4 +40,8 @@ class Survey extends Model {
         return $this->belongsTo(MasterOdp::class,'odp_id');
     }
 
+    public function customer():BelongsTo {
+        return $this->belongsTo(Customer::class,'customer_id');
+    }
+
 }
