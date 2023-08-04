@@ -26,7 +26,7 @@ class InstalationRepository implements InstalationInterface {
                 $query->where('id', 'like', '%'.$search.'%');
                 $query->orWhere('code', 'like', '%'.$search.'%');
                 $query->orWhereHas('work_order', function($work_order) use($search){
-                    $work_order->where('name', 'like', '%'.$search.'%');
+                    $work_order->where('order', 'like', '%'.$search.'%');
                 });
                 $query->orWhereHas('customer', function($customer) use($search){
                     $customer->where('name', 'like', '%'.$search.'%');
@@ -38,7 +38,10 @@ class InstalationRepository implements InstalationInterface {
                     $odp->where('name', 'like', '%'.$search.'%');
                 });
                 $query->orWhereHas('due_date', function($due_date) use($search){
-                    $due_date->where('name', 'like', '%'.$search.'%');
+                    $due_date->where('number', 'like', '%'.$search.'%');
+                });
+                $query->orWhereHas('due_date.time', function($time) use($search){
+                    $time->orWhere('name', 'like', '%'.$search.'%');
                 });
             });
         }
