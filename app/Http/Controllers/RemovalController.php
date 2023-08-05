@@ -19,7 +19,6 @@ class RemovalController extends Controller
     private
     $RemovalRepo,
     $ApiHelper,
-    $auth_id,
     $menu       = "Pemutusan",
     $order      = [5,10,50,100],
     $status     = ['Draft','New','Closed'],
@@ -29,7 +28,6 @@ class RemovalController extends Controller
     ApiHelper $apiHelper ) {
         $this->RemovalRepo  = $RemovalRepository;
         $this->ApiHelper    = $apiHelper;
-        $this->auth_id      = Auth::id();
     }
     
     
@@ -38,20 +36,22 @@ class RemovalController extends Controller
         foreach (WorkOrder::with(['user','customer'])
         ->where(['id_status'=>3,'category'=>'Berhenti Berlangganan'])
         ->whereHas('user', function($query){
-            $query->where('users.id',$this->auth_id);
+            $query->where('users.id',Auth::id());
         })
         ->orderByDesc('date')
         ->get() as $data) {
-            $instalation = Instalation::whereHas('work_order', function($query) use($data) {
+            $instalation = Instalation::where('active',1)
+            ->whereHas('work_order', function($query) use($data) {
                 $query->where('customer_id',$data->customer_id);
             })
-            ->latest()->first();
+            ->latest()->first()->toArray();
             if ($instalation) {
                 $work_order['id'] = $data->id;
                 $work_order['code'] = $data->code;
                 $work_order['name'] = $data->name;
+                $work_order['order'] = $data->order;
                 $work_order['customer'] = $data->customer;
-                $work_order['survey'] = $instalation;
+                $work_order['instalation'] = ($instalation?$instalation:[]);
             }
         }
         return $this->ApiHelper->return([
@@ -85,8 +85,8 @@ class RemovalController extends Controller
         $data = $this->RemovalRepo->create(array_merge($request->validated(),[
             "code"          => $this->ApiHelper->random('RMVE'),
             "date"          => Carbon::now()->format('Y-m-d H:i:s'),
-            "created_by"    => $this->auth_id,
-            "updated_by"    => $this->auth_id
+            "created_by"    => Auth::id(),
+            "updated_by"    => Auth::id()
         ]));
         if (is_array($data)) {
             Instalation::where('id',$request['instalation_id'])->update(['active'=>0]);
@@ -97,7 +97,7 @@ class RemovalController extends Controller
     
     public function update($id, RemovalRequest $request){
         $data = $this->RemovalRepo->update(array_merge($request->validated(),[
-            "updated_by" => $this->auth_id
+            "updated_by" => Auth::id()
         ]),$id);
         if ($data) {
             $response = Removal::find($id);

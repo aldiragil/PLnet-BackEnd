@@ -17,7 +17,7 @@ class InstalationRepository implements InstalationInterface {
         $this->image = $image;
     }
     
-    public function getBy(array $where,$search) {
+    public function getBy(array $where,$search = null) {
         $instalation = $this->instalation
         ->with(['work_order','customer','package','odp','due_date','due_date.time','images'])
         ->where($where);

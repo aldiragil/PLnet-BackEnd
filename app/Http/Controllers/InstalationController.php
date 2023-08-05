@@ -47,13 +47,12 @@ class InstalationController extends Controller
         ->orderByDesc('date')
         ->get() as $data) {
             $survey = Survey::with(['work_order','odp','package'])->where('customer_id',$data->customer_id)->latest()->first();
-            if ($survey) {
-                $work_order['id'] = $data->id;
-                $work_order['code'] = $data->code;
-                $work_order['name'] = $data->name;
-                $work_order['customer'] = $data->customer;
-                $work_order['survey'] = $survey;
-            }
+            $work_order['id'] = $data->id;
+            $work_order['code'] = $data->code;
+            $work_order['name'] = $data->name;
+            $work_order['order'] = $data->order;
+            $work_order['customer'] = $data->customer;
+            $work_order['survey'] = $survey;
         }
         
         $duedate    =[];
@@ -119,6 +118,12 @@ class InstalationController extends Controller
     }
     
     public function create(InstalationRequest $request){
+        $queryInst = $this->InstalationRepository->getBy(['customer_id'=>$request['customer_id'],'active'=>1]);
+        $check = $queryInst->first();
+        if ($queryInst->exists()) {
+            return $this->ApiHelper->return(false,'Pelanggan/n '.$check->customer->code.'/n '.$check->customer->name.'/n mempunyai perangkat aktif');
+            die();
+        };
         $status_image = array(
             "status"=>true,
             "data"=>null

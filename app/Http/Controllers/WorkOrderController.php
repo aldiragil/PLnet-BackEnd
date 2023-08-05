@@ -205,6 +205,11 @@ class WorkOrderController extends Controller
     }
     
     public function update($id, WorkOrderRequest $request){
+        if (in_array($request['category'], ['Survey','Pasang Baru','Berhenti Berlangganan']) && !$request['customer_id']) {
+            return $this->ApiHelper->return(false,'Kategori '.$request['category'].' pelanggan tidak boleh kosong ');
+            die();
+        }
+        
         $this->WorkOrderRepository->deleteEmp(["work_order_id"=>$id]);
         if (is_array($request['user'])||is_object($request['user'])) {
             $data_work_order_emp = [];
