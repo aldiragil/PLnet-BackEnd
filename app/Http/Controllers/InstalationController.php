@@ -82,7 +82,8 @@ class InstalationController extends Controller
     public function list(Request $request){
         $where = [];
         (!$request->order?:$this->default_order = $request->order);
-        (!$request->customer?: $where['customer_id'] = $request->customer);
+        (!$request->due_date?:$where['duedate_id'] = $request->due_date);
+        (!$request->package?:$where['package_id'] = $request->package);
         (!$request->odp?:$where['odp_id'] = $request->odp);
         $search = $request->search;
         $instalation = $this->InstalationRepository

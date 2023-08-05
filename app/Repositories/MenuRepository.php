@@ -48,14 +48,24 @@ class MenuRepository implements MenuInterface {
         if ($tipe_id == 2) {
             $menu = $this->menu
             ->where('active',1)
-            ->where('tipe_id',$tipe_id)
+            ->where('tipe_id',2)
             ->get()->toArray();
         }else{
-            $query = MenuRole::with('menus')
-            ->where('id',$tipe_id)
-            ->first();
-            $menu = $query->menus
-            ->toArray();
+            // $query = MenuRole::with('menus')
+            // ->where('id',$tipe_id)
+            // ->whereHas('menus', function($qMenu) {
+            //     $qMenu->where('menus.tipe_id',2);
+            // })
+            // ->first();
+            // $menu = $query->menus
+            // ->toArray();
+            $menu = $this->menu->with(['access'])
+            ->where('active',1)
+            ->where('tipe_id','!=',2)
+            ->whereHas('access', function($access) use($tipe_id) {
+                $access->where('tipe_id',$tipe_id);
+            })
+            ->get()->toArray();
         }
         return MenuHelper::ShowMenu(false,$menu,0);
     }

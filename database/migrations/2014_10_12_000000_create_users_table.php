@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('code');
             $table->integer('tipe_id')->default(1);
-            $table->integer('team_id')->default(1);
+            $table->integer('team_id')->default(0);
             $table->string('name');
             $table->string('phone')->nullable();
             $table->string('email')->unique();

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\InstalationEmp;
+use App\Models\Complaint;
 use Illuminate\Http\Request;
 
-class InstalationEmpController extends Controller
+class ComplaintController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class InstalationEmpController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(InstalationEmp $instalationEmp)
+    public function show(Complaint $complaint)
     {
         //
     }
@@ -42,7 +42,7 @@ class InstalationEmpController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(InstalationEmp $instalationEmp)
+    public function edit(Complaint $complaint)
     {
         //
     }
@@ -50,7 +50,7 @@ class InstalationEmpController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, InstalationEmp $instalationEmp)
+    public function update(Request $request, Complaint $complaint)
     {
         //
     }
@@ -58,7 +58,7 @@ class InstalationEmpController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(InstalationEmp $instalationEmp)
+    public function destroy(Complaint $complaint)
     {
         //
     }

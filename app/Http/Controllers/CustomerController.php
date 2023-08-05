@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ApiHelper;
+use App\Http\Requests\UserRequest;
 use App\Http\Requests\CustomerRequest;
 use App\Repositories\CustomerRepository;
 use App\Repositories\SettingRepository;
@@ -21,7 +22,7 @@ class CustomerController extends Controller
     $menu = 'Pelanggan',
     $order  = [5,10,50,100],
     $default_order = 5;
- 
+    
     public function __construct( CustomerRepository $customerRepository,
     SettingRepository $SettingRepository,
     UserRepository $UserRepository,
@@ -92,6 +93,19 @@ class CustomerController extends Controller
         return $this->ApiHelper->return($data,'Simpan '.$this->menu);
     }
     
+    public function createUser($id, UserRequest $request) {
+        $user = $this->UserRepository->createUser(array_merge($request->validated(),[
+            'code'       => $this->ApiHelper->random('CUST'),
+            'tipe_id'    => 2,
+            'name'       => 'CUST',
+            'created_by' => Auth::id(),
+            'updated_by' => Auth::id(),
+            ])
+        );
+        $this->CustomerRepository->update(['user_id'=>$user->id],$id);
+        return $this->ApiHelper->return($this->CustomerRepository->getById($id),'Simpan '.$this->menu);
+    }
+    
     public function update($id, CustomerRequest $request){
         $before                 = $this->CustomerRepository->getById($id);
         $path                   = public_path().'/images/';
@@ -102,7 +116,7 @@ class CustomerController extends Controller
         );
         (!$request['image_ktp'] ?: $save_ktp = $this->ApiHelper->save_image('CUST-KTP-',$request['image_ktp']));
         (!$request['image_ttd'] ?: $save_ttd = $this->ApiHelper->save_image('CUST-TTD-',$request['image_ttd']));
-
+        
         (!$save_ktp['status'] ?: $update['image_ktp'] = $save_ktp["data"]);
         (!$save_ttd['status'] ?: $update['image_ttd'] = $save_ttd["data"]);               
         $this->CustomerRepository->update(array_merge($request->validated(),$update),$id);

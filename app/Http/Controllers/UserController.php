@@ -19,14 +19,14 @@ class UserController extends Controller
     }
     
     
-    public function list(Request $request){
+    public function list(Request $request) {
         return $this->ApiHelper->return(
             $this->UserRepository->getUserBy([],$request->search)->paginate(10),
             'List '.$this->menu
         );
     }
     
-    public function create(UserRequest $request){
+    public function create(UserRequest $request) {
         return $this->ApiHelper->return(
             $this->UserRepository->createUser(
                 array_merge($request->validated(),[
@@ -40,7 +40,7 @@ class UserController extends Controller
         
     }
     
-    public function update($id, UserRequest $request){
+    public function update($id, UserRequest $request) {
         return $this->ApiHelper->return(
             $this->UserRepository->updateUser($request->validated(),$id),
             'Simpan '.$this->menu

@@ -2,27 +2,24 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\InstalationInterface;
-use App\Models\Instalation;
-use App\Models\InstalationImage;
-use Illuminate\Support\Facades\Auth;
+use App\Interfaces\ComplaintInterface;
+use App\Models\Complaint;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
-class InstalationRepository implements InstalationInterface {
+class ComplaintRepository implements ComplaintInterface {
     
-    private $instalation,$image;
-    public function __construct(Instalation $instalation,InstalationImage $image) {
-        $this->instalation = $instalation;
-        $this->image = $image;
+    private $complaint,$image;
+    public function __construct(Complaint $complaint) {
+        $this->complaint = $complaint;
     }
     
     public function getBy(array $where,$search) {
-        $instalation = $this->instalation
+        $complaint = $this->complaint
         ->with(['work_order','customer','package','odp','due_date','due_date.time','images'])
         ->where($where);
         if ($search) {
-            $instalation = $instalation->where(function($query) use($search){
+            $complaint = $complaint->where(function($query) use($search){
                 $query->where('id', 'like', '%'.$search.'%');
                 $query->orWhere('code', 'like', '%'.$search.'%');
                 $query->orWhereHas('work_order', function($work_order) use($search){
@@ -45,11 +42,11 @@ class InstalationRepository implements InstalationInterface {
                 });
             });
         }
-        return $instalation;
+        return $complaint;
     }
     
     public function getById($id) {
-        return $this->instalation
+        return $this->complaint
         ->with(['work_order','customer','package','due_date','due_date.time','odp','images'])
         ->where('id',$id)
         ->first();
@@ -58,7 +55,7 @@ class InstalationRepository implements InstalationInterface {
     public function create(array $data) {
         try {
             DB::beginTransaction();
-            $data = $this->instalation->create($data);
+            $data = $this->complaint->create($data);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -70,7 +67,7 @@ class InstalationRepository implements InstalationInterface {
     public function update(array $data, $id) {
         try {
             DB::beginTransaction();
-            $response = $this->instalation
+            $response = $this->complaint
             ->where('id', $id)
             ->update($data);
             DB::commit();
@@ -82,11 +79,7 @@ class InstalationRepository implements InstalationInterface {
     }
     
     public function delete($id) {
-        return $this->instalation->destroy($id);
-    }
-    
-    public function deleteImage($id) {
-        return $this->image->where('instalation_id',$id)->delete();
+        return $this->complaint->destroy($id);
     }
     
 }

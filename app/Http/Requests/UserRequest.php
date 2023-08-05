@@ -28,13 +28,16 @@ class UserRequest extends FormRequest
     {
 
         $rules = [
-            'tipe_id' => 'required|integer|exists:menu_roles,id',
-            'team_id' => 'required|integer|exists:teams,id',
-            'name' => 'required|string|min:2',
-            'phone' => 'required|numeric',
-            'password' => 'required|min:6',
+            'phone'     => 'required|numeric',
+            'password'  => 'required|min:6',
             'confirm_password' => 'required|same:password'
         ];
+
+        if ($this->route('id') === null) {
+            $rules['tipe_id'] = ['required','integer','exists:menu_roles,id'];
+            $rules['team_id'] = ['required','integer','exists:teams,id'];
+            $rules['name'] = ['required','string','min:2'];
+        }
 
         if (in_array($this->method(), ['PUT', 'PATCH'])) {
             $rules['email'] = ['required','unique:users,email,'. $this->route('id')];
@@ -52,7 +55,6 @@ class UserRequest extends FormRequest
             'tipe_id.required' => 'Tipe User tidak boleh kosong.',
             'tipe_id.integer' => 'Tipe User tidak valid',
             'tipe_id.exists' => 'Tipe User tidak ditemukan',
-            'team_id.required' => 'Tim tidak boleh kosong.',
             'team_id.integer' => 'Tim tidak valid',
             'team_id.exists' => 'Tim tidak ditemukan',
             'name.required' => 'Nama tidak boleh kosong.',

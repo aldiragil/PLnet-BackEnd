@@ -139,7 +139,7 @@ class MenuSeeder extends Seeder
                     'menu'      => 'List',
                     'tipe_id'      => 1,
                     'icon'      => '',
-                    'order'     => 3
+                    'order'     => 1
                 ]);
                 Menu::create([
                     'id'        => 0,
@@ -391,7 +391,7 @@ class MenuSeeder extends Seeder
             'menu'      => 'Info Tagihan',
             'tipe_id'      => 2,
             'icon'      => '',
-            'order'     => 1
+            'order'     => 3
         ]);
         Menu::create([
             'id'        => 0,
@@ -399,7 +399,7 @@ class MenuSeeder extends Seeder
             'menu'      => 'Laporan Isolir',
             'tipe_id'      => 2,
             'icon'      => '',
-            'order'     => 2
+            'order'     => 4
         ]);
 
         Menu::create([
@@ -411,13 +411,31 @@ class MenuSeeder extends Seeder
             'order'     => 2
         ]);
 
-        $menu = Menu::create([
+        Menu::create([
             'id'        => 0,
             'parent_id' => 1,
             'menu'      => 'Pemutusan',
             'tipe_id'      => 1,
             'icon'      => '',
             'order'     => 5
+        ]);
+
+        Menu::create([
+            'id'        => 0,
+            'parent_id' => 11,
+            'menu'      => 'List Pengaduan',
+            'tipe_id'      => 1,
+            'icon'      => '',
+            'order'     => 2
+        ]);
+
+        $menu = Menu::create([
+            'id'        => 0,
+            'parent_id' => 0,
+            'menu'      => 'Report Pengaduan',
+            'tipe_id'      => 2,
+            'icon'      => '',
+            'order'     => 2
         ]);
 
         

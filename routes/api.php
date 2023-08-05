@@ -57,6 +57,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('customer/component','component');
         Route::get('customer/list','list');
         Route::post('customer/create','create');
+        Route::post('customer/create-user/{id}','createUser')->where([ 'id' => '[0-9]+' ]);
         Route::put('customer/update/{id}','update')->where([ 'id' => '[0-9]+' ]);
     });
 
