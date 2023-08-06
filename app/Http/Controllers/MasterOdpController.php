@@ -109,7 +109,7 @@ class MasterOdpController extends Controller
                     ];
                 }
             }
-            if ($save_image['status'] && is_array($before->image)) {
+            if ($status_image['status'] && is_array($before->image)) {
                 foreach ($before->image as $img) {
                     unlink($path.$img['image']);
                 }

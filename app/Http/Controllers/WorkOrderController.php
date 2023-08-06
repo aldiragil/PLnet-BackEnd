@@ -81,12 +81,18 @@ class WorkOrderController extends Controller
     
     public function list(Request $request) {
         $where = [];
+        $team = null;
         (!$request->order?:$this->default_order     = $request->order);
         (!$request->customer?:$where['customer_id'] = $request->customer);
         (!$request->category?:$where['category']    = $request->category);
         (!$request->status?:$where['status']        = $request->status);
+        (!$request->level?:$where['level']          = $request->level);
+        (!$request->team?:$team                     = $request->team);
         return $this->ApiHelper->return(
-            $this->WorkOrderRepository->getBy($where,$request->search,$request->date)->orderByDesc('date')->paginate($this->default_order),
+            $this->WorkOrderRepository
+            ->getBy($where,$request->search,$request->date,$team)
+            ->orderByDesc('date')
+            ->paginate($this->default_order),
             'Ambil Semua '.$this->menu
         );
     }
@@ -212,12 +218,11 @@ class WorkOrderController extends Controller
         
         $this->WorkOrderRepository->deleteEmp(["work_order_id"=>$id]);
         if (is_array($request['user'])||is_object($request['user'])) {
-            $data_work_order_emp = [];
             foreach ($request['user'] as $emp) {
-                $data_work_order_emp = array_merge($data_work_order_emp,[
+                $data_work_order_emp[] = [
                     'work_order_id' => $id,
                     'user_id'       => $emp['id']
-                ]);
+                ];
             }
             $this->WorkOrderRepository->createEmp($data_work_order_emp);
         }

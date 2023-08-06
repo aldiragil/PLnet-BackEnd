@@ -9,6 +9,7 @@ use App\Models\WorkOrderEmp;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Exception;
+use Illuminate\Validation\Rules\Exists;
 
 class WorkOrderRepository implements WorkOrderInterface{
     
@@ -25,12 +26,19 @@ class WorkOrderRepository implements WorkOrderInterface{
         return $this->work_order->all();
     }
     
-    public function getBy(array $where, $search = null, $date = null){
-        $work_order = $this->work_order->with(['user','user.team','customer'])
+    public function getBy(array $where, $search = null, $date = null, $team = null){
+        $work_order = $this->work_order
+        ->with(['user','user.team','customer'])
         ->where($where);
+        if (is_array($where)) {
+            $work_order->where($where);
+            if (isset($where['level'])) {
+                $work_order->where('level', 'like', '%'.$where['level'].'%');
+            }
+        }
         (!$date?:$work_order = $work_order->whereRaw('DATE_FORMAT(date,"%Y-%m") = "'.$date.'"'));
         if ($search) {
-            $work_order = $work_order->where(function($query) use($search){
+            $work_order->where(function($query) use($search){
                 $query->where('code', 'like', '%'.$search.'%');
                 $query->orWhere('name', 'like', '%'.$search.'%');
                 $query->orWhere('referensi', 'like', '%'.$search.'%');
@@ -46,6 +54,11 @@ class WorkOrderRepository implements WorkOrderInterface{
                         $query->where('name', 'like', '%'.$search.'%');
                     });
                 });
+            });
+        }
+        if ($team) {
+            $work_order->whereHas('user', function($user) use($team){
+                $user->where('team_id',$team);
             });
         }
         return $work_order;
