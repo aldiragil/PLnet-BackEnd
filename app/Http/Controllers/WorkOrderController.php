@@ -115,8 +115,15 @@ class WorkOrderController extends Controller
             });
         })->orderByDesc('date')->paginate($this->default_order);
         
-        for ($i=0; $i < count($work_order); $i++) { 
+        for ($i=0; $i < count($work_order); $i++) {
+            $show_allowed = 0;
+            for ($j=0; $j < count($work_order[$i]['user']); $j++) {
+                if ($work_order[$i]['user'][$j]['id'] === Auth::id()) {
+                    $show_allowed = 1;
+                }
+            }
             $work_order[$i]['date'] = substr($work_order[$i]['date'],0,-3);
+            $work_order[$i]['show_allowed'] = $show_allowed;
         }
         return $this->ApiHelper->return($work_order,'Ambil Semua '.$this->menu);
     }
