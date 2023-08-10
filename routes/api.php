@@ -89,6 +89,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(App\Http\Controllers\MasterOdpController::class)->group(function() {
         Route::get('odp/component','component');
         Route::get('odp/list','list');
+        Route::get('odp/search-distance/{id}','searchDistance')->where([ 'id' => '[0-9]+' ]);
         Route::get('odp/detail/{id}','detail')->where([ 'id' => '[0-9]+' ]);
         Route::post('odp/create','create');
         Route::put('odp/update/{id}','update')->where([ 'id' => '[0-9]+' ]);

@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Interfaces\MasterOdpInterface;
 use App\Models\MasterOdp;
 use App\Models\MasterOdpImage;
+use App\Models\WorkOrder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -43,6 +44,16 @@ class MasterOdpRepository implements MasterOdpInterface {
         return $this->masterOdp->with(['image','work_order'])->where($where)->first();
     }
     
+    public function getByDistance($wo) {
+        return $this->masterOdp->selectRaw("*, ROUND(6371 * acos(cos(radians(" .$wo->latitude. "))
+        * cos(radians(`latitude`))
+        * cos(radians(`longitude`) - radians(" .$wo->longitude. "))
+        + sin(radians(" .$wo->latitude. ")) * sin(radians(`latitude`))
+    ),2) AS distance")
+        ->orderBy('distance')
+        ->get();
+    }
+    
     public function create(array $data) {
         try {
             DB::beginTransaction();
@@ -71,8 +82,8 @@ class MasterOdpRepository implements MasterOdpInterface {
     public function delete($id) {
         return $this->masterOdp->destroy($id);
     }
-
+    
     public function deleteImage($id) {
         return $this->image->where('master_odp_id',$id)->delete();
     }
- }
+}

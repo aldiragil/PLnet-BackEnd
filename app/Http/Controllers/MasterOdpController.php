@@ -50,7 +50,16 @@ class MasterOdpController extends Controller
             'Ambil Semua '.$this->menu
         );
     }
+
+    public function searchDistance($id){
+        $wo = WorkOrder::find($id);
     
+        return $this->ApiHelper->return(
+            ($wo?$this->MasterOdpRepository->getByDistance($wo):false),
+            'List distance '.$this->menu
+        );
+    }
+
     public function create(MasterOdpRequest $request){
         $path = public_path().'/images/';
         $save_image = array(
