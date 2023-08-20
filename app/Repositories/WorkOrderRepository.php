@@ -28,12 +28,12 @@ class WorkOrderRepository implements WorkOrderInterface{
     
     public function getBy(array $where, $search = null, $date = null, $team = null){
         $work_order = $this->work_order
-        ->with(['user','user.team','customer'])
-        ->where($where);
+        ->with(['user','user.team','customer']);
         if (is_array($where)) {
-            $work_order->where($where);
             if (isset($where['level'])) {
                 $work_order->where('level', 'like', '%'.$where['level'].'%');
+            }else{
+                $work_order->where($where);
             }
         }
         (!$date?:$work_order = $work_order->whereRaw('DATE_FORMAT(date,"%Y-%m") = "'.$date.'"'));

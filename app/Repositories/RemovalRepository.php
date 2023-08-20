@@ -18,8 +18,16 @@ class RemovalRepository implements RemovalInterface {
     
     public function getBy(array $where, $search) {
         $removal = $this->removal
-        ->with(['work_order','customer','instalation','images'])
-        ->where($where);
+        ->with(['work_order','work_order.customer','instalation','images']);
+        if (is_array($where)) {
+            if (isset($where['customer_id'])) {
+                $removal->whereHas('work_order', function($wo) use($search){
+                        $wo->where('customer_id', 'like', '%'.$search.'%');
+                });
+            }else{
+                $removal->where($where);
+            }
+        }
         if ($search) {
             $removal = $removal->where( function($query) use($search) {
                 $query->where('id', 'like', '%'.$search.'%');
@@ -27,8 +35,8 @@ class RemovalRepository implements RemovalInterface {
                 $query->orWhereHas('work_order', function($work_order) use($search){
                     $work_order->where('order', 'like', '%'.$search.'%');
                 });
-                $query->orWhereHas('customer', function($customer) use($search){
-                    $customer->where('name', 'like', '%'.$search.'%');
+                $query->orWhereHas('work_order.customer', function($customer) use($search){
+                    $customer->where('customers.name', 'like', '%'.$search.'%');
                 });
             });
         }
@@ -37,7 +45,7 @@ class RemovalRepository implements RemovalInterface {
     
     public function getById($id) {
         return $this->removal
-        ->with(['work_order','customer','instalation','images'])
+        ->with(['work_order','work_order.customer','instalation','images'])
         ->where('id',$id)
         ->first();
     }
