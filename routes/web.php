@@ -19,3 +19,9 @@ Route::get('login', function () {
         "message" => 'Unauthenticated',
     ], 401);
 });
+Route::get('/', function () {
+    return view('auth/login');
+});
+Route::get('/home/{id}', function ($id) {
+    return view('home',['key'=>$id]);
+});

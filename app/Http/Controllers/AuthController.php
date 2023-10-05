@@ -12,6 +12,7 @@ use App\Http\Requests\EmailRequest;
 use App\Http\Requests\UserRequest;
 use App\Helpers\ApiHelper;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -130,5 +131,17 @@ class AuthController extends Controller
             return $this->ApiHelper->response(200, false, CHECK_TOKEN_FAILED);
         }
     }
-    
+
+    public function token()
+    {
+        return $this->ApiHelper->response(200,true,LOGIN_SUCCESS, [
+            'id' => Auth::user()->id,
+            'name' => Auth::user()->name,
+            'email' => Auth::user()->email,
+            'tipe_id' => Auth::user()->tipe_id,
+            'tipe_name' => Auth::user()->role->name,
+            'notification' => null,
+            'menu' => $this->MenuRepository->getUserMenu(Auth::user()->tipe_id,Auth::user()->id)
+        ]);
+    }
 }

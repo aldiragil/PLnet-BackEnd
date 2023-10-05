@@ -28,6 +28,7 @@ Route::controller(App\Http\Controllers\AuthController::class)->group(function() 
 // Route::post('refresh-token',[App\Http\Controllers\AuthController::class,'refreshToken']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('user-token',[App\Http\Controllers\AuthController::class,'token']);
     Route::controller(App\Http\Controllers\WorkOrderController::class)->group(function() {
         
         Route::get('work-order/component-list','component_list');
