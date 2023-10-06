@@ -26,7 +26,7 @@ class MenuSeeder extends Seeder
             'name'      => "Customer",
         ]);
 
-        MenuRole::create(
+        MenuRole::create([
             'id'        => 3,
             'name'      => "Collector",
         ]);
