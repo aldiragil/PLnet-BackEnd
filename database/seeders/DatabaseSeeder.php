@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MenuSeeder::class);
 
         User::create([
-            'id'        => 0,
+            'id'        => 1,
             'tipe_id'   => 1,
             'team_id'   => 1,
             'code'      => 'ADMIN1111',
@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
             'password'  => 'admin'
         ]);
         User::create([
-            'id'        => 0,
+            'id'        => 2,
             'tipe_id'   => 4,
             'team_id'   => 1,
             'code'      => 'EMP1111',
@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
             'password'  => 'admin'
         ]);
         User::create([
-            'id'        => 0,
+            'id'        => 3,
             'tipe_id'   => 4,
             'team_id'   => 1,
             'code'      => 'EMP2222',
@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
             'password'  => 'admin'
         ]);
         User::create([
-            'id'        => 0,
+            'id'        => 4,
             'tipe_id'   => 3,
             'team_id'   => 2,
             'code'      => 'EMP3333',
@@ -63,23 +63,23 @@ class DatabaseSeeder extends Seeder
             'password'  => 'admin'
         ]);
         Team::create([
-            'id'        => 0,
+            'id'        => 1,
             'name'      => 'Team 1'
         ]);
         Team::create([
-            'id'        => 0,
+            'id'        => 2,
             'name'      => 'Team 2'
         ]);
         Payment::create([
-            'id'        => 0,
+            'id'        => 3,
             'name'      => 'Pra Bayar'
         ]);
         Payment::create([
-            'id'        => 0,
+            'id'        => 4,
             'name'      => 'Pasca Bayar'
         ]);
         Payment::create([
-            'id'        => 0,
+            'id'        => 5,
             'name'      => 'Pasca Bayar Put Off'
         ]);
 

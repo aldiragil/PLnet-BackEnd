@@ -14,7 +14,7 @@ class MasterOdpSeeder extends Seeder
     public function run(): void
     {
         Setting::create([
-            'id' => 0,
+            'id' => 7,
             'group' => 'MasterOdp',
             'key' => 'Perangkat',
             'value' => 'Perangkat 1',
@@ -22,7 +22,7 @@ class MasterOdpSeeder extends Seeder
             'updated_by' => 1,
         ]);
         Setting::create([
-            'id' => 0,
+            'id' => 8,
             'group' => 'MasterOdp',
             'key' => 'Perangkat',
             'value' => 'Perangkat 2',
@@ -30,7 +30,7 @@ class MasterOdpSeeder extends Seeder
             'updated_by' => 1,
         ]);
         Setting::create([
-            'id' => 0,
+            'id' => 9,
             'group' => 'MasterOdp',
             'key' => 'Perangkat',
             'value' => 'Perangkat 3',

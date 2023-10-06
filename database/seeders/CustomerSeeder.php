@@ -15,7 +15,7 @@ class CustomerSeeder extends Seeder
     public function run(): void
     {
         Customer::create([
-            'id'        => 0,
+            'id'        => 1,
             'user_id'   => NULL,
             'group_id'   => 1,
             'payment_id'   => 1,
@@ -34,7 +34,7 @@ class CustomerSeeder extends Seeder
             'updated_by'  => 1
         ]);
         Customer::create([
-            'id'        => 0,
+            'id'        => 2,
             'user_id'   => NULL,
             'group_id'   => 1,
             'payment_id'   => 1,
@@ -53,7 +53,7 @@ class CustomerSeeder extends Seeder
             'updated_by'  => 1
         ]);
         Customer::create([
-            'id'        => 0,
+            'id'        => 3,
             'user_id'   => NULL,
             'group_id'   => 1,
             'payment_id'   => 1,
@@ -74,7 +74,7 @@ class CustomerSeeder extends Seeder
 
 
         Setting::create([
-            'id' => 0,
+            'id' => 1,
             'group' => 'Customer',
             'key' => 'Area',
             'value' => 'Surabaya',
@@ -82,7 +82,7 @@ class CustomerSeeder extends Seeder
             'updated_by' => 1,
         ]);
         Setting::create([
-            'id' => 0,
+            'id' => 2,
             'group' => 'Customer',
             'key' => 'Area',
             'value' => 'Sidoarjo',
@@ -90,7 +90,7 @@ class CustomerSeeder extends Seeder
             'updated_by' => 1,
         ]);
         Setting::create([
-            'id' => 0,
+            'id' => 3,
             'group' => 'Customer',
             'key' => 'Area',
             'value' => 'Gresik',
@@ -99,7 +99,7 @@ class CustomerSeeder extends Seeder
         ]);
 
         Setting::create([
-            'id' => 0,
+            'id' => 4,
             'group' => 'Customer',
             'key' => 'Area',
             'value' => 'Gresik',
@@ -108,7 +108,7 @@ class CustomerSeeder extends Seeder
         ]);
 
         Setting::create([
-            'id' => 0,
+            'id' => 5,
             'group' => 'Instalation',
             'key' => 'Event',
             'value' => 'Agustus 50% Off',
@@ -117,7 +117,7 @@ class CustomerSeeder extends Seeder
         ]);
 
         Setting::create([
-            'id' => 0,
+            'id' => 6,
             'group' => 'Instalation',
             'key' => 'Event',
             'value' => 'Gratis Pemasangan',

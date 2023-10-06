@@ -17,33 +17,33 @@ class MenuSeeder extends Seeder
     {
 
         MenuRole::create([
-            'id'        => 0,
+            'id'        => 1,
             'name'      => "Administrator",
         ]);
 
         MenuRole::create([
-            'id'        => 0,
+            'id'        => 2,
             'name'      => "Customer",
         ]);
 
-        MenuRole::create([
-            'id'        => 0,
+        MenuRole::create(
+            'id'        => 3,
             'name'      => "Collector",
         ]);
 
         MenuRole::create([
-            'id'        => 0,
+            'id'        => 4,
             'name'      => "Teknisi",
         ]);
 
         MenuRole::create([
-            'id'        => 0,
+            'id'        => 5,
             'name'      => "NOC",
         ]);
 
         // 1 Menu Master Order Pemasangan Internet
         Menu::create([
-            'id'        => 0,
+            'id'        => 1,
             'parent_id' => 0,
             'menu'      => 'Order',
             'tipe_id'      => 1,
@@ -51,7 +51,7 @@ class MenuSeeder extends Seeder
             'order'     => 1
         ]);
             Menu::create([
-                'id'        => 0,
+                'id'        => 2,
                 'parent_id' => 1,
                 'menu'      => 'Work Order',
                 'tipe_id'      => 1,
@@ -59,7 +59,7 @@ class MenuSeeder extends Seeder
                 'order'     => 1
             ]);
                 Menu::create([
-                    'id'        => 0,
+                    'id'        => 3,
                     'parent_id' => 2,
                     'menu'      => 'Ticketing',
                     'tipe_id'      => 1,
@@ -67,7 +67,7 @@ class MenuSeeder extends Seeder
                     'order'     => 1
                 ]);
                 Menu::create([
-                    'id'        => 0,
+                    'id'        => 4,
                     'parent_id' => 2,
                     'menu'      => 'Kinerja',
                     'tipe_id'      => 1,
@@ -75,7 +75,7 @@ class MenuSeeder extends Seeder
                     'order'     => 2
                 ]);
                 Menu::create([
-                    'id'        => 0,
+                    'id'        => 5,
                     'parent_id' => 2,
                     'menu'      => 'Tracking User',
                     'tipe_id'      => 1,
@@ -83,7 +83,7 @@ class MenuSeeder extends Seeder
                     'order'     => 3
                 ]);
                 Menu::create([
-                    'id'        => 0,
+                    'id'        => 6,
                     'parent_id' => 2,
                     'menu'      => 'Setting',
                     'tipe_id'      => 1,
@@ -92,7 +92,7 @@ class MenuSeeder extends Seeder
                 ]);
 
             Menu::create([
-                'id'        => 0,
+                'id'        => 7,
                 'parent_id' => 1,
                 'menu'      => 'Master ODP',
                 'tipe_id'      => 1,
@@ -100,7 +100,7 @@ class MenuSeeder extends Seeder
                 'order'     => 3
             ]);
                 Menu::create([
-                    'id'        => 0,
+                    'id'        => 8,
                     'parent_id' => 7,
                     'menu'      => 'ODP',
                     'tipe_id'      => 1,
@@ -108,7 +108,7 @@ class MenuSeeder extends Seeder
                     'order'     => 2
                 ]);
                 Menu::create([
-                    'id'        => 0,
+                    'id'        => 9,
                     'parent_id' => 7,
                     'menu'      => 'Report',
                     'tipe_id'      => 1,
@@ -116,7 +116,7 @@ class MenuSeeder extends Seeder
                     'order'     => 2
                 ]);
                 Menu::create([
-                    'id'        => 0,
+                    'id'        => 10,
                     'parent_id' => 7,
                     'menu'      => 'Setting',
                     'tipe_id'      => 1,
@@ -126,7 +126,7 @@ class MenuSeeder extends Seeder
 
 
             Menu::create([
-                'id'        => 0,
+                'id'        => 11,
                 'parent_id' => 1,
                 'menu'      => 'Customer',
                 'tipe_id'      => 1,
@@ -134,7 +134,7 @@ class MenuSeeder extends Seeder
                 'order'     => 4
             ]);
                 Menu::create([
-                    'id'        => 0,
+                    'id'        => 12,
                     'parent_id' => 11,
                     'menu'      => 'List',
                     'tipe_id'      => 1,
@@ -142,7 +142,7 @@ class MenuSeeder extends Seeder
                     'order'     => 1
                 ]);
                 Menu::create([
-                    'id'        => 0,
+                    'id'        => 13,
                     'parent_id' => 11,
                     'menu'      => 'Setting',
                     'tipe_id'      => 1,
@@ -151,7 +151,7 @@ class MenuSeeder extends Seeder
                 ]);
 
             Menu::create([
-                'id'        => 0,
+                'id'        => 14,
                 'parent_id' => 1,
                 'menu'      => 'Survey',
                 'tipe_id'      => 1,
@@ -159,7 +159,7 @@ class MenuSeeder extends Seeder
                 'order'     => 5
             ]);
                 Menu::create([
-                    'id'        => 0,
+                    'id'        => 15,
                     'parent_id' => 14,
                     'menu'      => 'List',
                     'tipe_id'      => 1,
@@ -167,7 +167,7 @@ class MenuSeeder extends Seeder
                     'order'     => 4
                 ]);
                 Menu::create([
-                    'id'        => 0,
+                    'id'        => 16,
                     'parent_id' => 14,
                     'menu'      => 'Report',
                     'tipe_id'      => 1,
@@ -175,7 +175,7 @@ class MenuSeeder extends Seeder
                     'order'     => 4
                 ]);
                 Menu::create([
-                    'id'        => 0,
+                    'id'        => 17,
                     'parent_id' => 14,
                     'menu'      => 'Setting',
                     'tipe_id'      => 1,
@@ -184,7 +184,7 @@ class MenuSeeder extends Seeder
                 ]);
 
             Menu::create([
-                'id'        => 0,
+                'id'        => 18,
                 'parent_id' => 1,
                 'menu'      => 'Pemasangan',
                 'tipe_id'      => 1,
@@ -192,7 +192,7 @@ class MenuSeeder extends Seeder
                 'order'     => 5
             ]);
                 Menu::create([
-                    'id'        => 0,
+                    'id'        => 19,
                     'parent_id' => 18,
                     'menu'      => 'Pasang',
                     'tipe_id'      => 1,
@@ -200,7 +200,7 @@ class MenuSeeder extends Seeder
                     'order'     => 5
                 ]);
                 Menu::create([
-                    'id'        => 0,
+                    'id'        => 20,
                     'parent_id' => 18,
                     'menu'      => 'Berhenti',
                     'tipe_id'      => 1,
@@ -211,7 +211,7 @@ class MenuSeeder extends Seeder
 
         // 2. Menu Master NOC
         Menu::create([
-            'id'        => 0,
+            'id'        => 21,
             'parent_id' => '0',
             'menu'      => 'NOC',
             'tipe_id'      => 1,
@@ -219,7 +219,7 @@ class MenuSeeder extends Seeder
             'order'     => 1
         ]);
             Menu::create([
-                'id'        => 0,
+                'id'        => 22,
                 'parent_id' => 21,
                 'menu'      => 'Approval Pemasangan',
                 'tipe_id'      => 1,
@@ -227,7 +227,7 @@ class MenuSeeder extends Seeder
                 'order'     => 5
             ]);
             Menu::create([
-                'id'        => 0,
+                'id'        => 23,
                 'parent_id' => 21,
                 'menu'      => 'Approval Berhenti',
                 'tipe_id'      => 1,
@@ -235,7 +235,7 @@ class MenuSeeder extends Seeder
                 'order'     => 5
             ]);
             Menu::create([
-                'id'        => 0,
+                'id'        => 24,
                 'parent_id' => 21,
                 'menu'      => 'Report Redaman',
                 'tipe_id'      => 1,
@@ -243,7 +243,7 @@ class MenuSeeder extends Seeder
                 'order'     => 5
             ]);
             Menu::create([
-                'id'        => 0,
+                'id'        => 25,
                 'parent_id' => 21,
                 'menu'      => 'Setting',
                 'tipe_id'      => 1,
@@ -254,7 +254,7 @@ class MenuSeeder extends Seeder
 
         // 3. Menu Master Receivable
         Menu::create([
-            'id'        => 0,
+            'id'        => 26,
             'parent_id' => '0',
             'menu'      => 'Receivable',
             'tipe_id'      => 1,
@@ -262,7 +262,7 @@ class MenuSeeder extends Seeder
             'order'     => 1
         ]);
             Menu::create([
-                'id'        => 0,
+                'id'        => 27,
                 'parent_id' => 26,
                 'menu'      => 'Invoice',
                 'tipe_id'      => 1,
@@ -271,7 +271,7 @@ class MenuSeeder extends Seeder
             ]);
 
             Menu::create([
-                'id'        => 0,
+                'id'        => 28,
                 'parent_id' => 26,
                 'menu'      => 'Mapping',
                 'tipe_id'      => 1,
@@ -279,7 +279,7 @@ class MenuSeeder extends Seeder
                 'order'     => 5
             ]);
                 Menu::create([
-                    'id'        => 0,
+                    'id'        => 29,
                     'parent_id' => 28,
                     'menu'      => 'List',
                     'tipe_id'      => 1,
@@ -287,7 +287,7 @@ class MenuSeeder extends Seeder
                     'order'     => 5
                 ]);
                 Menu::create([
-                    'id'        => 0,
+                    'id'        => 30,
                     'parent_id' => 28,
                     'menu'      => 'Rute Tagih',
                     'tipe_id'      => 1,
@@ -297,7 +297,7 @@ class MenuSeeder extends Seeder
 
 
             Menu::create([
-                'id'        => 0,
+                'id'        => 31,
                 'parent_id' => 26,
                 'menu'      => 'Reminder',
                 'tipe_id'      => 1,
@@ -305,7 +305,7 @@ class MenuSeeder extends Seeder
                 'order'     => 5
             ]);
             Menu::create([
-                'id'        => 0,
+                'id'        => 32,
                 'parent_id' => 26,
                 'menu'      => 'Pending Koleksi',
                 'tipe_id'      => 1,
@@ -313,7 +313,7 @@ class MenuSeeder extends Seeder
                 'order'     => 5
             ]);
             Menu::create([
-                'id'        => 0,
+                'id'        => 33,
                 'parent_id' => 26,
                 'menu'      => 'Pembayaran',
                 'tipe_id'      => 1,
@@ -321,7 +321,7 @@ class MenuSeeder extends Seeder
                 'order'     => 5
             ]);
             Menu::create([
-                'id'        => 0,
+                'id'        => 34,
                 'parent_id' => 26,
                 'menu'      => 'Report',
                 'tipe_id'      => 1,
@@ -329,7 +329,7 @@ class MenuSeeder extends Seeder
                 'order'     => 5
             ]);
             Menu::create([
-                'id'        => 0,
+                'id'        => 35,
                 'parent_id' => 26,
                 'menu'      => 'Setting',
                 'tipe_id'      => 1,
@@ -340,7 +340,7 @@ class MenuSeeder extends Seeder
 
         // 4. Menu Master Inventory
         Menu::create([
-            'id'        => 0,
+            'id'        => 36,
             'parent_id' => '0',
             'menu'      => 'Inventory',
             'tipe_id'      => 1,
@@ -348,7 +348,7 @@ class MenuSeeder extends Seeder
             'order'     => 1
         ]);
             Menu::create([
-                'id'        => 0,
+                'id'        => 37,
                 'parent_id' => 36,
                 'menu'      => 'Gudang',
                 'tipe_id'      => 1,
@@ -356,7 +356,7 @@ class MenuSeeder extends Seeder
                 'order'     => 5
             ]);
             Menu::create([
-                'id'        => 0,
+                'id'        => 38,
                 'parent_id' => 36,
                 'menu'      => 'Report',
                 'tipe_id'      => 1,
@@ -367,7 +367,7 @@ class MenuSeeder extends Seeder
 
         // 5. Menu Master Penjualan
         Menu::create([
-            'id'        => 0,
+            'id'        => 39,
             'parent_id' => '0',
             'menu'      => 'Penjualan',
             'tipe_id'      => 1,
@@ -378,7 +378,7 @@ class MenuSeeder extends Seeder
 
         // 6. Menu Master Customer
         Menu::create([
-            'id'        => 0,
+            'id'        => 40,
             'parent_id' => 0,
             'menu'      => 'Pengaduan',
             'tipe_id'      => 2,
@@ -386,7 +386,7 @@ class MenuSeeder extends Seeder
             'order'     => 1
         ]);
         Menu::create([
-            'id'        => 0,
+            'id'        => 41,
             'parent_id' => 0,
             'menu'      => 'Info Tagihan',
             'tipe_id'      => 2,
@@ -394,7 +394,7 @@ class MenuSeeder extends Seeder
             'order'     => 3
         ]);
         Menu::create([
-            'id'        => 0,
+            'id'        => 42,
             'parent_id' => 0,
             'menu'      => 'Laporan Isolir',
             'tipe_id'      => 2,
@@ -403,7 +403,7 @@ class MenuSeeder extends Seeder
         ]);
 
         Menu::create([
-            'id'        => 0,
+            'id'        => 43,
             'parent_id' => 2,
             'menu'      => 'Ticketing List',
             'tipe_id'      => 1,
@@ -412,7 +412,7 @@ class MenuSeeder extends Seeder
         ]);
 
         Menu::create([
-            'id'        => 0,
+            'id'        => 44,
             'parent_id' => 1,
             'menu'      => 'Pemutusan',
             'tipe_id'      => 1,
@@ -421,7 +421,7 @@ class MenuSeeder extends Seeder
         ]);
 
         Menu::create([
-            'id'        => 0,
+            'id'        => 45,
             'parent_id' => 11,
             'menu'      => 'List Pengaduan',
             'tipe_id'      => 1,
@@ -430,7 +430,7 @@ class MenuSeeder extends Seeder
         ]);
 
         $menu = Menu::create([
-            'id'        => 0,
+            'id'        => 46,
             'parent_id' => 0,
             'menu'      => 'Report Pengaduan',
             'tipe_id'      => 2,

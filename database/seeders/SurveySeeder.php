@@ -14,7 +14,7 @@ class SurveySeeder extends Seeder
     public function run(): void
     {
         Setting::create([
-            'id' => 0,
+            'id' => 10,
             'group' => 'Survey',
             'key' => 'Paket',
             'value' => 'Paket 1',
@@ -22,7 +22,7 @@ class SurveySeeder extends Seeder
             'updated_by' => 1,
         ]);
         Setting::create([
-            'id' => 0,
+            'id' => 11,
             'group' => 'Survey',
             'key' => 'Area',
             'value' => 'Paket 2',
@@ -30,7 +30,7 @@ class SurveySeeder extends Seeder
             'updated_by' => 1,
         ]);
         Setting::create([
-            'id' => 0,
+            'id' => 12,
             'group' => 'Survey',
             'key' => 'Area',
             'value' => 'Paket 3',
