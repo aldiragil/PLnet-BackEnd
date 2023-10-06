@@ -26,7 +26,7 @@
   <link rel="stylesheet" type="text/css" href="{{ url('app-assets/vendors/css/extensions/sweetalert.css') }}">
 </head>
 <body class="horizontal-layout horizontal-menu 2-columns   menu-expanded" data-open="hover" data-menu="horizontal-menu" data-col="2-columns">
-  <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow navbar-static-top navbar-light navbar-brand-center">
+  <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow navbar-static-top navbar-light navbar-brand-center bg-blue box-shadow-3">
     <div class="navbar-wrapper">
       <div class="navbar-header">
         <ul class="nav navbar-nav flex-row">
@@ -36,7 +36,7 @@
           <li class="nav-item">
             <a class="navbar-brand" href="index.html">
               <img class="brand-logo" alt="modern admin logo" src="../app-assets/images/logo/logo.png">
-              <h3 class="brand-text">Layanan Internet</h3>
+              <h3 class="brand-text white">Layanan Internet</h3>
             </a>
           </li>
           <li class="nav-item d-md-none">
@@ -50,9 +50,9 @@
           </ul>
           <ul class="nav navbar-nav float-right">
             <li class="dropdown dropdown-user nav-item">
-              <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
+              <a class="dropdown-toggle nav-link dropdown-user-link white" href="#" data-toggle="dropdown">
                 <span class="mr-1">Hello,
-                  <span class="user-name text-bold-700">John Doe</span>
+                  <span class="user-name text-bold-700" id="app_name">-</span>
                 </span>
               </a>
             </li>
@@ -64,10 +64,11 @@
   <div class="app-content content">
     @yield('content')
   </div>
-  <footer class="footer fixed-bottom footer-dark navbar-border navbar-shadow">
+  <footer class="footer fixed-bottom navbar-border navbar-shadow  bg-blue">
     <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2">
-      <span class="float-md-left d-block d-md-inline-block">Copyright &copy; 2023 <a class="text-bold-800 grey darken-2" href="https://themeforest.net/user/pixinvent/portfolio?ref=pixinvent"
-        target="_blank">ANAK BANGSA </a>, All rights reserved.
+      <span class="float-md-left d-block d-md-inline-block white">
+        Copyright &copy; 2023
+        <a class="text-bold-800 grey darken-2">ANAK BANGSA </a>, All rights reserved.
       </span>
     </p>
   </footer>

@@ -42,6 +42,7 @@
                 var userMenu=response.data.menu;
                 $('#menu-user-token').html(buildMenu(0,0,userMenu));
                 $('.col-menu-0').css("display", "block");
+                $('#app_name').html(response.data.name);
             }else{
                 alert('gagal');
             }
@@ -71,4 +72,7 @@
     
     function setMenu(id){
         $('.col-menu-user').css("display", "none");
-        $('.col-menu-'+id).css("display", "b
+        $('.col-menu-'+id).css("display", "block");
+    }
+</script>
+@endsection
